@@ -1,0 +1,32 @@
+To access "Page" objects - Request, Response, Session, Cookies, Server etc into the "Class" (Outside the .cshtml and .aspx pages)
+=========================================
+
+The HttpContext class and its property named "Current" contains the reference of currently executed page/program.
+
+For example,   HttpContext.Current.Session
+               HttpContext.Current.Request 
+
+Example: A Session wrapper class to store or read the pair
+
+public class SessionWrapper
+{
+  public static int No
+   {
+    get
+      {
+        if(HttpContext.Current.Session["No"]==null) 
+              return 0;
+        return int.Parse(HttpContext.Current.Session["No"].ToString());
+       }
+     set
+      {
+        HttpContext.Current.Session["No"]=value;
+      }
+    }
+}
+
+and you can use this property in anywhere (page or other methods):
+
+   SessionWrapper.No = 10;
+ 
+

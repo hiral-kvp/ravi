@@ -1,0 +1,162 @@
+ C# Object Oriented Paradigm
+ ==================================================================================
+
+ Access modifiers 
+ ----------------
+
+ These are keywords (also known as access control keywords) of C# to hide or
+ show TYPE members. With the help of these keywords we can achieve "Datatype"
+ abstraction. 
+
+ C# have five modifiers:
+
+ 1. public  - The public entities have no access restriction. They can be visible 		& used everywhere inside or outside the projects.
+		[CTS types we've used and avaiable for public use are example of
+		 public entities].
+                                                                (nested/inner)
+ 2. private - The private entities are only visible inside the containing type in 			which they are created. 
+
+ 3. internal - The internal entities are only visible inside the assembly in which 
+		they are created. (Internal entities created in one project are not
+                visible in another project).
+ 4. protected - The protected entities have same access as "private" but they
+		are visible into sub-class.
+ 5. protected internal or internal protected - These entities are visible inside the
+		containing class & and their sub-classes inside or outside the
+		project (assembly).
+
+ 
+ Top-level types (Types which are not nested) are either "public" or "internal". They can't be "private", "protected" or "protected internal".
+ If modifier is not specified for top-level types then the default is "internal"
+
+ Example: 
+  //internal types
+  class Hello {}
+  interface Test{} 
+  internal class Help {}
+  //public types
+  public class MyApp{}
+  public struct TestApp {}
+
+ Nested/inner types can have following declared accessiblility:
+
+ TypeName	Default Access		We can change them to
+ --------------------------------------------------------------------------
+ class		private			private, public, protected, internal and
+					protected internal
+ interface	public			Can't change - Remains public forever
+ struct		private			private, public and internal
+					[Can't support inheritance so no protected or
+					 protected internal]
+ enum		public			Can't change
+ delegate	---No Members at all -------------------
+
+ Namespace statement
+ --------------------------------------------------------------------------------
+ It creates a group of related TYPES.
+
+ Syntax:
+
+  namespace NameYourNameSpace
+   {
+     //here goes your type definitions
+      public class Test { .. }
+     ...
+    }
+
+  namespace NameYourNamespace.SubNamespace 
+   {
+     //types
+   }
+
+  namespace NameYourNamespace 
+   {
+        //types
+        .....
+        //sub namespace
+        namespace SubNamespace 
+         {
+           //types
+         }
+    }
+
+  
+ A namespace includes :
+     1. another namespace 
+     2. class 
+     3. interface
+     4. enum
+     5. delegate and
+     6. struct
+
+ Naming rules and conventions while designing Namespaces & Types
+ ---------------------------------------------------------------
+ 1. Never create a "TYPE" into global namespace. A type created without
+    namespace will be added into "global" namespace.
+
+    You can use global namespace items via "global" keyword with following syntax:
+
+           1. global::YourTypeName  Or
+           2. YourTypeName directly.
+
+ 2. Namespaces don't have access modifiers - They are public by default.
+ 3. Name of namespace must be written using "PascalCase" pattern - Capitalize the 	first letter of each word and rest chars are lowercase.
+
+      e.g namespace SocialNetwork { }
+          namespace DataStructure.Graphs {}
+ 4. Any public entity must be written using "PascalCase" patten. 
+ 5. Any non-public entity must be written using "lower" or "camelCase" pattern.
+    In "camelCase" - first word must be lower letter and then capitalize the
+	first letter of each word.
+    Local variables, private fields must uses "lower" or "camelCase" pattern.
+    People also uses _ (underscore) prefix for private items.
+      e.g private int _roll;
+
+Example of namespace   : Code in your .cs file
+----------------------
+namespace MyApp   //This is root namespace of your app
+{
+  public class Config {}
+}
+namespace MyApp.Models // This is sub namespace
+{
+   public class Emp {}
+}
+namespace MyApp
+{ 
+   namespace Models  //This is sub namespace
+    {
+      public class Salary {}
+     }
+}
+namespace MyApp.Views  //Subnamespace
+{
+   public class Emp {}
+   public class Salary{}
+}
+namespace MyApp.Models 
+{
+   public class Work {}
+}
+//Now test the above code in your Main  method 
+
+class TestNs  // This class is created into "global" namespace
+{
+   static void Main()
+    {
+       MyApp.  <--- You will list two sub-namespaces and "Config" class
+       MyApp.Views. <-- Emp and Salary classes
+       MyApp.Models. <--- Three classes
+     }
+}
+
+NOTE: In Visual Studio, a name of your project will be used as "root" namespace bydefault.
+
+You can add one or more .cs files via 
+  1. Project Menu + Add New Item + Select "Class" template (code file)
+  2. Or In solution explorer + Right click on Project Name + Add + New Item + "Class"
+
+We can create "folders" via (Project Menu + New Folders) and then create "class" files
+into them - This technique automatically uses "Folder" name as a "Namespace" name.
+
+

@@ -1,0 +1,11 @@
+What is Source Code Control?
+============================
+
+It is a planning to save source code with each & every version (every day changes), to share the source code so one or more people/developers can work on them. There are number of Source Code Control protocols but following are most popular - Git (developed by the creator of Linux - Linus Torvald), Mercury (open source), Microsoft Team Foundation Service (Microsoft).
+
+
+All above mentioned are protocol - a way to create a source code bank/repository either at local machine or at remotely ( on different machine). There are number of software vendors that provide "free" space to create our repositories remotely and they are github.com, visualstudio.com ( Register your account). 
+
+Note: Visual Studio is already configured to use the "Git" and "Team Service" protocols so no need to download extra software however you can download "git" for window if you don't want to use Visual Studio as git client.
+ (https://git-scm.com/download/win)
+

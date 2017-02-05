@@ -1,0 +1,453 @@
+ADO.NET - Database Integration API
+---------------------------------------------------------------------------------
+ADO stands for "Active DataSet Object". The System.Data namespace include the Data and Database classes/types. There are two category of types and these two types are known as "ADO".
+
+  These types are:
+
+          1. DataSet or Data relation (relation mean table) - these classes used independently of the database because
+			they are used to represent data into the RAM (memory) but nows a day these classes are not used
+			because of the collection framework classes List<T>, Dictionary and Linq APIs.
+
+          2. Data Providers - These classes connect us to databases (RDBMS), execute SQL statements/functions/stored 
+			 procedures and returns the result.
+
+The Data Providers
+-------------------
+Data Providers are collection of interfaces that are used by the database vendors and third party software developers to implement necessary code to allow developers and programs to use the appropriate database product. These interfaces are IDbConnection (declares connect behavior), IDbCommand (declares how to construct query, set values and call functions/stored proc), IDbDataReader (how to read the data) and many more but these three are the major interfaces.
+
+ So we may call "Data Providers" as a "Protocol" -- Any RDBMS product vendor who want to allow the use of their product
+						    to the .net developer, they must have to implements the Data 						     Providers APIs.
+
+ For example, Microsoft has develop a general purpose API called "OleDb" Data Provider (System.Data.OleDb namespace)
+		to access the "Excel", "Fox", "dBase", Ms-Office, and many old or legacy databases.
+
+ There is another "SqlClient" Data provider for Microsoft Sql Server database (Sequel server) from Microsoft. (System.Data.SqlClient namespace types).
+
+ In case, if you want to work with Oracle product in your .net app, you must have to download the ODP.NET Oracle Data  Provider from oracle's website.
+
+ Similarly, you can download connector APIs or Data Provider APIs for MySql, DB2 etc from their websites.
+              
+ Data Provider classes
+ -----------------------
+ There are five major data provider classes:
+
+1. XXXXConnection  (i.e OleDbConnection, OracleConnection, SqlConnection)
+2. XXXXCommand
+3. XXXXDataReader
+4. XXXXDataAdapter
+5. XXXXParamater
+
+The "Connection" class  : is used to connect with database by setting the "connection information - database server,
+-----------------------   username, password etc.
+
+			  Most commonly methods and properties are :
+				1. CommectionString = To set/get connect information
+				2. Open() - Establish the connection based upon the connection string
+				3. Close() - Terminate the connection
+				4. Dispose() - Terminate the connection and release the resources.
+The "Command" class     : is used to prepare SQL statement/Stored proc/function, set parameters, execute them and
+-----------------------   returns the result.
+
+				1. CommandText - To set/get SQL statement/procedure/function name
+                                2. Connection  - To set connection object reference
+                                3. CommandType - Based uopn the value of CommandTest. ie. stored procedure or text 
+				4. Parameters  - It is a collection of XXXXParameter object to set query/function/stored
+						 procedure parameters.
+				5. int ExecuteNonQuery() - This method execute the "commandText" and returns count of
+						 affected rows. Use this method to execute create,alter, drop, insert,
+						 update, delete etc SQL statement that don't returns results in the 
+						 form of table's row(s)/columns.
+				6. Object ExecuteScalar() - This method must be used when the command returns a single
+						value. (e.g SELECT count(*) from table)
+				7. XXXXDataReader ExecuteReader() -- This method must be used when you want to returns
+						database result - especially with SELECT statement.
+The "DataReader" class :  is used to traverse the database result. In fact it opens the cursor, fetch row one by one     
+-----------------------   and finally close the cursor.
+				1. bool Read - It fetch the row and returns true if that row has data; returns false
+						otherwise.
+				2. object [columnName|columnOrdinal]  - Returns a value in form of "object" of given
+						column number or column name from the currently fetched row.
+				3. XXXXX GetXXXXXX(columnOrdinal) - Returns typed cast result of given column number
+						from the currenly fetched row.
+						e.g   GetInt32(0) -- return int at 1st column
+							GetString(1)- return string from 2nd column
+The "Parameter" class : is used by "Command" object to set Parameter name and value (name-value pair)
+-----------------       OleDb and SqlClient provider uses "@" prefix to name the parameter.
+
+The "DataAdapter" class : is used to populate the DataSet object. This object uses four instances of "Command" class
+------------------------- for Insert (InsertCommand), Update (UpdateCommand), Delete (DeleteCommand) and Select (
+			  SelectCommand) object and populate (read) the data from database, store them into Dataset
+			 and also update the database.
+				1. Fill(dataset) - To execute SELECT command and populate the result
+				2. Update(dataset) - To execute insert or delete or update command to update the
+							database.
+
+All these classes (ADO.NET) uses huge amount of memory and that's why we need to call the "Dispose()" methods for each object once the operation is done. So, we must have to use "using" statement because all ADO classes are IDisposable.
+
+For example,
+    using(SqlConnection cn = new SqlConnection()) { .. }
+
+
+Local databases into the web projects
+---------------------------------------
+There are two types of databases - Remote (which are hosted outside your project and use them via ip-address and port number along with username and password) and Local (which copied into your project folder).
+
+We will have "Ms-Access" as a local database and also Microsoft SQL Server allow us to create a database local to the project.
+
+So, any kind of database product you want to use in your web app, use the App_Data folder to save them. The App_Data folder is a special purpose folder that automatically provide the physical path of database files using |Data Directory| macro; which used into the connectionString property.
+
+For instance,
+ |Data Directory|\yourfile.mdb tells that the file is located at App_Data folder.
+
+Example: Create Ms-Access database and also create Category and Product tables and save it with ProductDb.accdb. Now, open/create web app project + Add "Add_Data" folder and move/paste this ProductDb.accdb file in it.
+
+In order to fetch the connection info, double click on ProductDb.accdb or Open View menu + Server explorer where you can see the database name into the "server explorer". Now, right mouse click on database name in server explorer + properties to open the properties windows and copy the "connectionString" property and will looks a like:
+
+ "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=c:\abc\App_Data\ProductDb.accdb;Persist Security Info=True"
+
+Now, open a .cshtml and write following code.
+
+@using System.Data
+@using System.Data.OleDb
+
+@{
+  using(OleDbConnection cn = new OleDbConnection())
+   {
+      cn.ConnectionString=@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\ProductDb.accdb;Persist Security Info=True";
+      using(OleDbCommand cmd = new OleDbCommand())
+       {
+          cmd.CommandText = "insert into category values (@catId,@catName)"; //@catId ,@catName are parameters
+          cmd.Connection = cn;
+          cmd.Parameters.AddWithValue("@catId",1);
+          cmd.Parameters.AddWithValue("@catName","Pencil");
+          
+          cn.Open(); //Open the connection
+          cmd.ExecuteNonQuery();
+          <p>Record added successfully</p>
+         }
+      }
+}
+
+Example: To delete a row (based upon the primary key value)
+
+...
+cmd.CommandText="delete from category where categoryid=@p1"; //SQL text is case-insensitive
+cmd.Connection = cn;
+cmd.Parameters.AddWithValue("@p1",1);
+
+cn.Open();
+cmd.ExecuteNonQuery();
+....
+
+Example: Update/change the category name whose categoryid is 3
+
+...
+cmd.CommandText="update category set categoryname=@p1 where categoryid=@p2";
+cmd.Connection=cn;
+cmd.Parameters.AddWithValue("@p1","Fullscape notebook");
+cmd.Parameters.AddWithValue("@p2",3);
+....
+
+Working with AutoNumber column (Column's value will be numeric/integer and incremented automatically so we don't have to set value for the auto number type of columns. In MSSQL very same feature is known as IDENTITY column)
+
+Note: Assume that we've CategoryId and ProductId in both table Category and Product are Autonumber respectively.
+
+Category(CategoryId, CategoryName)
+Product(ProductId,CategoryId,ProductName,Unit,Rate,Qty,Available)
+
+Now, to insert a row we need to create a column list using following syntax:
+
+   INSERT INTO Table (Column_list) VALUES (Value_list)
+
+Insert into Category (CategoryName) Values (@catName)
+
+Insert into Product (CategoryId,ProductName,Unit,Rate,Qty,Available) 
+             Values (@CategoryId,@ProductName,@Unit,@Rate,@Qty,@Available)
+
+Working with SELECT statement
+-----------------------------
+Example: To fetch rows (and one or more columns) from the table
+
+...
+cmd.CommandText="select * from category";
+cmd.Connection = cn;
+
+cn.Open();
+using(var dr = cmd.ExecuteReader())
+ {
+   while(dr.Read)
+   {
+     <p>@dr[0] @dr["CategoryName"]</p>
+    }
+  }
+.....
+ 
+Example: To fetch a row of given Primary key value (CategoryId) -- Search by the id
+
+..
+cmd.CommandText="select * from category where categoryId=@categoryId";
+cmd.Connection = cn;
+cmd.Parameters.AddWithValue("@categoryId",1);
+
+cn.Open();
+using(var dr = cmd.ExecuteReader())
+{
+   if(dr.Read())
+     {
+       <p>Found!! @dr[0] @dr[1]</p>
+     }
+   else
+    {
+       <p>Not Found</p>
+    }
+}
+...
+
+Example: SELECT with Like expression
+
+..
+cmd.CommandText="select * from category where categoryName like @p1";
+cmd.Connection = cn;
+cmd.Parameters.AddWithValue("@p1","a%"); /* begins with */
+.....
+
+
+Example: Use ExecuteScalar() when the return value is a single; i.e single column and single row. Or if you want to fetch the value from first row and first column then use the ExecuteScalar()
+
+...
+cmd.CommandText="select categoryname from category where categoryid=@p1";
+cmd.Connection = cn;
+cmd.Parameters.AddWithValue("@p1",200);
+
+cn.Open();
+var val = cmd.ExecuteScalar();
+if(val!=null)
+ {
+   <p>Category @val</p>
+  }
+else
+ {
+   <p>No such a category!!!</p>
+ }
+
+Sometimes, a column value has "database null" value and this case your "val" value will be not null but it contains a special value which will be compared using DBNull.Value constant.
+
+Example: Design the DAO and use the DAO methods into BAO.
+
+public class CategoryViewModel
+{
+   public int CategoryId {get;set;} 
+   public string CategoryName {get;set;}
+}
+
+Now, add "MySettings" class to add a static field to hold connection string
+
+ public class MySettings
+    {
+        public static string CnStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|\ProductDb.mdb;Persist Security Info=True";
+    }
+
+Create CategoryDao.cs and add following methods,
+
+ public class CategoryDao
+    {
+        public bool Add(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "insert into category (categoryname) values (@p1)";
+                    cmd.Parameters.AddWithValue("@p1", model.CategoryName);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        public bool Update(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "update category set categoryname=@p1 where categoryid=@p2";
+                    cmd.Parameters.AddWithValue("@p1", model.CategoryName);
+                    cmd.Parameters.AddWithValue("@p2", model.CategoryId);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        public bool Delete(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "delete from category  where categoryid=@p2";
+                    cmd.Parameters.AddWithValue("@p2", model.CategoryId);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        public CategoryViewModel Find(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select * from category where categoryId=@p1";
+                    cmd.Parameters.AddWithValue("@p1", model.CategoryId);
+
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            return new
+                                CategoryViewModel
+                            {
+                                CategoryId = dr.GetInt32(0),
+                                CategoryName = dr.IsDBNull(1) ? "" : dr.GetString(1)
+                            };
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
+        public List<CategoryViewModel> Categories
+        {
+            get
+            {
+                var list = new List<CategoryViewModel>();
+                using (var cn = new OleDbConnection())
+                {
+                    cn.ConnectionString = MySettings.CnStr;
+                    using (var cmd = new OleDbCommand())
+                    {
+                        cmd.Connection = cn;
+                        cmd.CommandText = "select * from category order by categoryname";
+
+                        cn.Open();
+                        using (var dr = cmd.ExecuteReader())
+                        {
+                            while(dr.Read())
+                            {
+                                list.Add(new
+                                    CategoryViewModel
+                                {
+                                    CategoryId = dr.GetInt32(0),
+                                    CategoryName = dr.IsDBNull(1) ? "" : dr.GetString(1)
+                                });
+                            }
+                        }
+                    }
+                }
+                return list;
+            }
+        }
+    }
+
+and create "CategoryPage.cshtml"
+
+@{ 
+    var model = new DbApp.Models.CategoryViewModel();
+    var catDao = new DbApp.Models.CategoryDao();
+    model.CategoryId = Request["CategoryId"].AsInt();
+    model.CategoryName = Request["CategoryName"] ?? "";
+    var cmd = Request["cmd"] ?? "";
+    var message = "";
+    var isEdit = false;
+    if(cmd.Equals("Edit"))
+    {
+        isEdit = true;
+        var search = catDao.Find(model);
+        if(search!=null)
+        {
+            model = search;
+        }
+    }
+    if(cmd.Equals("Add"))
+    {
+        if(catDao.Add(model))
+        {
+            message = "Category added";
+        }
+        else
+        {
+            message = "Can't add category";
+        }
+    }
+    if (cmd.Equals("Update"))
+    {
+        message = catDao.Update(model) ? "Updated!" : "Can't update";
+    }
+    if (cmd.Equals("Delete"))
+    {
+        message = catDao.Delete(model) ? "Deleted!" : "Can't delete";
+    }
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <form method="post">
+            <input type="hidden" name="CategoryId" value="@model.CategoryId"/>
+            <p>
+                <label>Category Name : <input type="text" 
+                                              value="@model.CategoryName"
+                                              name="CategoryName"/></label>
+            </p>
+            <p>
+                @if (isEdit)
+                {
+                    <button name="cmd" value="Delete">Delete</button>
+                    <button name="cmd" value="Update">Update</button>
+                    <button name="cmd" value="Cancel">Cancel</button>
+                }
+                else
+                {
+                    <button name="cmd" value="Add">Add</button>
+                }
+            </p>
+            <p>@message</p>
+        </form>
+
+        <table>
+            @foreach(var c in catDao.Categories)
+            {
+                <tr>
+                    <td>
+                        @c.CategoryName
+                    </td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="CategoryId" value="@c.CategoryId"/>
+                            <button name="cmd" value="Edit">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </body>
+</html>
+
+ 

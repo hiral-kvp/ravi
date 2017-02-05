@@ -1,0 +1,252 @@
+ Design the custom type using class keyword
+ =================================================================================
+ General syntax:
+
+  access-modifier class YourClassName : SuperClassName, Interface1,Interface2,...
+  {
+     //class members
+  }
+
+ [Note: If "SuperClassName" is not specified then System.Object class will become
+        super class automatically.]
+
+ Minimum content of class (Rules)
+ -------------------------
+
+  1. A class has two types of fields - instance & static fields.
+  2. Fields must be private.
+  3. To encapsulate "private" fields, define Getters & Setters method.
+     The getter/setter method must be public.
+  4. To initialize the instance fields, define appropriate number of "constructors".
+  5. To initialize the static fields, define a "static" constructor.
+  6. Override some of the important methods of "System.Object" class and these methods
+     are - Equals(), ToString() and GetHashCode()
+
+The class, reference variable and an object
+--------------------------------------------
+
+Reference variable - It is a special variable can hold memory reference of an object or null and its size will be 4 bytes (It can be increased to 8 bytes when working with 64 bits).
+
+Object - The allocated memory area. Or Partitioned area of memory. The "new" keyword allocate memory for "instance fields" defined insize the specified "class".
+
+Example: Understand the stack & heap frame memory.
+
+class Test
+{
+  public int no;   //field or data-member
+ }
+class TestMain
+{
+   static void Main()
+    {
+       Test a = new Test(); // Variable "a" is called reference variable.
+                            // The "new" keyword allocate memory i.e creates an object
+			    // returns memory reference to the variable "a".
+       Test b = a;          // Variable 'b" is reference variable.
+                            //  b = a; The value of "a" (which is reference of an
+                            //  object) is copied to variable "b".
+       a.no = 10;           //  It means both these reference variables points to
+       b.no = 20;           //  the same object.
+       
+       Console.WriteLine( a.no + "  " + b.no );  // 20  20
+    }
+}
+
+Draw figure:
+
+ Class members 
+ --------------
+ A class definition contains two kind of members:
+   1. Static members and  
+   2. Instance members
+
+ Static members: The members created using "static" keyword are called "static" 		 members.
+
+		 Static means once created members. These members are created once
+		 at very begining when a class in which they are defined is used
+	         very first time in your application and remains into memory
+		 till your application is running.
+
+		 Static members are discarded when you shutdown your app.
+ Instance members : Members created without using "static" are called "Instance 		    Members".
+
+ To access or use static members, use following syntax:
+
+                 ClassName.MemberName
+
+ To access or use instance members, we must need a reference variable:
+
+                  varName.MemberName
+
+ NOTE: Static members are always created into "Heap Frame".
+
+Example:
+
+class Test
+{
+    public int no;           //instance field
+    public static int no1;   //static field
+}
+class TestMain
+{
+    static void Main()
+    {
+        Console.WriteLine(Test.no1); //0
+        Test.no1 = 100;
+
+        //Instance
+        Test a = new Test();
+        Test b = new Test();
+        a.no = 10;
+        b.no = 20;
+        Console.WriteLine(a.no + " " + b.no + " " + Test.no1);
+        Test.no1 = 120;
+        a.no = 2;
+        Console.WriteLine(a.no + " " + b.no + " " + Test.no1);
+    }
+}
+
+Constructors & Destructor - Instance
+------------------------------------------------------------------
+Constructor - It is a very special method of class which will be called automatically
+		just after an object is created.
+		
+		The "Constructor" method must have same name as its class name.
+
+		The "Constructor" method don't have return type.
+
+		The "Constructor" method can be overloaded - Same method name with
+		different parameters.
+
+Destructor  - It is a very special method of class which will be called by the
+		Garbage collector service (Garbage collector service is responsible
+		to deallocate the heap) just before releasing an object.
+	     
+		The "Destructor" method must have same name as its class but it is
+		prefixed with "~" operator.
+
+		The "Destructor" method don't have return type and parameters.
+
+Example:
+
+class Test
+{
+   public Test()
+    {
+        Console.WriteLine("Constructor: No Parameter");
+    }
+    public Test(int no)
+    {
+        Console.WriteLine("Constructor: Int Parameter");
+    }
+    public Test(string str)
+    {
+        Console.WriteLine("Constructor: String Parameter");
+    }
+    ~Test()
+    {
+        Console.WriteLine("Destructor");
+    }
+}
+class TestMain
+{
+    static void Main()
+    {
+        Test a = new Test();
+        Test b = new Test(10);
+        a = new Test("Hello");
+
+        {
+            new Test();
+            a=new Test();
+        }
+        new Test();
+    }
+}
+
+Application of "constructors"
+------------------------------
+Constructors are used to initialize the fields and also allow us to add object specified startup code.
+Each class must have one or more constructors. In fact, C# compiler insert empty definition of parameterless constructor to each class when you don't add constructors
+explicity into the class. This empty parameterless constructor is called "Default Constructor".
+
+Application of "destructor"
+-------------------------------
+In rarest momemnt when you want to write an object specified cleanup code.
+
+Example: Define "Student" class having roll & name fields.
+
+using System;
+
+public class Student
+{
+    //fields
+      private int _roll;
+      string _name; // default access is private
+
+    //Constructors
+    public Student()
+    {
+        _roll = 1;
+        _name = ""; //Empty
+    }
+    public Student(int roll, string name)
+    {
+        // _roll = roll;
+        // _name = name;
+        SetRoll(roll);
+        SetName(name);
+    }
+
+    //Setter & Getter
+    public void SetRoll(int v)
+    {
+        if (v >= 1 && v <= 100)
+        {
+            _roll = v;
+        }
+    }
+    public void SetName(string v)
+    {
+        if(v!=null  && v.Length>=1 && v.Length<=50)
+        {
+            _name = v;
+        }
+    }
+
+    public int GetRoll() { return _roll; }
+    public string GetName() { return _name; }
+}
+class TestMain
+{
+    static void Main()
+    {
+        Student s = new Student();
+        s.SetRoll(101);
+        s.SetName("Rajesh");
+
+        Console.WriteLine(s.GetRoll());
+        Console.WriteLine(s.GetName());
+
+        Student t = new Student(-100, "asasd asdas asdas asdasd asdasdasdas asdasdasdasdasdasdasdasdasdasd");
+        Console.WriteLine(t.GetRoll() + " " + t.GetName());
+    }
+}
+
+ 
+public class Product
+{
+   private int _id;
+   private String _name;
+   private DateTime _purchaseDate;
+ 
+   public void SetPurchaseDate(DateTime v) 
+    {
+         _purchaseDate = v;
+     }
+}
+
+code in main:
+
+   Product p = new Product();
+   p.SetPurchaseDate(DateTime.Parse("08/16/2015"));

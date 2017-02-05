@@ -1,0 +1,18 @@
+Area
+=====
+
+An "Area" is a way to separate the "Models, Controllers and Views" classes which are created at root of your application. What will happen if your app has over 50 controllers? Of course this list will be increased as we go further.
+
+An "Area" is special purpose Folder which allow us to create a separate section to define Models, Views and Controllers classes.
+
+for example, assume that we've three category of app users and we want to create separate MVC components for each user (or each role. e.g Admin, Clerk, Customer etc)
+
+Steps - Right mouse click at "ProjectName" in Solution Explorer + Add + Areas... + Use suitable name e.g Admin, User,
+	Guest, Employee, Customer etc.
+
+	Visual Studio will automatically creates "Areas" folder and inside the "Areas" there will be your area (e.g. 	Admin etc). Each aria contains Controllers, Views, and Models and configuration files.
+
+	NOTE: Don't use "HomeController" again in "Area" because the "Home" is reserved for the application's root and
+		it must be one and only one.
+
+	You can choose any name to name your controllers except the "Home".

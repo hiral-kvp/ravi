@@ -1,0 +1,381 @@
+ CSS Properties
+======================================================
+
+1. margin - To set margin. Use relative measurement units instead of absolute
+            measurement units.
+
+            Relative measurement units:    em, %
+
+            Absolute measurement units:  px, pt, in (inch), cm (centimeter)
+
+   margin: value;
+   margin: top right bottom left;
+   
+   margin is "shorthand" property of,
+
+          margin-left: value;
+          margin-right: value;
+          margin-top: value;
+          margin-bottom: value;
+
+IMPORTANT:   
+  => CSS properties and value are case-sensitive so always use "lower-letters". 
+  => Add a space after : (colon) to set value to the property.
+
+         e.g margin: 10px; but not margin:10px <-- This is not "good" practice.
+
+    margin: auto;   To let browser determines the margin.
+
+Example:
+
+*{
+  border: 1px solid red;
+  margin: 20px 0px 0px 0px;  /* top right bottom left */
+}
+h1 {
+  margin-top: 20px;
+}
+
+2. width: value;    - Set fixed width & height
+3. height: value;
+4. min-width: value;  - set minimum height & width but their height or width can be
+5. min-height: value;   increased when they have large content.
+
+Example:
+
+<h1>Hello, this is same page and it contains page info</h1>
+
+h1 {
+   border: 1px solid red;
+   width: 100px;
+   height: 100px; /* or set min-height: 100px; */
+   margin: 10px;
+}
+
+6. overflow: none  | hidden | scroll;
+
+   Overflow will occurs when fixed height & width are set.
+
+h1 {
+  ..same as previous ...
+  overflow: hidden;  /* overflow: scroll; */
+}
+
+Example: display content at center of screen
+
+h1 {
+   /* set width */
+   width: 400px;
+   /* set left & right margins with equal value or just set auto*/
+   margin-left: auto;
+   margin-right: auto;
+   border: 1px solid red;
+}
+
+Example:
+
+.center-component {
+    margin-left: auto;
+    margin-right: auto;
+}
+.width-300px {
+    width: 300px;
+}
+.width-500px {
+    width: 500px;
+}
+
+<table class="width-300px center-component"> .... </table>
+<div class="width-500px center-component"> ... </div>
+
+7. padding: value;
+   padding: top right bottom left;   add space at specifed edge (inside the component)
+   padding is shorthand property of padding-left, padding-right, padding-top and 
+   padding-bottom.
+
+h1 {
+  border: 1px solid red;
+  margin: 10px;
+  padding: 30px 10px 5px 50px;
+}
+
+Note: Don't use measurement suffix while setting to 0.
+
+ e.g   padding: 40px 0 0 0;
+       margin: 0 auto;   /* top is 0 */
+
+8. display: none - Hide the element 
+   display: block; - block element
+   display: inline; - inline element
+   display: inline-block; inline-block element  -- display changes the display 						   behavior of HTML elements.
+
+   There are other "layout or display" introduced in new CSS standard but they
+   are still under development. e.g flex, grid etc.
+
+Example:
+
+
+.to-block {
+  display: block;
+}
+
+.to-inline {
+  display: inline;
+}
+
+
+
+.to-inline-block {
+  display: inline-block;
+}
+
+
+<h1 class="to-inline">Site Title</h1>
+<h1 class="to-inline">Sub title</h1>
+<h1>Welcome</h1>
+<span>This is inline - span</span>
+<span class="to-block">This is block - span</span>
+
+9. float: none | left | right;  - To float the element either left or right edge.
+10. clear: left | right | both; - Stop floating.
+
+Example: Layout
+
+[A][B]                [C][D]
+[E]
+[F][G]                   [H]
+
+.float-left {
+   float: left;
+}
+
+.float-right {
+   float: right;
+}
+
+.clear {
+   clear: both;
+}
+
+div {
+  border: 1px solid red;
+}
+
+
+    <div class="float-left">A</div>
+    <div class="float-left">B</div>
+    <div class="float-right">D</div>
+    <div class="float-right">C</div>
+
+    <!--Reset the float -->
+    <div class="clear"></div>
+
+    <div>E</div>
+
+    <div class="float-left">F</div>
+    <div class="float-left">G</div>
+    <div class="float-right">H</div>
+
+    <!--Reset the float -->
+    <div class="clear"></div>
+
+    <div>Hello</div>
+
+11. border - set border at edges
+
+    border: width style color; It is shorthand property of border-left, border-right,
+    border-bottom and border-top.
+
+    border styles can be : solid, dotted, dashed, double, ridge, outset
+
+    color value can be named (e.g red, greem lightblue etc) or hexadecimal or rgb or
+    rgba() function.
+
+     hexa decimal value begins with  # and has six char, each two for red, gree and
+     blue color.  e.g  #ff0000;  red
+                       #990000;  dark red
+                       #00ff00;  green
+                       #0000ff; blue
+                      
+          if each two color hex chars (twins) are of same value then just use single
+          hex char.  e.g   #ff0000  is equaivelent to #f00;
+                           #443388  is #438;
+                     but   #434455  is #445, is not same.
+
+     CSS rgb() function take value of color ranging from 0 to 255
+        rgb(255,0,0) - red
+        rgb(0,255,0) - green
+        rgb(20,223,20) - green + some red & blue
+
+     CSS rgba(red,green,blue,alpha) - To have color with alpha (transparency).
+
+        rgb(255,0,0,30) ;  value of alpha must be 0 to 100 or float value 0 to 1
+    
+12. border-radius: value;
+    border-radius: leftTop rightTop rightBottom leftBottom;  To add round corner as
+                   per radius value.
+
+a {
+   border: 1px solid red;
+   color: white;
+   padding: 5px;
+   border-radius: 10px;
+}
+
+<a href="#">Home</a> <a href="#">About us</a>
+     
+13. box-shadow: x y z blur #color; To add shadows around the box.
+
+.box {
+  border: 1px solid black;
+  box-shadow: 5px 5px 5px #aaa;
+  padding:5px;
+}
+
+<div class="box">This is shadow box</div>
+
+14. text-shadow: x y x blur #color - Add shadows around the text
+     
+.head {
+  text-shadow: 4px 4px 4px #aaa;
+}
+<h1 class="head">ABC Ltd</h1>
+
+15. background: color url [options]  - To paint the background using color or texture
+					with one or more options. This is short-hand
+				property of background-color, background-image,
+				and other background-* properties.
+
+    background-color: color;
+Or
+    background: color;
+
+ Paint texture (image):
+
+    background-image: url(file.ext);
+or  background: url(file.ext);
+
+body {
+   background: url(file.png); <-- file.png is located under "Content" folder
+}
+
+ background: url(file) no-repeat | repeat-x | repeat-y; paint with "repeat" options
+
+ background: url(file) repeat-options positionX positionY; - paint at given x & y but
+							    works when no-repeat and
+							    height/width is specified.
+Example:  
+
+.box {
+  width: 300px;
+  height: 400px;
+  background: url(file.png) no-repeat center center;
+}
+
+<div class="box"></div>
+
+Value of positionX and positionY can be numeric or relative constants like - left, top, right, bottom, center etc.
+
+Example: Paint multiple image file
+
+.box {
+   width: 300px;
+   height: 300px;
+   background: url(center.png) no-repeat center center,
+               url(left-top.png) no-repeat left top,
+               url(right-top.png) no-repeat right top;
+}
+<div class="box"></div>
+
+Example: paint background with single image
+
+  background-size: height width;  Set height/width 
+  background-size: cover;         set height/width as per container
+
+
+body {
+    background: url(../images/my-picture.jpg) no-repeat;
+    background-size: cover;
+}
+
+Example: paint background at "fixed" position on the screen
+  
+    background: url(../images/my-picture.jpg) no-repeat center center;
+    background-size: 200px 200px;
+    background-attachment: fixed;
+
+16. font property. It is short-hand of font-family, font-size, font-* properties.
+
+    font-family: font-1, font-2, font-3, ..., font-family-name;
+
+       The last entry in font-family must be one of the following:
+
+           1. sans-serif
+           2. serif
+           3. monospace
+           4. cursive
+           5. fantcy      
+
+       Most probably, we are using "fonts" in apps or windows os are belongs to one of
+       the above mentioned "families".
+
+    The font-family name is the "fallback" for each font-entry set.
+
+e.g
+body {
+  font-family: "Georgia", "Arial", sans-serif;
+}
+
+body {
+  font-family: "font1", "font2",cursive; 
+}
+
+    font-weight: 100 to 900;
+    font-weight: bold | bolder;  To add or remove font weight (stroke)
+
+    font-style: none | italic;  
+    font-size: value; Always use relative unit.
+        e.g font-size: 1em;          font-size: 100%;
+            font-size: 1.3em;  // or font-size: 130%;
+
+    font-variant: small-caps | none; 
+
+    line-height: value; To set text line height (space between two lines). Always
+                        use relative value;
+
+p {
+   line-height: 1.8em; 
+}
+
+17. text-transform: uppercase | lowercase | capitalize; Change text case
+18. text-decoration: none | underline | overline | line-thru; 
+19. text-align: left | right | center | justify | none;
+
+20. list-style: none | disc | url(...) - Set ul or ol style
+
+<ul>
+  <li>File
+      <ul>
+         <li><a href="#">New</a><li>
+         <li><a href="#">Open</a><li>
+       </ul>
+   </li>
+  <li>Edit
+      <ul>
+         <li><a href="#">Cut</a><li>
+         <li><a href="#">Paste</a><li>
+       </ul>
+   </li>
+</ul>
+
+ul {
+  list-style: none;  /* list-style: url(one.png); */
+  padding:0;
+}
+    
+    
+
+      
+  
+
+  

@@ -1,0 +1,37 @@
+ Bootstrap - (Twitter bootstrap - getbootstrap.com)
+ -------------------------------------------------
+ It is a CSS framework for responsive web experience. It automatically handles
+ viewport related (area in which content is rendered) tasks if bootstrap library
+ configured appropriately.
+
+ First of all download "bootstrap-x.x.x.zip" from getbootstrap.com, extract that zip file and you will find three folders - css, js and fonts. Now copy these three folders
+ into your current project folder.
+
+ The boostrap uses "jQuery - a JavaScript library" so we need to download jQuery.js  from jquery.com (single file - jquery.min-x.x.x.js) and copy it to "js" folder.
+
+
+ To bootstrap your web-page:
+
+ 1. Link the bootstrap.css into <head> along with <meta> for mobile device support.
+
+ 2. At the end of <body>, add reference of "jquery" library and then "bootstrap" library.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bootstrap sample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- our own or custom css file -->
+    <link href="~/css/style.css" rel="stylesheet" />
+</head>
+<body>
+ <div class="container">
+    <!-- Put everything inside the "container" -->       
+ </div>
+ <!--- JavaScript code -->
+ <script src="~/js/jquery-1.11.3.min.js"></script>
+ <script src="~/js/bootstrap.min.js"></script>
+
+</body>
+</html>

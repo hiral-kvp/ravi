@@ -1,0 +1,237 @@
+ The Delegate type
+ ------------------------------------------------------------------------------
+
+ The "delegate" is a keyword to create delegate datatype.
+
+ The "delegate" type is used to:
+
+     1. Create a function pointer to store memory reference of methods
+     2. To create anonynous (nameless) functions.
+
+  [Note: Interface is also a technique to represent method references]
+
+
+ The "delegate" is far simpler than interface and offers C/C++ style function pointer  declaration.
+
+ Syntax:
+
+          access_modifier delegate  return_type DelegateTypeName(parameters....);
+
+
+For example,
+
+           public delegate void TestDel(int a,int b);
+           public delegate void MyDel();
+
+     Note that the signature of delegate type and method's signature must be same to
+     represent method reference. (Signature of delegate or method means return type      and parameters).
+
+Example:
+
+public class Test
+{
+   public void Hello()
+    {
+       Console.WriteLine("Hello");
+     }
+    public void Sum(int a,int b)
+     {
+        Console.WriteLine(a+b);
+      }
+}
+public delegate void TestDel(int x,int y);
+public delegate void MyDel();
+
+class MainApp
+{
+   static void Main()
+    {
+      Test t = new Test();
+  
+      //declare delegate reference variables
+      MyDel m; // or MyDel m = null;
+      TestDel d;
+      //Assign "t.Sum" method reference to "d" variable
+      d = t.Sum;
+      //Assign t.Hello reference to "m" variable
+      m= t.Hello;
+      
+      //call methods via delegate reference variables
+      d(10,20);
+      m();
+     
+      //Note: we cannot store t.Hello reference to d because there isn't match 
+      //      of signature of method & delegate type.
+     }
+}
+
+Add one or more method references having similar signature to the delegate variable
+----------------------------------------------------------------------------------
+Delegate uses += operator to add or append method reference and -= operator to remove method reference to or from the delegate reference respectively.
+
+public class Test
+{
+    public void Sum(int a, int b)
+    {
+        Console.WriteLine(a + b);
+    }
+    public void Mul(int a, int b)
+    {
+        Console.WriteLine(a * b);
+    }
+    public void Div(int a, int b)
+    {
+        Console.WriteLine(a / b);
+    }
+}
+public delegate void TestDel(int x, int y);
+
+class MainApp
+{
+    static void Main()
+    {
+        Test t = new Test();
+
+        TestDel d = t.Div; //Assign method ref.
+        d += t.Mul; //Add another method ref.
+        d += t.Sum; //Add another method ref.
+
+        //Multicast - call more than one methods in the order in which method ref.
+        d(10, 2);     //are added.
+
+        d -= t.Div; //Remove method ref.
+        d(8, 2);
+    }
+}
+
+Define anonymous functions
+-------------------------------------------------------------------------
+The delegate types are very useful to create nameless / anomymous functions and they can be created any where -- within the class, functions, loops or conditional statements.
+
+There are two syntax:
+
+  1.   DelegeteTypeName  refVar = delegate(parameter1,....)
+        {
+          //statements
+         }; <------- Don't forget the semi-colon.
+
+  2.    DelegateTypeName  refVar = (parameterName1,parameterName2,..) =>
+         {
+            //statements -- multiple statements
+          }
+        delegateTypeName refVar = (paramNAme1,...) => single-statement;
+
+ In first syntax we have to specify the parameter - ie. TypeName var
+      e.g
+          
+      public delegate void TestDel(int x,int y);
+      
+      TestDel sum = delegate(int a,int b)
+       {                     
+          Console.WriteLine(a+b);
+        }
+
+ Whereas, in second syntax, only parameter name is used (don't use parameter type).
+
+      TestDel sum = (a,b)=> Console.WriteLine(a+b);
+ Or
+      TestDel sum = (x,y)=>
+       {
+          Console.WriteLine(x+y);
+        };
+
+Example:
+
+public delegate void TestDel(int x, int y);
+public delegate void MyDel();
+class MainApp
+{
+    static void Main()
+    {
+
+        //Anonymous (nameless) function
+        //Syntax - 1 using delegate(Type parm,Type param,...) keyword
+        TestDel sum = delegate(int a, int b)
+        {
+            Console.WriteLine(a+b);
+        };
+        TestDel mul = delegate(int x, int y) { Console.WriteLine(x*y); };
+        MyDel printLine = delegate()
+        {
+            Console.WriteLine("-------------------------------");
+        };
+        printLine();
+        sum(1, 5);
+        mul(5, 6);
+        printLine();
+
+        //Syntax - 2 Lambda expression
+        TestDel div = (p, q) => Console.WriteLine(p/q);
+        MyDel sayHello = () => Console.WriteLine("Hello World!");
+        TestDel series = (x, y) =>
+        {
+            for (int s = x; s <= y; s++)
+            {
+                Console.WriteLine(s);
+            }
+        };
+        series(10, 50);
+        sayHello();
+        div(10, 2);
+    }
+}
+           
+Generic delegate
+------------------
+We can use "generics" with delegate type.
+
+Example:
+
+public delegate void TestDel<T>(T x, T y);
+class MainApp
+{
+    static void Main()
+    {
+        TestDel<double> div = (a, b) => Console.WriteLine(a/b);
+        div(5, 2);
+    }
+}
+
+Example: System.Comparison<T> delegate used to compare objects while calling Array.Sort() method.
+
+In previous example, we've used an interface to define "comparision".
+
+In this example, we will use same code except we don't have to implements ICompare interfaces.
+
+public class Product
+{
+  //same as example
+}
+class Test
+{
+  static void Main()
+   {
+     //Create list of products 
+     Product []products = { ..... same as previous example };
+
+     //Create anonymous functions
+     Comparision<Product> byId = (a,b)=>a.Id-b.Id;
+     //Sort
+     Array.Sort( products, byId );
+     foreach(Product p in products ) 
+       { 
+         Console.WriteLin(p.Id + " " + p.Name);
+        }
+      //Name wise sorting
+      Array.Sort( products, (x,y)=>x.Name.CompareTo(y.Name));
+      foreach(Product p in products ) 
+       { 
+         Console.WriteLin(p.Id + " " + p.Name);
+        }
+     }
+}
+In second attempt to call Sort(), we've created lambda expression while calling a Sort() method.
+
+
+NOTE: Different languages or platforms uses different names for "delegate" type exists in .net framework. In JavaScript, it is called clausure. In Java, it is called anonymous inner class or lambda. It is sometimes known as "callback".
+

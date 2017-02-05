@@ -1,0 +1,116 @@
+ Visual Studio and Projects
+ =============================================================
+ Visual Studio is an IDE - Integrated Development Environment which allow us to add bunch of program code files, resource files, library references, compile the code and debug the applications.
+
+ Projects
+ --------
+ A project is a start point to create a .net application using
+ visual studio. In fact a "project" is a way to collect code files, resources (images,icons,xml,database files etc), libraries which are used to develop an app, configuration files about how to compile each & every code file and settings file for application deployment.
+
+ Project Template 
+ ----------------
+ A project template is an XML document which describes:
+    1. Category or nature of project (i.e Web, Windows, Service)
+    2. Set build configuration - The build configuration can be
+	"debug" or "release" or "user-defined".
+
+	The meaning of "Build" is to create .net assembly by
+	compiling code files, embeding resources and emitting
+	application settings.
+
+        Debug build - An application is in development phase and
+			still it depends upon the development
+			environment.
+
+	Release build - An app is ready for production and now
+			it is independent of development
+			environment.
+
+	In other words, a "build" is an action to "deploy" the
+	application (or create the installer).
+   
+  3. C# project template has .csproj extension (Similary VB.NET 	project template has .vbproj)
+  4. C# code files have .cs extension ( and .vb for VB.NET)
+  5. Application settings file name for web applications will 
+     be "web.config" and other than web applications it is      "app.config".
+  6. Build output will be stored under "bin/debug" or 	"bin/release" folder however you can change them.
+  7. To learn a CLS-compliant language from the scratch (very 	begining), the VS offers a project template named - 	Console Application.
+
+	The "Console Application" project read data from console
+	(terminal / command prompt) and send data to the 	console.
+
+Example: Create a console application
+
+1. Open VS + File + New + Project + Select "Visual C#" section ( Other Languages ) + Select "Console Application" 
+
+2. Use your own folder to save project template (Dont use long folder name and also be ensure that folder name should reflect your program behavior)
+ 	
+3. In "Solution Explorer" window ( All Windows on Visual Studio are turn on via View Menu) - which is a project content navigation system of VS.
+
+   There are two files namely app.config and program.cs under 	the project which we have just created.
+
+4. Open Program.cs + Remove all content from it (Ctrl+A  and delete)
+
+5. Write following code in Program.cs (C# is case sensitive language)
+
+class MyFirstClass 
+{
+  static void Main()  /* M of Main must be upper letter */
+   {
+     System.Console.WriteLine("My First Console App.");
+    }
+}
+
+6. Press F5 ( or Debug Menu + Start Debugging) to debug your 	application.
+   If you don't want to execute debug build then 
+   press CTRL+F5 (or Debug Menu + Start Without Debugging) to
+	run a program directly (without debug help of VS).
+
+
+The entry point method - Main
+-----------------------------
+
+Each console app must have one and only Main() method from one of the following syntax:
+
+1. static void Main()
+2. static int Main()
+3. static void Main(string []args)
+4. static int Main(string []args)
+
+The input-output class - System.Console
+------------------------------------------
+There are number of methods in System.Console class but we will have to use:
+
+  1. System.Console.Write(data) - To write data without newline
+  2. System.Console.WriteLine(data) - To write with newline
+  3. System.Console.Read() - Read/input a character
+  4. System.Console.ReadLine() - Input a string
+
+Backslash or Escape characters
+------------------------------------------------------
+All backslash chars (we've used in C/Java), are used here.
+
+Example:
+
+class First
+{
+  static void Main()
+   {
+  System.Console.Write("\nThis is \n\nthe\t\t\tsecond program");
+  System.Console.WriteLine("\nNo\t\tName\t\tAge");
+  }
+}
+\n - New line
+\r - Enter key (carriage return)
+\b - Backspace key or char
+\t - Horizontal tab char
+\a - Audible bell/beep
+\\ - Escape the \ backslash
+\" - Escape the " double quote
+
+Example: Code in Main()
+
+ System.Console.WriteLine("c:\\new folder\\test");
+ System.Console.WriteLine("c:\new folder\test");
+ System.Console.WriteLine("The \"red\" sun");
+

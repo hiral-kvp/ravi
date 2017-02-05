@@ -1,0 +1,175 @@
+ Composition
+ -----------
+
+ Objects can be used to construct another but complex objects. That means we can use
+ our "classes" to construct the new classes by instantiate them.
+
+ Example:
+
+ public class Address
+  {
+    public string City {get;set;}
+    public int Pin {get;set;}
+   }
+ public class Student 
+  {
+    public int Roll {get;set;}
+    public string Name {get;set;}
+    public Address LocalAddress {get;set;}
+    public Address PostalAddress {get;set;}
+    
+    // Constructor
+    public Student() 
+     {
+        Roll  = 0; 
+        Name  = "";
+        LocalAddress = new Address();
+        PostalAddress = new Address();
+      }
+ }
+
+ class Test
+  {
+    static void Main()
+      {
+        //Test 1
+         Student s = new Student();
+         s.Roll = 1;
+         s.Name = "A";
+         s.LocalAddress.City = "Meh";
+         s.LocalAddress.Pin = 384001;
+         s.PostalAddress.City = "Pat";
+         s.PostalAddress.Pin = 384120;
+
+         Console.WriteLine( s.Roll + " " + s.Name);
+         Console.WriteLine( s.PostalAddress.City + " " + s.PostalAddress.Pin);
+         Console.WriteLine( s.LocalAddress.City + " " + s.LocalAddress.Pin);
+      
+         //Test 2
+   
+         Student t = new Student{
+           Roll = 2, Name = "B",
+           LocalAddress = new Address {City="P",Pin=23},
+           PostalAddress = new Address { City ="Q",Pin=24}
+         };
+         //Print the data - as per previous code 
+
+         //Test 3
+         Student r = new Student();
+         Address addr = new Address{City="Q",Pin=33};
+         r.Roll = 5; r.Name = "G";
+         r.LocalAddress = addr;
+         r.PostalAddress = addr; //if postal & local addresses are same
+         //Print the data - as per previous code
+    }
+}  
+
+NOTE: 90% of code in our development will be "composition" and "10%" will be "inheritance & generics".
+
+Example:
+
+public class Category
+{
+   public int Id {get;set;}
+   public string Name {get;set;}
+}
+public class Product
+{
+   public int Id {get;set;}
+   public string Name {get;set;}
+   public Category Category {get;set;}
+}
+
+Write "Test" code (different ways to use the "Product & Category" classes).
+
+ Product p = new Product();
+ p.Id = 10; //OK
+ p.Name = "Rotomac Pen";
+// p.Category.Id = 10; //Error - p.Category is not instantiate
+// p.Category.Name = "Pen"; //Error
+
+ p.Category = new Category { Id = 1, Name = "Pen" }; // Solution
+ //Or
+ //p.Category = new Category();
+ //p.Category.Id = 1;
+ //p.Category.Name ="Pen";
+ //Or
+ //Category cat = new Category { Id = 1, Name = "Pen" };
+ //p.Category = cat;
+
+Example:
+
+public class Customer
+{
+   public int Id {get;set;}
+   public string Name {get;set;}
+}
+public class Bank 
+{
+   public int Id {get;set;};
+   public string Name {get;set;};
+}
+
+public class BankAccount
+{
+   public int AccountId {get;set;}
+   public Customer Customer {get;set;}
+   public Bank Bank {get;set;}
+}
+
+Example: 
+
+public class Point 
+{
+  public int X {get;set;}
+  public int Y {get;set;}
+}
+public class Size
+{
+  public int Width {get;set;}
+  public int Height {get;set;}
+}
+public class Rectangle 
+{ 
+  public Point Location {get;set;}
+  public Size Size{get;set;}
+}
+public class Circle
+{
+  public Point Center {get;set;} 
+  public double Radius {get;set;}
+}
+public class Oval
+{
+  public Point Center {get;set;}
+  public Size Size {get;set;}
+}
+
+Example:
+public class Exam
+{
+   public string ExamType {get;set;}
+   public DateTime ExamDate {get;set;}
+}
+public class Subject
+{
+   public string Name {get;set;}
+   public string Std {get;set;}
+}
+public class Student
+{
+   public int Roll {get;set;}
+   public string Name {get;set;}
+}
+
+public class StudentExam 
+{
+   public Student Student {get;set;}
+   public Exam Exam {get;set;}
+   public Subject Subject {get;set;}
+}
+
+
+
+
+

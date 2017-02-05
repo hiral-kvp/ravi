@@ -1,0 +1,96 @@
+MSSQL - Microsoft SQL Server (Sequel Server) and System.Data.SqlClient data provider
+=======================================================================================
+
+MSSQL Server version (7,2002,2005,2008,2010, 2012, 2014, 2016) shipped with three editions - Enterprize and Standard (which are commercial) and Express (Local Db instance) which is free for the developers. In current installation of VS, we've an express or local db instance of MSSQL server.
+
+There are two ways to use the "Local db" MSSQL server :
+   1. Create a database files into the projects (and saved at App_Data in web app) Or 
+   2. Create a database remotely or outside the project folder and this database can be used by one or more programs for
+	one or more purposes. 
+
+   In actual deployment of application, there is the only one way and it is the "Remote" database. Locallly created 
+   databases helps the developers to keep databases along with their code.
+
+Local database : Create / open the project + Project Menu + Add New Item + [Data Section + SQL Server Database ] + Use --------------   use appropriate/suitable Database file name (Use ProperCase. eg. ProductDb or AppDb or SchoolDb etc).
+
+ 	 The local database files (.mdf & .ldf) will be copied into App_Data folder and use |DataDirectory| with
+		connectionString.
+                  To design the Database (Remote or Local), open the View + Server Explorer (or double click on Database
+		 file).
+
+Remote Database:    Open View + Server Explorer + Right mouse click on Data Connections + Create New SQL Server database
+------------------  + Set the Server Name  "(LocalDb)\MSSQLLocalDb" (Installed localdb server name but it can be 			different on different environment if installed manually).
+		    + There are two types of authentication (login) system but we will use Windows Authentication System
+			+ Finally set your database name and create it.
+
+Windows Authentication System uses operating system's currently logged users' credentails to log into the SQL Server database.
+
+Another authentication system is "SQL Server Authentication" and it uses different user accounts which are created by the database administrator (Mostly with Enterprize and Standard Editions).
+
+To attach, detach, or remove or expore the entire database and its objects via "SQL Server Object Explorer -- from the View Menu"
+
+MSSQL Datafiles
+-----------------
+There must be two files .mdf (master data file) and .ldf (log data file) makes a "MSSQL" Database. So, we must keep both these files.
+
+In order to distribute or deploy the databases, it is best practice to persists (save/store) SQL queries/statements into appropriate documents or script files.
+
+MSSQL Fields naming conventions
+--------------------------------
+You can use any kind of special char or reserved word or names having whitespace because MSSQL allow them to be escape using [ ] subscript escape operator.
+
+  e.g   Emp Id  is illegal name but [Emp Id] is legal/valid name
+
+BUT....We should not use whitespace or special characters in them. 
+       We must use "ProperCase" and Singular name for the fields.
+
+For example,
+
+CREATE Table Category
+(
+   CategoryId int primary key identity,
+   CategoryName varchar(50) not null unique
+)
+
+[Table name "Category" is a good but "Categories" does not make right]
+   
+Field Data types
+---------------------
+We've lots of datatypes in MSSQL server and mostly number and text/string oriented.
+
+integer family :  tiny, int, bigint, bit
+real family : float, double, decimal
+string : There are two types of string "Only for ANSI" and "for unicode"
+	 char, varchar are example of ANSI text
+	 nchar,nvarchar are example of Unicode text
+date family: date, time, datetime etc
+byte array : varbinary, image
+
+
+Example: Create Category and Product with almost all constraints 
+
+Create table Category
+(
+   Id int primary key identity,
+   Name varchar(50) not null unique,
+   Description varchar(MAX) 
+ )
+
+The MAX automatically select the width when content is inserted and it can be upto 2 GB
+ [If you want to use nonEnglish then use nvarchar instead of varchar]
+
+create table Product
+(
+   Id int primary key identity,
+   Name varchar(100) not null unique,
+   Unit varchar(10) default 'Nog',
+   Rate Decimal(18,2) not null,
+   Qty  Decimal(18,3),
+   Avail bit default 1,
+   CategoryId int not null,
+   Foreign Key (CategoryId) References Category(Id)
+ )
+
+
+
+

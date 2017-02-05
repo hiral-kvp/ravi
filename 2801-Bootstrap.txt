@@ -1,0 +1,52 @@
+CSS Framework - Twitter Bootstrap
+----------------------------------
+An open source framework for design a mobile first web layout or UI interfaces. The Bootstrap uses HTML, CSS and JavaScript and also a jQuery (JavaScript open source function library).
+
+You can download Bootstrap from www.getbootstrap.com or nuget.org. In Visual Studio, the boostrap code is exist under demo templates of Web Applications and also use "Scafolding" -- Create a view with [x] checking the Layout page in MVC project.
+
+To bootstrap  a web document (.cshtml - simple or loayout)
+------------------------------------------------------------
+
+1. First of we've three folders in our apps that contains CSS Framework files/programs.
+
+/Content
+    -> Bootstrap.css
+    -> Bootstrap.min.css
+    -> Site.css <-- It is for users
+
+/Fonts
+    Font files to represent icons
+
+/Scripts
+    -> jquery-x-x.js and
+    -> jquery-x-min.js
+    -> bootstrap.js and
+    -> bootstrap.min.js
+
+2. 
+
+In <head> of a doc, set "viewport' <meta> to layout for mobile as well as regular devices.
+
+Then, <link > the /Content/Bootstrap.min.css and after it 
+      <link> your own css docs (e.g. style.css or site.css etc)
+
+At the end of </body> and just before it, embed .js in following order:
+
+   <script src="/Scripts/jquery-x-x.min.js"></script>
+   <script src="/Scripts/bootstrap.min.js"></script>
+   <script>
+      //code
+   </script>
+
+3. Use "Grid" system to place the elements, text, content, images, videos, etc --- A "grid" in bootstrap is a row and it has 12 equal width columns for different sizes of screen:
+
+  col-lg-x ( x means value between 1 to 12) - for large device - laptop
+  col-md-x  for medium (PC)
+  col-sm-x  for small device (tablets phones)
+  col-xs-x for extreen small screen
+
+4. Use "container" selector which wraps the content of entire web page:
+
+
+  
+

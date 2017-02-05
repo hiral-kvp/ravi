@@ -1,0 +1,360 @@
+Arrays
+==========================================
+Arrays in .net are sub-classes of System.Array class. It means arrays are reference types.
+
+When you declare an array variable using one of the following syntax, that variable is of "System.Array" reference variable.
+
+ type []varName;              //One dimensional
+ type [,]varName;             //Two dim
+ type [,,]varName;            //Three dim
+ type [][]varName;            //One dim array of one dim arrays - array of arrays
+ type [][,]varName;           //One dim array of two dim arrays - array of arrays
+
+  e.g   int []nos;  <-- Where "nos" is not a int variable but it is reference variable
+			of type System.Array.
+
+To create an array we can use,
+ 
+ 1. new keyword .eg  int []nos = new int[10];
+                     int []nos = new int[] { value1,value2,...};
+ 2. Array initializer syntax  e.g int []nos = {value1,value2,value3...};
+
+Array properties & methods
+---------------------------
+1. Length - Returns count of elements in an array.
+2. Rank   - Returns 1 if array is one dim, 2 if it is two dim, 3 if it is three and
+		so on.
+3. GetUpperBound(int dim) - Returns upper limit/bound of given int dim. The value of
+				int dim can be - 0 for 1st dimension
+       						 1 for 2nd dimension
+						 2 for 3rd dim and so on.
+4. GetLowerBound(int dim) - Returns lower limit/bound of given int dim. In C#, all
+				arrays have 0 value as lower limit/bound.
+5. Array.Sort( array ) - Sort the array elements
+6. Array.Reverse( array ) - Reverse the array elements.
+
+Where & when to use array?
+---------------------------
+Array don't support insertion or deletion of items/elements so do not use arrays when the count of elements are not known at the time of coding - we'll learn "Collection Framework" for that purpose.
+
+Always use arrays when the element's count are known at the time of coding. eg. day name of week, month name of year etc.
+
+Example: 
+
+            int[] nos;  //declare
+            nos = new int[5];
+            string[] days = {"Sun", "Mon", "Tue"};
+            int [,]mat = new int[5,7];
+            int [,,]mat1 = new int[5,4,10];
+
+            Console.WriteLine(nos.Length + " " + days.Length + " " 
+                                               + mat.Length + " " + mat1.Length);
+            Console.WriteLine(nos.Rank + " " + days.Rank + " " 
+                                       + mat.Rank + " " + mat1.Rank);
+
+            //traverse or iterate
+            for (int i = nos.GetLowerBound(0); i <= nos.GetUpperBound(0); i++)
+            {
+                Console.WriteLine( nos[i]);
+            }
+            for (int i = 0; i <= days.GetUpperBound(0); i++)
+            {
+                Console.WriteLine(days[i]);
+            }
+            mat[0, 4] = 8;
+            for (int i = 0; i <= mat.GetUpperBound(0); i++)
+            {
+                for (int j = 0; j <= mat.GetUpperBound(1); j++)
+                {
+                    Console.Write(" " + mat[i,j]);
+                }
+                Console.WriteLine();
+            }
+
+            for (int i = 0; i <= mat1.GetUpperBound(0); i++)
+            {
+                for (int j = 0; j <= mat1.GetUpperBound(1); j++)
+                {
+                    for (int k = 0; k <= mat1.GetUpperBound(2); k++)
+                    {
+                        Console.Write(" " + mat1[i,j,k]);
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine("\n\n");
+            }
+
+foreach loop - Iterator loop used to traverse any object has implemented IEnumerable<T> interface
+-------------------------------------------------------------------------------
+ [Note: we will learn on IEnumerable<T> in later session]
+
+ Syntax:
+       foreach(type varName in Array_or_IEnumerable_Object) 
+        {
+          //statements
+        }
+  In this loop, each and every element from an array will be first copied into "type   varName" and we can use that "varName" variable to read the value from array.
+
+  Because we are not accessing array elements directly from the array (via index),   this loop (foreach) is also called "Readonly loop".
+
+Example:
+
+            int[] nos = {11,2,-10,2,55,3};
+            string[] cities = {"Patan", "Mehsana", "Rajkot", "Ahm"};
+            foreach (int no in nos)
+            {
+                Console.WriteLine(no);
+            }
+            //Array.Sort(cities);
+            foreach (var city in cities)
+            {
+                Console.WriteLine(city);
+            }
+            Array.Reverse(nos);  //Array.Sort(nos);
+            foreach (int no in nos)
+            {
+                Console.WriteLine(no);
+            }
+
+Array of reference types
+----------------------------------
+The array of reference type creates an array of reference variable which will be initialized with null automatically.
+
+Example:
+
+public class Point {
+   public int X {get;set;}
+   public int Y {get;set;}
+}
+class Test {
+  static void Main() {
+    Point []pts = new Point[4];  // will create four reference variables of Point
+
+    foreach(var p in pts) 
+     {
+         Console.WriteLine( p == null ); // true
+      }
+    // Now, after creating reference variables, we must have to create objects
+ 
+    pts[0] = new Point { X= 10, Y = 20 };
+    pts[3] = new Point { X = 30, Y =100 };
+    pts[1] = new Point { X = 100, Y =50 };
+
+    foreach(var p in pts) 
+     {
+       //always check for the null
+        if(p!=null) 
+          {
+            Console.WriteLine( p.X + " " + p.Y );
+           }
+       }
+   }
+ }
+
+
+Example: Create "Polygon" class 
+
+using System;
+
+public class Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+
+public class Polygon
+{
+    private Point[] _points;
+
+    public Polygon(int numPoints)
+    {
+        _points = new Point[numPoints];
+        for (int i = 0; i <= _points.GetUpperBound(0); i++)
+        {
+            _points[i] = new Point();
+        }
+    }
+    public Point[] Points
+    {
+        get { return _points; }
+    }
+    public int Count {get{ return points.Length; }}
+}
+class Test
+{
+    static void Main()
+    {
+        Polygon poly = new Polygon(5);
+
+        poly.Points[0].X = 10;
+        poly.Points[0].Y = 12;
+        poly.Points[2] = new Point {X = 30, Y = 20};
+        foreach (var p in poly.Points)
+        {
+            Console.WriteLine(p.X + " " + p.Y );
+        }
+    }
+}
+Example:
+
+public class Column 
+{
+   public string Text {get;set;}
+}
+
+public class Row
+{
+   private Column []_columns;
+   ......
+}
+
+public class Table
+{
+    private Row[] _rows;
+    ....
+}
+
+
+string []names = null;
+names = new string[3];   |   null  |
+                         |   null  |
+                         |   null  |
+
+Point []nos = new Point[3];  | null  |
+                             | null   |
+                             | null   |
+
+Example:
+
+public class Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public Point Add(Point other)
+    {
+        Point temp=new Point();
+        temp.X = X + other.X;
+        temp.Y = Y + other.Y;
+        return temp;
+    }
+}
+
+public class Polygon
+{
+    private Point[] _pts;
+
+    public Polygon(int num)
+    {
+        _pts = new Point[num];
+        for (int i = 0; i < num; i++)
+        {
+            _pts[i] = new Point();
+        }
+    }
+
+    public Point[] Points
+    {
+        get { return _pts; }
+    }
+
+    public Point Get(int index)
+    {
+        return _pts[index];
+    }
+    public int Count { get { return _pts.Length; } }
+
+    public bool IsExists(Point point)
+    {
+        foreach (var p in _pts)
+        {
+            if (p.X == point.X && p.Y == point.Y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int IndexOf(Point point)
+    {
+        for (int i = 0; i <= _pts.GetUpperBound(0); i++)
+        {
+            if (_pts[i].X == point.X && _pts[i].Y == point.Y)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public void Move(int x, int y)
+    {
+        foreach (var p in _pts)
+        {
+            p.X = p.X + x;
+            p.Y = p.Y + y;
+        }
+    }
+
+    public void Print()
+    {
+        foreach (var p in _pts)
+        {
+            Console.WriteLine(string.Format("{0} {1}",p.X,p.Y));
+        }
+    }
+}
+
+class Test
+{
+    private static void Main()
+    {
+        Polygon poly=new Polygon(5);
+        poly.Points[0].X = 10;
+        poly.Points[0].Y = 20;
+
+        poly.Get(1).X = 100;
+        poly.Get(1).Y = 200;
+        poly.Points[2] = new Point {X=30, Y= 50};
+        poly.Points[3] = new Point {X=5,Y=20};
+        poly.Points[4] = new Point {X=50,Y=40};
+
+        Console.WriteLine(poly.Count);
+
+        foreach (var p in poly.Points)
+        {
+            Console.WriteLine(p.X + " " + p.Y);
+        }
+
+        Point search = new Point{X=30, Y=50};
+
+        if (poly.IsExists(search))
+        {
+            Console.WriteLine("Found");
+        }
+        else
+        {
+            Console.WriteLine("Not found");
+        }
+
+        int index = poly.IndexOf(search);
+        if (index != -1)
+        {
+            Console.WriteLine("Found at " + index + " with " + poly.Points[index].X + " " + poly.Points[index].Y);
+        }
+        else
+        {
+            Console.WriteLine("Not found");
+        }
+        poly.Move(-5,-2);
+        poly.Print();
+
+        Point pt1 = new Point {X = 10, Y = 20};
+        Point pt2 = new Point { X = 30, Y = 40 };
+        Point pt3 = pt2.Add(pt1.Add(pt1));
+        Console.WriteLine(pt3.X + " " + pt3.Y);
+    }
+}
+ 

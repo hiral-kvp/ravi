@@ -1,0 +1,183 @@
+ List<T> class (Collection framework)
+ ========================================================================
+
+ The List<T> is an IEnumerable<T> class has additional methods to add, update, get,  search, delete an object from the collection.
+
+ In other words, the List<T> is dynamic array whose size can be grows or shrinks.
+
+
+ Example: Methods of List<T> class
+ ---------------------------------
+
+       List<string> cities=new List<string>();
+
+        //1. Add(E) - Append an element
+        cities.Add("Mehsana");
+        cities.Add("Patan");
+
+        //2. Count - Returns length/size of items
+        Console.WriteLine(cities.Count);
+
+        //3. Insert(index,E) - Insert at index
+        cities.Insert(0,"Surat");
+        cities.Insert(2,"Jamnagar");
+
+        //4. Traverse
+        Console.WriteLine("List.....");
+        foreach (var city in cities)
+          Console.WriteLine(city);
+
+        //5. [index] method
+        Console.WriteLine(cities[0]); //Get - Surat
+        cities[1] = "Mahesana"; //Set - update/change
+
+
+        //6. Remove(E) - Remove an element
+        //7. RemoveAt(index) - Remove at index
+        cities.Remove("mahesana");
+        cities.RemoveAt(2);
+
+        Console.WriteLine("List.....");
+        foreach (var city in cities)
+            Console.WriteLine(city);
+
+        //8. Contains(E) - returns boolean
+        //9. IndexOf(E) - returns index or -1
+        Console.WriteLine(cities.Contains("Mahesana"));
+        Console.WriteLine(cities.Contains("mahesana"));
+        Console.WriteLine(cities.IndexOf("Mahesana"));
+        Console.WriteLine(cities.IndexOf("Mehesana"));
+
+Example: List<Student> (list of students)
+
+Example: Inherits List<Student> to enhance the List<T> implementation.
+
+public class Student
+{
+    public int Roll { get; set; }
+    public string Name { get; set; }
+}
+
+public class Students : List<Student>
+{
+   //Extra or Helper Methods
+    public void Add(int roll, string name)
+    {
+        Add(new Student{Roll=roll,Name=name});
+    }
+
+    public IEnumerable<Student> BetweenRolls(int start, int ends)
+    {
+        foreach (var s in this)
+        {
+            if (s.Roll >= start && s.Roll <= ends)
+                yield return s;
+        }
+    }
+}
+class Test
+{
+    static void Main()
+    {
+       
+        Students stdList = new Students();
+        stdList.Add(new Student{Roll=1,Name="A"});
+        stdList.Add(new Student { Roll = 2, Name = "B" });
+        stdList.Add(3,"Raj");
+        stdList.Add(4,"Test");
+        foreach(var s in stdList.BetweenRolls(2,4))
+            Console.WriteLine(s.Roll + " " + s.Name);
+    }
+}
+
+Dictionary<K,V> - Key-Value pair collection
+==========================================================================
+Dictionary<K,V> is a collection of unique Keys (K) and values (V). A K (Key) object must be unique hence an object must have GetHashCode() and Equals() methods to determine the uniqueness of key object. Value (V) object can be unique or duplicate.
+
+
+Note that the Dictionary object cannot preserve the order of elements (KeyValuePair<K,V> entries).
+
+Example: Methods
+
+       Dictionary<string, int> cities = new Dictionary<string, int>();
+        
+        //Add(K,V)
+        cities.Add("Meh",384001);
+        cities.Add("Pat",40000);
+        cities.Add("Sur", 33323);
+        cities.Add("Ahm", 13323);
+
+        //2. ContainsKey(K) ContainsValue(V) - Returns boolean
+        if(!cities.ContainsKey("Meh"))
+           cities.Add("Meh",50000);
+        else
+            Console.WriteLine("Key exists.");
+
+        //3. [key] - Get or set value
+        Console.WriteLine(cities["Meh"]);
+        cities["Pat"] = 340003;
+
+     //   Console.WriteLine(cities["meh"]); //Throws an error
+
+        //4. Remove("key")  - Remove an element
+        Console.WriteLine(cities.Remove("Suur")); //returns boolean
+        Console.WriteLine(cities.Remove("Sur"));  
+
+        //5. List
+        foreach (var entry in cities)
+        {
+            Console.WriteLine(entry.Key + " " + entry.Value);
+        }
+        foreach (KeyValuePair<string,int> entry in cities)
+        {
+            Console.WriteLine(entry.Key + " " + entry.Value);
+        }
+ 
+Example: Represent state names of each country
+
+Dictionary<string,List<string>> countries=new Dictionary<string,List<string>>();
+countries.Add("India", new List<string>());
+countries.Add("Nepal", new List<string>());
+
+countries["India"].Add("Guj");
+countries["India"].Add("Raj");
+countries["Nepal"].Add("Kat");
+
+foreach(var entry in countries)
+{
+  Console.WriteLine(entry.Key);
+  foreach(var state in entry.Value)
+  {
+     Console.WriteLine("\t" + state);
+   }
+}
+
+Example: How many times each char repeated in a string?
+
+ e.g var str = "The red sun and red rose";
+       T = 1 time
+       h = 1 time
+       e = 4 times
+
+        var str = "The red sun and red rose";
+        Dictionary<char, int> map = new Dictionary<char, int>();
+        foreach (var ch in str)
+        {
+            if (map.ContainsKey(ch))
+                map[ch]++;
+            else
+                map.Add(ch, 1);
+        }
+        foreach (var entry in map)
+        {
+            Console.WriteLine(entry.Key + " occurs " + entry.Value + " times");
+        }
+
+Example:
+
+Dictionary<string,Dictionary<string,List<string>>> countries;
+countries=Dictionary<string,Dictionary<string,List<string>>>();
+
+countries.Add("India", new Dictionary<string,List<string>>());
+countries["India"].Add("Gujarat", new List<string>());
+countries["India"]["Gujarat"].Add("Meh");

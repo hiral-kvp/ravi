@@ -1,0 +1,406 @@
+Inheritance
+=====================================================================
+Inheritance is a mechanism to create a new class from using existing class and also we can add more features (methods, fields, properties) into newly designed class. The existing class is known as super or base class whereas a class that is created using super class is called sub-class or derived-class.
+
+In other words, with the help of inheritance feature, we can reuse the "form" of datatype. It means newly created class is nothing new but it is a "kind" of that existing class.
+
+For example,
+
+public class Person { ... }
+public class Teacher : Person { .. }
+public class Student : Person { .. }
+public class Doctor  : Person { .. }
+
+We use inheritance for the following purposes:
+ 
+  1. To create a new class with all traits (form) of existing class.
+  2. To improve the existing class by adding more members by creating sub-class.
+  3. To define "method reference" ability within the class - This feature is called
+     "override a method".
+  4. Some cases where we are unable to design a complex class again and again then
+     inheritance wil help us to design once and reuse its form many times.
+  
+Inheritance relationship defines "is" relationship between two classes.
+
+    For example,
+
+                   Teacher : Person reads as "Teacher is Person"
+                   Doctor  : Person reads as "Doctor is Person". Note that you can't
+			     read as "Person is Doctor" -- Not every "Person" is 			     "Doctor".
+
+ In sub-classes, private members & constructors of super-class are not inherited. Any access other than private to the members are inherited & visible in sub-classes.
+
+The System.Object - root or the ultimate super/base class
+----------------------------------------------------------
+General Syntax:
+
+ access_modifier class ClassName : SuperClass, Interface1,Interface2,....
+ {
+ }
+
+If super class is not specified while creating a class then C# compiler automatically uses "System.Object" as super class of any .net class.
+
+Secondly, the inheritance is transitive. For instace,
+
+  class A {}   or class A : System.Object {}
+  class B : A { } -- Super class of "B" is "A" and super class of "A" is "Object" then
+		     class "B" has two super-classes namely - "A" and "Object".
+
+  
+Example:
+
+public class Person
+{
+   public int Age {get;set;}
+   public string Name {get;set;}
+}
+public class Student : Person
+{
+   public string Standard {get;set;}
+}
+public class Teacher : Person
+{
+   public string MainSubject {get;set;}
+}
+public class Doctor : Person
+{
+   public string Speciality {get;set;}
+}
+code in Main:
+
+  Student s = new Student { Name = "Raj", Age = 4, Standard = "K.G" };
+  Doctor d = new Doctor { Name = "Mohan", Age =55, Speciality = "Ortho" };
+  Teacher t = new Teacher { Name = "Tej", Age =44, MainSubject="Hindi" };
+
+  Console.WriteLine(s.Name + " " + s.Age + " " + s.Standard);
+  Console.WriteLine(d.Name + " " + d.Age + " " + d.Speciality);
+  Console.WriteLine(t.Name + " " + s.Age + " " + t.MainSubject);
+
+Example:
+
+public class Employee
+{
+   public string Name {get;set;}
+
+}
+public class Manager : Employee
+{
+   public Employee Secretory {get;set;}   //Composition
+}
+public class Secretory : Employee
+{
+   public  Manager Boss {get;set;}
+}
+public class Clerk : Employee
+{
+ public   Manager Boss {get;set;}
+} 
+
+Code in Main:
+
+ Manager man1 = new Manager { Name="Manager1" };
+ Manager man2 = new Manager { Name="Manager2" };
+ Secretory s1 = new Secretory { Name="Sec1", Boss = man1 };
+ Secretory s2 = new Secretory { Name="Sec2", Boss = man2 };
+ man1.Secretory = s1;
+ man2.Secretory = s2;
+ var c1 = new Clerk { Name = "Clerk1", Boss = man1 };
+ var c2 = new Clerk { Name = "Clerk2", Boss = man1 };
+ var c3 = new Clerk { Name = "Clerk1", Boss = man2 };
+
+ Console.WriteLine( c1.Name + " " + c1.Boss.Name + " " + c1.Boss.Secretory.Name );
+ Console.WriteLine( man2.Name + " " + man2.Secretory.Name);
+
+Execution of constructors of sub & super class
+---------------------------------------------------------------------------------
+class A
+{
+  public A()
+   {
+     Console.WriteLine("A::Parameterless");
+    }
+  public A(int n)
+   {
+     Console.WriteLine("A::Int");
+    }
+}
+class B : A
+{
+   public B()
+    {
+      Console.WriteLine("B::Parameterless");
+     }
+   public B(int n)
+    {
+      Console.WriteLine("B::Int");
+     }
+   public B(string v)
+    {
+     Console.WriteLine("B::String");
+     }
+}
+class Test
+{
+   static void Main()
+    {
+          B x = new B();
+          B y = new B(10);
+          B z = new B("Hello");
+     }
+}
+A::Parameterless
+B::Parameterless
+A::Parameterless
+B::Int
+A::Parameterless
+B::String
+
+When we creates an object of sub-class, the system automatically first creates an object of its super class and call the "parameterless" constructor by default.
+
+In case if we want to select the different constructor of super class (other than parameterless), then we must have to use "base" keyword from within the sub-class.
+
+Syntax:
+  public class SuperClass
+   {
+        public SuperClass() : base(arguments....)
+         {
+          }
+    }
+ public class SubClass :SuperClass
+   {
+          public SubClass() : base(arguments... )
+          {
+          }
+    }
+ [Note: Arguments in base() can be optional - it depens upon the super's constructor]
+
+Example : 
+class A   // same as previous example
+{
+  public A()
+   {
+     Console.WriteLine("A::Parameterless");
+    }
+  public A(int n)
+   {
+     Console.WriteLine("A::Int");
+    }
+}
+class B : A
+{
+   public B() : base(9)
+    {
+      Console.WriteLine("B::Parameterless");
+     }
+   public B(int n) : base(n)
+    {
+      Console.WriteLine("B::Int");
+     }
+   public B(string v) : base(0)
+    {
+     Console.WriteLine("B::String");
+     }
+}
+class Test  // same as previous example
+{
+   static void Main()
+    {
+          B x = new B();
+          B y = new B(10);
+          B z = new B("Hello");
+     }
+}
+A::Int
+B::Parameterless
+A::Int
+B::Int
+A::Int
+B::String
+
+What will happen when super class has parametrized constructors only?
+
+ In this case, we must have to use base() in sub-class constructors. Otherwise our program code cannot be compiled.
+
+For example,
+class A
+{ 
+  public A(int n)
+   {
+     Console.WriteLine("A::Int");
+    }
+}
+class B : A
+{
+   public B()  <--- Error will be displayed because there isn't parameterless in 
+    {               super class.   So, add   public B() : base(0) 
+      Console.WriteLine("B::Parameterless");
+     }
+   .....
+}
+ 
+Understanding super and sub objects and type casting or casting of objects
+==============================================================================
+class A
+{
+   public int no;
+}
+class B : A
+{
+   public int no; // it hides super's field
+}
+class Test
+{ 
+  static void Main()
+   {
+      B x = new B(); //Three objects namely Object, A and B are created when we
+                     //creates an object of class "B".
+
+      x.no = 10;
+      A y = x;  //Auto cast or Implicit cast
+      y.no =20;
+      Console.WriteLine(x.no +  " " + y.no);
+      object z = x; //implicit cast
+//or  object z = y; 
+     }
+ }
+
+With the help of inheritance, we can cast objects - to cast an object means to select a super class object from the sub-class object or to select a sub class object from the super class object.
+
+We have two kind of cast here.
+
+  1. To select a super class object from sub class object and which is known as 
+     "Automatic Cast" or "Implicit Cast".
+
+       Following examples shows automatic cast:
+
+              object z = new B(); 
+              A y = new B();
+              B x = new B();
+              A p = x;
+              object q = x; or object q = p;
+      
+  2. To select a sub class object from super class object is called "Explict Cast" or
+     "Force cast" using "(cast operator)" or  "as  operator".
+
+     Code in Main:
+
+       object z = new B();
+
+        A y = (A)z;
+        B x = (B)z;
+     //   string s = (string) z; // Error - Invalid cast
+        B a = z as B;  //Or B a = (B) z;
+        x.no = 90;
+        y.no = 100;
+        Console.WriteLine(x.no + " "+ y.no);
+
+        //We can cast object via following ways
+        ((A) z).no = 1;
+        ((B) z).no = 2;
+
+        Console.WriteLine( ((B)z).no  + " " + ((A)z).no);
+
+Difference between () cast and "as" operators
+-------------------------------------------------
+The () cast operator throws an error when invalid cast is performed where as the "as" operator returns null if invalid cast is performed.
+
+code in Main:
+
+  object z = new B();
+  string s = (string) z; <--- This will throws an error because there isn't "string"
+				object in object graph.
+
+ but if you use "as" operator then exception/error will not be thrown instead it returns null.
+
+  object z = new B();
+  string s = z as string;  //or B s = z as B;
+  if(s == null)
+   {
+       Console.WriteLine("Invalid Cast.");
+    }
+  else
+    {
+        Console.WriteLine("Valid cast.");
+     }
+
+Override the methods - Method overriden
+====================================================================================
+Method overriden means only methods or functions of super class are replaced by the sub-class object. In many cases where we don't want the super class methods in sub-class or super class method is has not significance in sub-class, then we must have to replace or supersede it via "overriden" technique.
+
+
+Note:
+   In fact, the method overriden is nothing but creating a method reference (pointer)    so we can update/change method reference with appropriate method defined in sub-   classes.
+
+By default C# class method don't support method reference. To add method reference support into the C# class, we have two keywords namely,
+    1. virtual and
+    2. abstract
+One of these two keywords can be used with super class's method definition in order to
+achieve method reference.
+
+Example:
+
+public class Language
+{
+   public virtual void Speak()
+    {
+       Console.WriteLine("I can speak something.");
+     }
+}
+public class Gujarati : Language
+{
+    //To replace/overrides  a Speak() method,
+    //    1. Create sub-class method with "override" keyword and
+    //    2. Singnature of sub-class method must be same as super class
+    public override void Speak()
+    {
+       Console.WriteLine("I can speak Gujarati.");
+     }
+}
+public class English : Language
+{
+    public override void Speak()
+    {
+       Console.WriteLine("I can speak English.");
+     }
+}
+public class Hindi : Language
+{
+    public void Speak()  <--- Method reference is not replaced because "override"
+    {                         is not used.
+       Console.WriteLine("I can speak Hindi.");
+     }
+}
+code in Main:
+
+   Gujarati g = new Gujarati();
+
+/*
+Virtual Method Map
+|----------------------------|
+| Method         | Reference |
+|----------------------------|
+| Language.Speak | g.Speak() |
+|----------------|-----------|
+| Gujarati.Speak | g.Speak() |
+|----------------------------|
+*/
+   g.Speak();
+   Language l = g;  //cast
+   l.Speak();        //I can speak Gujrati
+   l = new English();
+   l.Speak();       // I can speak English
+   l = new Hindi(); // I can speak something
+
+   Language []speakers  = { new English(), new Gujarati(), new Gujarati(), new Hindi() };
+    foreach(var a in speakers)
+     {
+        a.Speak();
+      }
+
+
+
+
+
+
+
+     

@@ -1,0 +1,108 @@
+ Override the System.Object's Equals(), GetHashCode() and ToString() methods
+ ---------------------------------------------------------------------------------
+
+ Equals() method
+ ---------------
+
+ In .net framework, almost all classes uses "Equals()" method to compare object  content. It returns true if two object content are same, returns false otherwise.
+
+ As we already know that == or != cannot be used to compare objects.
+
+ For example,
+
+      Product p1 = new Product { Id = 1, Name ="Pencil" };
+      Product p2 = new Product { Id = 1, Name ="Pencil" };
+
+   These two objects hold common data but they have different memory references if
+   we compare like this:
+
+      if(p1 == p2)  <--- This is completely improper because that way we are
+       {                 comparing memory references.
+          //
+       }
+
+Example: Add equality comparison ability.
+   
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public override bool Equals(object obj)
+    {
+        Product other = obj as Product;
+        if (other == null) return false;
+        if (Id != other.Id) return false;
+        if (!Name.Equals(other.Name)) return false;
+        return true;
+    }
+}
+
+Code in Main:
+
+        Product p1 = new Product { Id = 1, Name = "Pencil" };
+        Product p2 = new Product { Id = 1, Name = "Pencil" };
+        if (p1.Equals(p2))
+           Console.WriteLine("Eq");
+        else
+            Console.WriteLine("Not Eq");
+   
+
+int GetHashCode() method
+-------------------------
+Data Hashing means to generate integral value based upon the object data. The main objective of this "hash" algorithm to enhance the comparision of objects because the hashcode will be generated via object data. If both objects have same data then they have same "hashcode".
+
+String ToString() method
+---------------------------
+This method is used to convert object data to string so we can easily determine the object content for debugging purpose.
+
+So it is good practice to have all three methods (overriden) in your class.
+
+Example:
+
+using System;
+ 
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public override bool Equals(object obj)
+    {
+        return GetHashCode() == obj.GetHashCode();
+    }
+    public override int GetHashCode()
+    {
+        /* int hash = 7;
+         hash = hash * Id;
+         hash = hash + (Name!=null ? Name.GetHashCode() : 0);
+         return hash;*/
+        //Or
+        return Id.GetHashCode() + (Name!=null ? Name.GetHashCode() : 0);
+    }
+    public override string ToString()
+    {
+        return "[" + Id + " " + Name + "]";
+    }
+}
+class Test
+{
+    static void Main()
+    {
+        string s1 = "Hello";
+        string s2 = "Hello";
+        Console.WriteLine(s1.GetHashCode());
+        Console.WriteLine(s2.GetHashCode());
+
+        Product p1 = new Product { Id = 10, Name = "Pen" };
+        Product p2 = new Product { Id = 10, Name = "Pen" };
+        Console.WriteLine(p1.GetHashCode());
+        Console.WriteLine(p2.GetHashCode());
+        if (p1.Equals(p2))
+            Console.WriteLine("EQ");
+        else
+            Console.WriteLine("Not EQ");
+
+        Console.WriteLine(p1.ToString()); 
+        Console.WriteLine(p2); //ToString() will be called automatically
+    }
+}

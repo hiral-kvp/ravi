@@ -1,0 +1,229 @@
+ The Property Methods
+ ------------------------------
+ Syntax:
+
+   access-modifier Type PropertyName
+   {
+      get
+         {
+           //return value
+          }
+      set
+         {
+           //set value
+         }
+    }
+
+Property method is an enhance form of Getter/Setter methods which we've written in previous example (SetRoll, SetName, GetName etc).
+
+Property method has two accessors - get & set. The "get" accessor returns a value of type specified at property declaration and "set accessor" has automatic parameter named "value" of the type specified at property declaration to store value into the field.
+
+Property method can have "get" or "set" or both these accessors. If there is only a "get" then it is called "Readonly". If there is only a "set" then it is called "Writeonly".
+
+The main goal of "property" methods are to improve the developer's productivity.
+
+To invoke "set" accessor, use = (assigment) operator.
+
+And when you use property without calling "set" accessor, it will be the "get" accessors which will be calling each time.
+
+Example:
+
+public class Student
+{
+  //fields
+  private int _roll;
+  private string _name;
+
+  //properties
+  public int Roll
+  {
+    get
+      {
+       return _roll;
+       }
+    set
+       {
+        if(value>=1 && value<=100) 
+         {
+           _roll=value;
+          }
+        }
+    }
+
+   public string Name 
+    {
+      get { return _name; }
+      set 
+       {
+          if(value!=null && value.Length>=1 && value.Length<=30)
+           {
+              _name = value;
+            }
+         }
+      }
+} //End class
+
+class MainApp
+{
+  static void Main()
+   {
+      Student s = new Student();
+      s.Roll = 10;       //Invoke "set" accessor of Roll property
+      s.Name = "Rajesh"; //set of Name property
+ 
+      Console.WriteLine( s.Roll ); // get of Roll
+      Console.WriteLine( s.Name ); // get of Name
+
+      Console.WriteLine(s.Roll + " " + s.Name);
+     }
+}
+
+Object initialization using "Properties"
+------------------------------------------
+You don't need a constructor if "properties" are there. You can use following syntax
+to initialize the fields.
+
+Type varName = new Type
+ {
+   Property1 = value1,
+   Property2 = value2,
+   ......
+  };
+
+Code in main:
+
+   Student s = new Student
+    {
+      Roll = 10,
+      Name = "Rajesh"
+     };
+
+    Student t = new Student { Name = "Man" };
+ 
+    Console.WriteLine( s.Roll + " " + s.Name);
+    Console.WriteLine( t.Roll + " " + t.Name);
+
+Auto-Implemented properties
+---------------------------------------------------
+The following syntax tells C# compiler to create private fields and implement the get & set automaticlaly.
+
+   access-modifier Type PropertyName {get;set;}
+
+Use "auto-implemented" properties when you don't want to validate data or add business logic.
+
+Example:
+
+using System;
+ 
+public class Student
+{
+    public int Roll { get; set; }
+    public string Name { get; set; }
+    public int English { get; set; }
+    public int Maths { get; set; }
+    public int Science { get; set; }
+
+    //Computational properties
+    public int Total
+    {
+        get { return Maths + English + Science; }
+    }
+    public double Percent
+    {
+        get { return Total / 3.0; }
+    }
+    public string Grade
+    {
+        get
+        {
+            double p = Percent;
+            if (p >= 70) return "A";
+            if (p >= 60) return "B";
+            if (p >= 50) return "C";
+            return "D";
+        }
+    }
+}
+class MainApp
+{
+    static void Main()
+    {
+        Student s = new Student
+        {
+            Roll =1,Name="A", English=50,
+            Maths =90,Science =60
+        };
+        Console.WriteLine("Roll       : " + s.Roll);
+        Console.WriteLine("Name       : " + s.Name);
+        Console.WriteLine("English    : " + s.English);
+        Console.WriteLine("Maths      : " + s.Maths);
+        Console.WriteLine("Science    : " + s.Science);
+        Console.WriteLine("Total      : " + s.Total);
+        Console.WriteLine("Percent    : " + s.Percent);
+        Console.WriteLine("Grade      : " + s.Grade);
+    }
+}
+
+To read data from console.
+
+code in main:
+
+        Student s = new Student();
+        s.Roll = int.Parse(Console.ReadLine());
+        s.Name = Console.ReadLine();
+        s.English = int.Parse(Console.ReadLine());
+        s.Maths = int.Parse(Console.ReadLine());
+        s.Science = int.Parse(Console.ReadLine());
+
+        ..... as per previous example .......
+
+
+Example: Define following classes
+
+Product (id, name, category, quantity, rate, discount)
+Employee(id,name,dateJoined, basicSalary)
+ElecticityBill(meterno,billno,billDate,CustomerName,lastReading,currentRead)
+
+Note: Add necessary compute properties into Product class - DiscountAmount, GrossAmount,NetAmount
+
+      Add compute properties into ElectocityBill - Amount. Use following unit rates:
+               first 100 units - 1.25 per unit
+               next  100 units - 2.25 per unit
+               next  100 units - 3.75 per unit
+               and rest units  - 5.00 per unit
+
+Anonymous object
+-----------------
+You can create an object without declaring a class. i.e. an object without "class" is called "Anonymous object". This kind of object is used only for the "local" scope (within the method).
+
+ syntax:
+
+   var  varName = new 
+    {
+       Property1 = value1,
+       Property2 = value2,
+       .....
+     };
+
+Code in Main:
+
+      var emp = new
+        {
+            Id = 10,
+            Name = "Rajesh",
+            Salary=1000.10
+        };
+        Console.WriteLine(emp.Id + " " + emp.Name + " " + emp.Salary);
+ 
+
+public decimal DiscountAmount
+{
+  get
+     {
+      return quatity * rate * discount/ 100;
+      }
+ }
+
+ 5 * 100 * 1/100
+
+ 500/100  = 5.00 

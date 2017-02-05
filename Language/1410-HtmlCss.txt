@@ -1,0 +1,168 @@
+HTML - A markup language to present your data on the web
+==========================================================
+
+HTML is a markup language derived from SGML (Standard Generilized Markup Language - i fact all markup languages including XML, HTML, SVG, MathML, and many more derived from SGML) and is used to present data on the web.
+
+Structure of HTML document
+==========================
+HTML markup can be embed in static resources as well as dynamic resources.
+
+  Static Resource - A file whose content cannot be changed during program                     execution once it is created (only the author of that resource
+		    can change its content). These resources are .htm, .html, .js, 		    .css, image files, videos, audios etc.
+  Dynamic Resource - A program file written using C/C++/C#/Java/PHP and many more 
+		     which will be parsed and executed by the "server-side platforms"
+		     and produce dynamic content of HTML.
+			
+		     Different server-side platforms has different kind of dynamic 		     resources -- .jsp & servlet in Java, .php in PHP, .cshtml, .aspx
+		     and Controllers in ASP.NET and so on.
+
+		     Server-side dynamic resources are also called "Views" or 		     "Templates" - because they generate / produce HTML content when
+		     they are requested.
+[NOTE: To create a website (Not a web application) project, open the visual 
+studio with "Administrator previleges.]
+
+Dynamic resources in ASP.NET are created via one of the two "View-Engines":
+    1. WebForm ViewEngine - This ViewEngine is used for WebForm Web application whose
+			    resources have .aspx, .ascx, .master extensions.
+
+    2. Razor ViewEngine  - This ViewEngine is used by ASP.NET WebPage application and
+			   ASP.NET MVC application.
+
+       |----------------------------------------|
+       | ASP.NET - One                          |
+       |----------------------------------------|
+       | WebForm   | WebPages  |MVC   | WebAPI  |
+       | App       | App       |App   | App     |
+       |----------------------------------------|
+
+
+ WebForm ViewEngine is not used to build a large scale applications because it has  some issues and flaw in control-based program design.
+ 
+ WebForm ViewEngine provide a dynamic resource which contains "HTML markup", "C# code"
+ into a single page.
+
+ Nows a day, WebPages Web App are used to write simple PHP alike apps with full  control over the HTML/CSS/JavaScript. Note that WebForm ViewEngine also uses  HTML/CSS/JavaScript but they are added via "Controls User Interfaces" so we don't  have full control in a web page.
+
+ For any kind of business apps, ASP.NET MVC app are used. They offer simplicity of 
+ WebPages with content separation - HTML markup is stored into pages, C# code is
+ stored (an also re-used) in separate class files and request & response code is  stored into separate class files.
+
+ Razor View Engine
+ ==================
+ WebPages  & MVC Web Applications uses "Razor" view engine. Note that the "Razor" is
+ not a programming language but it is a "syntax" to write/embed C# or VB.NET code
+ into a dynamic resource.
+
+ C# Razor pages has .cshtml extension.
+ VB.NET Razor pages has .vbhtml extension.
+
+ Syntax
+ =======
+
+ Razor syntax begins with @ (at-the-rate) sign:
+
+ 1.  @*  comment syntax *@  
+ 2.  @{
+      //statements - block syntax
+     }
+ 3. @statement-syntax{
+
+    }
+ 4. @expression - To write the content of expression into the resopnse buffer     (output).
+
+ 5. @:text     - To embed text instead of HTML markup
+   
+ 6. <text></text> - To embed text instead of HTML markup
+
+ 7. @@ - To escape (leave) razor sign
+
+Examples
+========
+
+1. Never add semi-colon to @expression and @statement-syntax
+  
+ [In your website/webapp, add new item  - Razor page]
+
+Sample-1
+---------
+@* My First Dynamic Page *@
+@{
+    //some variables
+    var no = 10;
+    var name = "Rajesh";
+    var birthDate = DateTime.Parse("1/1/2002");
+}
+<p>Welcome @name;</p>
+<p>Welcome @name.ToUpper()</p>
+Your roll number is <strong>@no</strong>
+<p>Your birth day @birthDate.ToString("dd-MMM-yyyy")</p>
+
+ 
+Sample-2   Razor automatically separate the C# code and HTML tags
+---------
+@{
+  var pass = true;
+}
+@if(pass)
+{
+   <p>You got it!</p>
+}
+else
+{
+   <p>You need to work hard</p>
+}
+
+Sample-3   But following code confuse the Razor parser because we don't want to use <p> HTML tag.
+
+@{
+  var pass=true;
+}
+@if(pass)
+{
+   You got it!  <--- Error
+}
+.....
+
+Sample - 4  Always use @: or <text></text> syntax when text data appears after the C# 		code. (Consider the previous issues)
+@{
+  var pass=true;
+}
+@if(pass)
+{
+  @:You got it!
+}
+else
+{
+  <text>You need to work hard</text>
+}
+ 
+Sample - 5 
+
+<select>
+@for(int i=1;i<=10;i++)
+{
+  <option>@i</option>
+}
+</select>
+
+Sample - 6
+
+@{
+ string []cities = { "Meh","Pat"};
+}
+<select>
+@foreach(var city in cities) 
+{
+   <option>@city</option>
+}
+</select>
+
+
+
+
+ 
+ 
+	
+
+
+

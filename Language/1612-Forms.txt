@@ -1,0 +1,164 @@
+HTML <form> and <input> elements
+==============================================================================
+ 
+The <form> element
+------------------
+ 
+The <form> element amass (gethers) all <input> element's name-value pairs and create a collection of data and send them to the web-server via web-browser or JavaScript code
+or any other programming approach.
+
+In other words, <form> is responsible to create an "envelope" that contains "data - simple or plain and complex or binary". Once a <form> envelope is ready then we can
+use web-browser's mechanism or programming language's code we can send or pass them
+to other machine via HTTP over TCP/IP.
+
+Important things to be noted while creating a form envelope:
+   1. set "action", "method" and "enctype" attribute
+
+      <form method="post | get"
+            action="dynamic-resource-url"
+            enctype="x-www-url-encoded | multipart">
+           
+           Default value of 'method' is "GET"
+                             'action' is "current resource/page url"
+                             'enctype' is x-www-url-encoded
+
+  2. Each and every <input> element must have a "name" attribute and whose value
+      must be a valid identifiers.
+
+  3. You can use one of the following buttons elements to submit the <form> data.
+ 
+      1. <input type="image" src="file.jpg"/>    
+      2. <input type="submit" />
+      3. <button type="submit">Submit</button>  or <button>Button<button>
+ 
+     However, we can also use JavaSCript code to post or submit <form> data.
+
+Example:
+
+emp.cshtml
+------------
+<form method="post" action="save.cshtml">
+   <p>No : <input type="text" name="empName" /> </p>
+   <p>Name : <input type="text" name="empName"/> </p>
+   <p> <button>Submit</button> </p>
+</form>
+
+  
+  4. Do not nest the <form>. However we can use as many as <form> in our      page/resource.
+      This is illegal :   <form>
+                              <form> ... </form>
+                          </form>
+What is "get", "post", "delete", "debug" etc ?
+==========================================================
+
+
+These are HTTP verbs.  In other words, they are command of HTTP. Basically these "verbs" are used by the web-browser or client programs to convey the instructions to the web-servers or application servers. These verbs are also known as "Request" methods.
+
+  The GET request method
+  -----------------------
+  This is the natural or default request method.  Whenever we type "url" at addressbar
+  or clicking on hyperlink or linking/embeding stylesheet, JavaScript, Images, Video,
+  Audio etc or submitting <form> are implicitly "GET" requests.
+
+  GET request is to "read" the resource however we can also pass data along with
+  request but these data should not be used for deletion/insertion/updation or any 
+  other serious tasks - login, payment etc.
+
+  GET request carries data in plain-text (readable) form with "url".
+    e.g
+     http://www.example.com?empNo=10&empName=Rajesh
+     |--------------------| |----------------------|
+             URL                 Data - name-value pairs delimeted with & sign. 
+                                 The above described pattern is called "querystring".
+
+    ?empNo=10&empName=Rajesh is a "querystring" or GET request with data.
+ 
+  GET Request cannot be used to send "binary" data (file upload).
+
+ The POST request method
+ ------------------------
+ The POST request method is either used with <form> element or via JavaScript code and
+ we will use POST request for:
+
+    1. To send huge amount of data (no data length restriction. In GET, it is 4 KB or        8 KB - browser dependence".
+    2. To pass binary data or upload a file.
+    3. To perform serious data related tasks - insert/delete/udate etc
+
+  The POST method automatically serialize form data into array of bytes and send them
+  to webservers via web-browsers.
+
+
+Intercept the request and response (HTTP) in ASP.NET -- Request & Response properties
+=====================================================================================
+
+To intercept "request"  -- url, metadata and data -- we will have "Request" property (Request object) in our cshtml or program.
+
+Similarly, we will use "Response" property to intercept the "HTTP response".
+
+NOTE:  It is important to note that the "RAZOR View Engine" implicitly uses "Request" and "Response" properties in its own way and also we can use very same properties in our own ways.
+
+For example:
+
+  To write a message, razor uses expression:
+        
+               <p>@message</p>
+
+  But, you can also use direct use of "Response" like:
+
+              Response.Write("<p>" + message + "</p>");
+
+
+Example: Create emp.cshtml with following code.
+
+emp.cshtml
+----------
+<form method="post" action="save.cshtml">
+  <p>No <input type="text" name="no"/></p>  
+  <p>Name <input type="text" name="name"/></p>
+  <button>Submit</button>
+</form>
+
+And create save.cshtml to receive the requested data.
+
+save.cshtml
+------------
+@{
+  var no = Request["no"];  
+  var name = Request["name"];
+}
+<p>Received data : @no and @name</p>
+<a href="emp.cshtml">Back to emp </a>
+
+
+Request data collection methods
+===========================================================================
+There are numbers of methods (functions) in "Request" property to read or retrieve data.
+
+1. Request["key"] -- It returns value if "key" exists, returns null otherwise. This
+                     method is used to read GET or POST method data.
+
+2. Request.Form["key"] - This method is used to read "POST" request data.
+
+3. Request.QueryString["key"] - This method is used to read "GET" request data.
+
+4. Request.Files["key"] - This method is used to read "file" content - POST request 
+										data.
+
+Example:  Change code in save.cshtml : Use Request.Form or Request.QueryString and 
+          see what happens?
+
+          For POST request, both Request[key] and Request.Form[key] methods are used.
+          For GET, both Request[key] and Request.QueryString[key] are used.
+          
+
+
+ 
+
+
+     
+
+   
+
+
+
+  

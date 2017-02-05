@@ -1,0 +1,512 @@
+The table elements
+----------------------------
+A table is a collection of rows & columns and the entire table is constructed with following basic structure (however you my ommit some of the elements).
+
+<table>
+  <thead>
+    <tr>
+      <th>Head1</th><th>Head2></th>
+    </tr>
+    ....
+  </thead>
+  <tbody>
+    <tr>
+      <td>Data1</td><td>Data2</td>
+    </tr>
+    ....
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Footer1</td><td>Footer2</td>
+    </tr>
+    ...
+   </tfoot>
+</table>
+
+tr - stands for table row
+td - stands for table data
+th - stands for table head
+
+Draw borders around the cells and table
+------------------------------------------
+We need to set boder-collapse: collapse; property to the table - which removes spaces between cells and the table.
+
+<style>
+    table {
+        border-collapse: collapse; 
+        border: 1px solid #aaa;
+    }
+    td,th {
+         border: 1px solid #aaa;
+         padding: 5px;
+    }
+    thead {
+        background: black;
+        color: white;
+    }
+</style>
+
+
+Data modeling - Design the layers
+=======================================================================================
+The fundamental concept of programming is a code separation so we can keep things sepaterly and each separate thing can be edited or removed without affecting other things. This concept is begins with the "functions - in C lang", "Types definition in OOP languages" and such things are known as "Layers" of code. 
+
+There may be different "layers" of code for different purposes and it includes -- Neutal model component that can be used with any kind of (web, win, service, mobile etc) applications, Data models; these components are used to define data read/write/delete/save etc actions and they might uses disk file, RDBMS, XML, etc. Some of the model components contains the business logic which will uses the "Data models" along with neutral models.
+
+It is important to note that we are working & talking about the "Layers -- software code separation technique" not a "Tier - hardware & software abstraction". Tiers concept is completely different then "Layers".
+
+Tiers means physical separation of software. Example: Browser communicates to the WebServer and WebServer is confugured with different application servers and different application servers may uses different database servers, mail server and many more hardware & software.
+
+Layers means logical separation of the source code. Example: To ease the software development, a develop a code in such manner so he/she can re-use and maintain the code easily.
+
+
+The DAL or DAO stands for Data Access Layer or Data Access Object; these components represent Database and data related actions.
+
+The BAL or BAO stands for Business Access Layer or Business Access Object which uses DAL componnets to provide the business solutions (i.e. filter the data, restrict the data, define policies, sort the data etc).
+
+In following example we will use some neutral / pure CLR objects and BAOs.
+----------------
+
+Assume that you've an web application named "MyApp". Now, create a folder "Models" in it and add some .cs (code) files into the "Models".
+
+[Naming Conventions: Use "ProperCase" or "PascalCase" To name the files and folders]
+
+/MyApp/
+      |------/Models/
+                   CategoryViewModel.cs
+                   ProductViewModel.cs
+                   CategoryBao.cs
+                   ProductBao.cs
+      |
+      |------/Content/
+                     |
+                     |--/Images
+                     |
+                     | Style.css
+      |
+      | Index.cshtml
+      | Category.cshtml
+      | Product.cshtml
+
+CategoryViewModel.cs
+----------------------
+ public class CategoryViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+ProductViewModel.cs
+-----------------------
+ public class ProductViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Unit { get; set; }
+        public decimal Rate { get; set; }
+        public string Photo { get; set; }
+        public bool IsAvailable { get; set; }
+        public CategoryViewModel Category { get; set; }
+    }
+CategoryBao.cs
+---------------
+public class CategoryBao
+    {
+        public List<CategoryViewModel> Categories { get; set; }
+        public CategoryBao()
+        {
+            //Mock test data
+            Categories = new List<CategoryViewModel>
+            {
+                new CategoryViewModel { Id= 10, Name="Pen" },
+                new CategoryViewModel { Id=20, Name="Pencil" },
+                new CategoryViewModel {Id=30, Name="Book" }
+            };
+        }
+    }
+ProductBao.cs
+----------------
+public class ProductBao
+    {
+        public List<ProductViewModel> Products { get; set; }
+        public ProductBao()
+        {
+            //Mock test data
+            var cats = new CategoryBao().Categories;
+            Products = new List<ProductViewModel>
+            {
+                new ProductViewModel { Id=1, Name="Raynold .45", Category=cats[0], IsAvailable=true, Photo="a1.png", Rate=20.0m, Unit="Pack" },
+                new ProductViewModel { Id=6, Name="Raynold . 90", Category=cats[0], IsAvailable=false, Photo="a2.png", Rate=90.0m, Unit="Pack" },
+                new ProductViewModel { Id=2, Name="Rotomac Notebook", Category=cats[2], IsAvailable=true, Photo="a3.png", Rate=220.0m, Unit="Dozen" },
+                new ProductViewModel { Id=5, Name="Navneet Pencil .45", Category=cats[1], IsAvailable=true, Photo="a1.png", Rate=80.0m, Unit="Pack" },
+                new ProductViewModel { Id=9, Name="Navneet Fullscape", Category=cats[2], IsAvailable=true, Photo="a1.png", Rate=70.0m, Unit="Nog" },
+            };
+        }
+
+        public static IEnumerable<ProductViewModel> GetProducts(int byCategoryId)
+        {
+            var bao = new ProductBao();
+            foreach(var p in bao.Products)
+            {
+                if(p.Category.Id==byCategoryId)
+                {
+                    yield return p;
+                }
+            }
+        }
+    }
+
+Category.cshtml
+---------------
+
+       <h3>List of categories</h3>
+        <ol>
+            @foreach (var c in new MyApp.Models.CategoryBao().Categories)
+            {
+                <li><a href="Product.cshtml?Id=@c.Id">@c.Name</a></li>
+            }
+        </ol>
+
+        <form method="get" action="~/Product.cshtml">
+            @foreach (var c in new MyApp.Models.CategoryBao().Categories)
+            {
+                <button name="Id" value="@c.Id">@c.Name</button>
+            }
+        </form>
+
+Product.cshtml
+----------------
+       @{
+         var categorId = Request["Id"].AsInt();
+       }
+       @foreach(var p in MyApp.Models.ProductBao.GetProducts(categoryId))
+        {
+            <div class="item">
+                <h4 class="@(!p.IsAvailable ? "not-avail" : "" )" >@p.Name</h4>
+                <p>
+                    <img src="/Content/Images/@p.Photo" alt="@p.Name photo"/>
+                </p>
+                <p>
+                    Rate @p.Rate per @p.Unit
+                </p>
+            </div>
+        }
+style.css
+-----------
+.item { display: inline-block; border: 1px solid #aaa;}
+.not-avail { color: red; }
+.not-avail:after { content: '<-- Not available'; }
+
+
+Merge table's rows & columns -- rowspan and colspan attributes of <td> and <th> elements
+===========================================================================================
+
+colspan and rowspan attributes uses "int" value and they are with <td> or <th> only.
+
+Example:
+
+        <style>
+            table {
+                border-collapse: collapse;
+                border: 1px solid #aaa;
+            }
+
+            td, th {
+                border: 1px solid #aaa;
+                padding: 5px;
+            }
+        </style>
+        <table>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="2"></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td rowspan="3" colspan="2"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td rowspan="2" colspan="2"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="6"></td>
+            </tr>
+        </table>
+
+Example: List the products in a tabular form:
+
+<table>
+ <thead> 
+   <tr>
+     <th>Id</th>..Name, Unit, Rae, Photo, Avail, Action(buttons)...
+   </tr>
+ </thead>
+ <tbody>
+  @foreach(var p in products)
+    {
+     <tr>
+       <td>@p.Id</td><td>@p.Name</td>....<td>@(p.IsAvailable ? "Yes" : "No")</td>
+       <td><!--Action-->
+          <form method="post">
+             <input type="hidden" name="id" value="@p.Id"/>
+             <button name="cmd" value="Edit">Edit</button>
+             <button name="cmd" value="Delete">Delete</button>
+           </form>
+        </td>
+      </tr>
+    }
+ </tbody>
+ <tfoot>
+   <tr>
+     <td colspan="7" style="text-align: center">
+          <!--code for paging-->
+          [1][2] etc...
+      </td>
+   </tr>
+ </tfoot>
+</table>
+
+Style the odd-even or a specified element using :nth-child(value) pseudo selector
+----------------------
+Syntax:  selector:nth-child(odd) { .. }
+            use odd or even keyword to style the odd-even elements
+         selector:nth-child(1) { .. } style the 1st element, use 2 for second and so on.
+
+p:nth-child(odd) {
+   background: yellow;
+}
+
+<div>
+  <p>First</p> 
+  <p>Second</p>
+  <p>Third</p>
+   ....
+</div>
+
+Ex:  
+
+ tr:nth-child(odd) {
+    background: #aaa;
+ }
+ tr:nth-child(even) {
+     background: #ddd;
+ }
+ 
+ a table's rows will be look like a striped with gray and light gray colors.
+
+Example: Design the "invoice" layout using table and other elements
+
+|------------------------------------------------------------|
+| Invoice  No :   9999999             Invoice Date: 00/00/00 |
+|------------------------------------------------------------|
+|                       Ms. PQR & Co.                        |
+|------------------------------------------------------------|
+| Customer:
+|          xxxxxxx
+|          xxxxxxx
+|----------------------------------------------------------------|
+| # | Product           | Qty  | Rate | Unit  | Discount | Amount|
+|----------------------------------------------------------------|
+| 1 |  xxxx              | 2   | 2.00 | Nog   | 0.00     | 4.00  |
+| ....
+|
+|....
+|-----------------------------------------------------------------|
+|                                              |Total    |0000.00 |
+| Rs. amount in words (e.g. two hundred and seventy only)         |
+|-----------------------------------------------------------------|
+
+There must be two styles --- one for screen (that uses color - background etc) and one for the printer which uses gray and black color for borders & background.
+
+In this example, we need to create "Customer", Product, "Invoice" etc classes to represent the data.
+
+
+public class Product {}
+public class Customer {}
+public class Invoice {
+  No, Date
+  public Customer Customer {get;set;}
+  public List<Product> Products {get;set;}
+}
+
+@{ 
+    var inv = MyApp.Models.Invoice.InvoiceBao.MockInvoice;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            table {
+                border-collapse: collapse;
+                border: 1px solid #aaa;
+            }
+            th, td {
+                 border: 1px solid #aaa;
+                 padding: 1px;
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td colspan="5">No : @inv.No</td>
+                
+                <td colspan="2">Date : @inv.Date.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td colspan="7">ABC LTD</td>
+            </tr>
+            <tr>
+                <td>Customer</td>
+                <td colspan="6">@inv.Customer.Name</td>
+            </tr>
+            <tr>
+                <td>#</td>
+                <td>Name</td>
+                <td>Qty</td>
+                <td>Rate</td>
+                <td>Unit</td>
+                <td>Discount (%)</td>
+                <td>Amount</td>
+            </tr>
+            @foreach(var p in inv.Products)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Name</td>
+                    <td>@p.Qty</td>
+                    <td>@(p.Rate.ToString("N"))</td>
+                    <td>@p.Unit</td>
+                    <td>@((p.Discount/100).ToString("N")) %</td>
+                    <td>@p.Amount.ToString("N")</td>
+                </tr>
+            }
+        </table>
+
+    </body>
+</html>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace MyApp.Models.Invoice
+{
+     public class CustomerViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+    public class ProductViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Unit { get; set; }
+        public decimal Qty { get; set; }
+        public decimal Discount { get; set; }
+        public decimal Rate { get; set; }
+
+        public decimal Amount
+        {
+            get
+            {
+                return Qty * Rate - (Qty*Rate*Discount/100);
+            }
+        }
+    }
+    public class InvoiceViewModel
+    {
+        public int No { get; set; }
+        public DateTime Date { get; set; }
+        public CustomerViewModel Customer { get; set; }
+        public List<ProductViewModel> Products { get; set; }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace MyApp.Models.Invoice
+{
+    public class InvoiceBao
+    {
+        public List<InvoiceViewModel> Invoices { get; set; }
+
+        public InvoiceBao()
+        {
+            //Mock Invoices
+            Invoices = new List<InvoiceViewModel> { };
+        }
+        public static InvoiceViewModel MockInvoice
+        {
+            get
+            {
+                return new InvoiceViewModel
+                {
+                    No = 1000,
+                    Date=DateTime.Now,
+                    Customer = new CustomerViewModel { Id=9, Name="Ramanlal Shah" },
+                     Products=new List<ProductViewModel>
+                     {
+                         new ProductViewModel {  Id=1, Name="Pencils", Unit="Nog", Qty=10m, Rate=5.5m, Discount=0.01m},
+                         new ProductViewModel {  Id=1, Name="Pencils", Unit="Nog", Qty=10m, Rate=5.5m, Discount=0.01m},
+                         new ProductViewModel {  Id=1, Name="Pencils", Unit="Nog", Qty=10m, Rate=5.5m, Discount=0.01m},
+                     }
+
+                };
+            }
+        }
+
+        /* Query Methods */
+        public static InvoiceViewModel FindById(int id)
+        {
+            return new InvoiceBao().Invoices.FirstOrDefault(x => x.No == id);
+        }
+        public static IEnumerable<InvoiceViewModel> FindByCustomerName(string name)
+        {
+            // return new InvoiceBao().Invoices.Where(x => x.Customer.Name.Equals(name)).ToList();
+            return new InvoiceBao().Invoices.Where(x => x.Customer.Name.StartsWith(name)).ToList();
+        }
+        public static IEnumerable<InvoiceViewModel> FindByDateRange(DateTime start, DateTime end)
+        {
+            // return new InvoiceBao().Invoices.Where(x => x.Customer.Name.Equals(name)).ToList();
+            return new InvoiceBao().Invoices.Where(x => x.Date>=start && x.Date<=end ).ToList();
+        }
+
+        public static void Add() { }
+        public static void Delete() { }
+        public static void Update() { }
+    }
+}
+
+
+Example: Define "Question classes -- Single and Multiple choice questions " to represent the questions and navigate quesions.
+
+Question 1.  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   ( )  Option1   Or [ ] Option1
+   ( )  Option2   Or [ ] Option2
+   ( )  Option3   Or [ ] Option3
+ [Prev][Next]
+ 
+ 

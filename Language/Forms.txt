@@ -1,0 +1,412 @@
+ Example : Same page postback (submit). The previous example (emp.cshtml &            save.cshtml) demonstrate the cross-page postback.
+
+ [Note: Postback meaning "submission of form data"]
+
+emp.cshtml
+===========
+
+<!DOCTYPE html>
+
+<!-- First of all create variables --->
+@{
+    var no = 0;
+    var name = "";
+    var cmd = "";
+    var message = "";
+
+    /* Check whether a request is POST or not*/
+
+    if (IsPost)
+    {
+        /* Receive request data */
+        cmd = Request["cmd"] ?? "";
+        no = Request["no"].AsInt();
+        name = Request["name"] ?? "";
+
+        /* Process the data */
+        if ("Add".Equals(cmd))
+        {
+            message = "Record has been added successfully";
+            <p>Add operation is performed</p>
+        }
+        else
+            if ("Update".Equals(cmd))
+        {
+            message = "Record has been updated successfully";
+            <p>Update operation is performed</p>
+        }
+        <p>Received data : @no  @name @cmd</p>
+    }
+}
+
+<form method="post" action="emp.cshtml">
+    <p>No: <input type="text" name="no" /></p>
+    <p>Name: <input type="text" name="name" /></p>
+    <button name="cmd" value="Add">Submit</button>
+    <button name="cmd" value="Update">Update</button>
+</form> 
+ 
+<p>@message</p>
+
+
+Request.AsXXXX() extension methods
+===================================
+AsXXXX() extension methods are used to parse "string" or "null" value into appropriate
+datatype. These methods can be: Request["key"].AsInt(), Request["key"].AsDouble() and so on.
+
+Rewrite HTML attributes/CSS properties
+========================================
+To set HTML attributes or CSS properties programatically, we will have to 
+create variable, set value in it and define appropriate action.
+
+For example: Want to display value "Hello" into "text" box.
+
+@{
+  var data = "Hello";
+}
+<input type="text" value="@data" />
+
+Or we want to disabled the button,
+@{
+  var status = "disabled";
+}
+<button @status>OK</button>
+
+Or we want to persists the <form> data even after posting (submitting). In previous example -- emp.cshtml --- same page postback, you've noticed that after form submission all data in <input> are gone or reset to its original value (blank).
+
+
+ Change "emp.cshtml" page (inside the <form>):
+
+    <form method="post" action="emp.cshtml">
+      <p>No: <input type="text" value="@no" name="no" /></p>
+      <p>Name: <input type="text" value="@name" name="name" /></p>
+      ......
+     </form>
+
+ Note: Add "value" attribute for "no" and "name" text field.
+
+IMPORTANT: Not all HTML <input> has "value" attribute to persist the state. Some of them uses "checked", "selected" etc.
+
+Homework: Add two radio buttons into a <form> and preserve the radio button selection.
+
+<form>
+   ...
+<input type="radio" name="gender" value="Male"/> Male
+<input type="radio" name="gender" value="Female"/> Female
+<button>Submit</button>
+</form>
+
+ Use "common" value for name attributes of "radio" buttons to create a group.
+   
+Example:
+
+
+@{
+    var gender = Request["gender"] ?? "";
+}
+@gender
+
+<form method="post">
+    <input type="radio" 
+        @("Male".Equals(gender) ? "checked" : "")  
+        name="gender" value="Male" /> Male
+    <input type="radio" @("Female".Equals(gender) ? "checked" : "") 
+        name="gender" value="Female" /> Female
+    <button>Submit</button>
+</form>
+
+Example: Persist the state of checkboxes.
+
+  [ ] Play
+  [ ] Read
+  [ ] Write
+
+  [Submit]
+
+[Use "checked" attribute] 
+
+Always choose unique "name" attribute value for checkboxes.
+
+
+@{
+    var read = Request["read"] ?? "";
+    var write = Request["write"] ?? "";
+    var play = Request["play"] ?? "";
+}
+@read @write @play
+
+<form method="post">
+    <h3>Hobbies</h3>
+    <p>
+        <input @("read".Equals(read) ? "checked" : "") type="checkbox" name="read" value="read"/> Read
+    </p>
+    <p>
+        <input @(!string.IsNullOrWhiteSpace(write) ? "checked" : "") type="checkbox" name="write" value="write" /> Write
+    </p>
+
+    <p>
+        <input @(!string.IsNullOrWhiteSpace(play) ? "checked" : "") type="checkbox" name="play" value="play" /> Play
+    </p>
+
+    <button>Submit</button>
+</form>
+
+Example: Preseve the state of "Dropdownlist" -- <select> combobox
+
+
+NOTE: Items inside the <select> must be filled via program code 
+
+@{
+    string[] countries = { "India", "Nepal", "UK", "USA" };
+    var country = Request["country"] ?? "";
+
+}
+@country
+
+<form method="post">
+    <select name="country">
+        <option value="">Select Country</option>
+        @foreach(var c in countries)
+        {
+            <option @(c.Equals(country) ? "selected" : "") value="@c">@c</option>
+        }
+    </select> 
+    <button>Submit</button>
+</form>
+
+Example: State of "Listbox" -- Add "size" attribute to <select> in previous example.
+
+<select name="country" size="3">
+   ....
+</select>
+[Note: Remove <option value="">Select country</option> entry]
+
+Example: Listbox with multiple selection. Add "multiple" attribute to 
+             <select name="name" size="5" multiple>.
+
+NOTE: Multiple selected items are received as comma separated string.
+
+@{
+    string[] countries = { "India", "Nepal", "UK", "USA" };
+    var countriesStr = Request["country"] ?? "";
+    //Split the string and transform to array of strings
+    string[] selectedCountries = countriesStr.Split(',');
+}
+@foreach(var s in selectedCountries)
+{
+    <p>@s</p>
+}
+<form method="post">
+    <select name="country" multiple size="6">
+        
+        @foreach(var c in countries)
+        {
+            <option @(selectedCountries.Contains(c) ? "selected" : "") value="@c">@c</option>
+        }
+    </select> 
+    <button>Submit</button>
+</form>
+      
+Homework: Print following data.
+Name  : Ram (in textbox)
+Address : 12 PQR,
+          ABC Road   (textarea)
+City    : Meh   (dropdownlist)
+Gender  : Male  (radio buttons)
+Hobbies : Read,Write,Play (checkboxes or multiple selection listbox)
+
+Example: Persists the <textarea>
+
+@{
+   var address=Request["address"] ?? "";
+}
+<form ......>
+   <textarea name="address">@address</textarea>
+    ....
+</form>
+ 
+NOTE: <textarea> preserve the whitespaces so value from variable must not surrounded by whitespace or chars.
+e.g <textarea>
+         @address    <----- This will contains newlines and spaces along with address
+    </textarea>   
+
+
+<input> elements
+=====================
+1. <input type="text"/>  -- single line text
+2. <input type="number"/> -- numeric 
+3. <input type="color"/>  -- color selection
+4. <input type="date" />  -- date selection
+5. <input type="file"/>  -- file selector
+6. <input type="search"/> -- search text field
+7. <input type="hidden"/> -- hide the value
+8. <input type="radio"/>  -- radiobutton
+9. <input type="checkbox"/> -- checkbox
+10. <input type="range"/>  -- slider (number)
+11. <textarea> -- multiline text
+12. <select>   -- dropdownlist
+13. <select size="n"> -- listbox
+14. <input type="submit"/> -- submit button
+15. <input type="button"/> -- non-submit button (for client code/Javascript)
+16. <input type="image"/> --  image submit button
+17. <button type="button|submit"> submit or non-submit button
+
+Example: Write a code which displays number which will be incremented or decremented when a user press [next] or [prev] button.
+
+Layout:
+
+Value:   4    <-- value
+
+[Previous] [Next] <--- Submit buttons  
+
+Example:
+@{
+    int n = Request["no"].AsInt();
+    var cmd = Request["cmd"] ?? "";
+    if ("Next".Equals(cmd))
+    {
+        n++;
+    }
+    if ("Prev".Equals(cmd))
+    {
+        n--;
+    }
+}
+@n
+<form method="post" action="emp.cshtml">
+    <input type="hidden" name="no" value="@n" />
+    <button name="cmd" value="Prev">Previous</button>
+    <button name="cmd" value="Next">Next</button>
+</form>
+Example: Display a "quote" also navigate quote via Next/Prev buttons
+        Or
+         Display an image and navigate via Next/Prev buttons
+
+@{
+    int n = Request["no"].AsInt();
+    var cmd = Request["cmd"] ?? "";
+    string[] quotes =
+    {
+        "Where there is a will, there is a way!",
+        "Those who trust themselves had faith!",
+        "Quote2",
+        "Quote3"
+    };
+
+    if ("Next".Equals(cmd))
+    {
+        n++;
+    }
+    if ("Prev".Equals(cmd))
+    {
+        n--;
+    }
+
+    if(n<0)
+    {
+        n = 0;
+    }
+    if(n>=quotes.Length)
+    {
+        n = quotes.Length - 1;
+    }
+
+}
+@quotes[n]
+<form method="post" action="emp.cshtml">
+    <input type="hidden" name="no" value="@n" />
+    <button name="cmd" value="Prev">Previous</button>
+    <button name="cmd" value="Next">Next</button>
+</form>
+
+Images: First of copy some images at root of app.
+
+/Images/
+        1.png
+        2.png
+        ......
+
+ Now, add array of string in previous example,
+
+  string []images = 
+   {
+     "/Images/1.png",
+     "/Images/2.png",
+     .....
+    }
+
+and display image via <img/>
+
+<img src="@images[n]" alt="images"/>
+
+Example: Multiple input - text field having common value of name attribute.
+
+@{ 
+    int totalElements = 5;
+    string[] nos = new string[totalElements];
+    string message = "";
+    string cmd = "";
+
+    if(IsPost)
+    {
+        string []_receivedNos = Request["nos"].Split(',');
+        cmd = Request["cmd"];
+        for(int i = 0; i < totalElements; i++)
+        {
+            nos[i] = _receivedNos[i];
+        }
+        if("Sum".Equals(cmd))
+        {
+            int sum = 0;
+            foreach(var str in nos)
+            {
+                sum = sum + int.Parse(str);
+            }
+            message = "Sum : " + sum;
+        }
+    }
+}
+<form method="post">
+   @for(int i=0;i<totalElements;i++)
+   {
+     <p><input type="text" value="@nos[i]" name="nos"/></p>
+   }
+   <p>
+    <button name="cmd" value="Sum">Sum</button>
+    <button name="cmd" value="Mul">Multiply</button>
+    </p> 
+</form>
+@if("Sum".Equals(cmd))
+{
+    <p>@message</p>
+}
+
+Example:
+
+Name                Qty         Rate        Amount
+[Textbox         ]  [Textbox ]  [Textbox]   display amount( qty * rate)
+[Textbox         ]  [Textbox ]  [Textbox]   display amount( qty * rate)
+[Textbox         ]  [Textbox ]  [Textbox]   display amount( qty * rate)
+[Textbox         ]  [Textbox ]  [Textbox]   display amount( qty * rate)
+[Textbox         ]  [Textbox ]  [Textbox]   display amount( qty * rate)
+[Textbox         ]  [Textbox ]  [Textbox]   display amount( qty * rate)
+
+[Submit]
+
+Example: Hightlight (with CSS proerties) the pressed or clicked submit button.
+
+ e.g    [Home  ][About us][Contact us]
+                 =========
+                       
+Example: Display a number and increment/decrement via HTTP GET request or especially
+         hyperlinks.
+
+Solution-1  :    Change method="get" of previous example
+
+Solution-2  :
+ 
+             Remove <form> part and add,
+
+		<a href="~/emp.cshtml?no=@n&cmd=Prev">Prev</a>
+		<a href="~/emp.cshtml?no=@n&cmd=Next">Next</a>
+

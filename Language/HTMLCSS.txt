@@ -1,0 +1,371 @@
+﻿<!doctype html> - a HTML directive
+
+ This is an instruction to the web-browser to render the HTML content using "stable"  standard of HTML parser.
+ 
+ When <!doctype> is missing, our web-browser will render (paint) HTML markup arbitry and this kind of situation is known as "Quirk Mode" (Dirty mode) where web-browser
+surprise us with differences in web layout/CSS/JavaScript code.
+
+ When <!doctype> is specified, a web-browser is rendering web content in "Standard  Mode".
+
+Example:
+
+<!doctype html>  <!--- Remove the "doctype" and see what happen? --->
+<html>
+<head>
+    <title>Welcome</title>
+    <style>
+        html { background:black;}
+        body { background:yellow;}
+        h1 { background:red;}
+    </style>
+</head>
+<body>
+ <h1>Hello World</h1>
+</body>
+</html>
+
+2. <title>, <meta> in <head>
+    <title> displays text at window's titlebar and <meta> is used to provide
+    additional instructions or data to the web-browser.
+
+For example,
+     <head>
+       <meta charset="utf-8"/>
+       <title>This is ગુજરાતી text</title>
+     </head>
+     
+    we instruct web-browser to use "utf-8" charset to display non-english chars at
+    the title of window.
+
+3. Embed tags -- These tags request another resource and embed the content into                  currently requested web page.
+
+     To embed stylesheet or favicon,
+ 
+         <link rel="stylesheet" href="file.css"/>
+
+     To embed JavaScript code,
+
+          <script src="file.js"></script>
+
+     To embed images,
+
+          <img src="file.jpg"/>
+
+     To embed video,
+
+          <video src="file.mp4" controls="controls" autoplay="autoplay"></video>
+
+      To emebd audio,
+
+          <audio src="file.mp4" controls="controls" autoplay="autoplay"></audio>
+
+  The <link/> should be placed inside the <head> because this approach allow our page
+  content to be attributed via CSS progresssively. 
+
+  The other embed tags should be placed inside the <body> tag.
+
+
+4. Semantics Elements  - These elements have different purposes which will be defined
+			 or implemented by the author of the page.
+
+   These elements/tags are:
+
+    div, span, header, footer, nav, article, section, aside etc
+
+Example:
+
+Index.cshtml
+--------------
+<!doctype html>
+<html lang="en_US">
+   <head>
+       <title>Sample Page</title>
+   </head>
+   <body>
+      <div> 		<!--- This is main wrapper --->
+         <div>  	<!--- Heade of page -->
+             <h1>ABC Site</h1>
+         </div>
+         <div>       	<!--- Navigation - menu --->
+            <a href="#">Home</a>
+            <a href="#">About us</a>
+         </div>
+         <div>		<!---Left section ---->
+            <p>I represent left section of screen</p>
+         </div>
+         <div>		<!---Right section ----->
+             <p>I represent right section of screen</p>
+         </div>
+         <div>		<!-- Footer --->
+            <p>&copy; ABC 2015</p>
+         </div>
+      </div>		<!-- End main wrapper -->
+    </body>
+ </html>
+     
+Above example uses <div> tag to compose the structure of web page. However, we should use <header>, <nav>, <footer>, <article>, <section> , <aside> etc tags in place of
+excessive use of <div>
+
+  for example, for navigation
+     <nav>
+        <a href="#">Home</a>.......
+     </nav>
+
+  for header or footer, use <header> or <footer> instead of <div>
+
+Example:
+
+....
+<article>
+   <header>Article Header</header>
+   <section>1st Section</section>
+   <aside>Sidebar</aside>
+   <footer>Footer</footer>
+</article>
+
+Example:
+.....
+<section>
+   <header>..</header>
+   <article>....</article>
+   .....
+</section>
+
+Types of HTML tags
+=================  
+
+HTML tags are classified into two major categories based upon they represent the viewport or area of body.
+
+
+1. Block elements/tags -- These tags shared the width of their parent elements or
+			  width of web-browser and we can change their height & width
+			  via CSS properties.
+
+			  Example: <h1> to <h6>, <p>, <div>, <section> etc
+2. Inline elements    --  These tags's height & width will be calculated by their
+			  content and we cannot change height/width via CSS.
+
+3. inline-block elements -- These elements have mixed display properties of block &
+				inline.
+
+			Inline elements are: span, code, em, i, u, b, kbd etc
+			Inline-Block are : <input>, <select>, <textarea>,<button> etc 
+
+Important: We can change inline elements to block or inline-block and vice-versa via CSS "display" property.
+
+Example:
+
+
+<div>
+  <h3>Introduction</h3>
+  <p>
+    What I can say? said Ram. I want to learn <abbr title="HyperText Markup Language">
+    HTML</abbr> along with <code>CSS</code> and <code>JavaScript</code>. My    <em>reasons</em> to learn these <strong>things</strong> are not my interest but
+   I have to do it for <span>myself or for my carrier</span>.
+  </p>
+</div>
+<style>
+  * {
+    border:1px solid #f00;
+  }
+</style>
+
+Each eleement in page have a border to understand how block or inline element is rendered.
+
+
+CSS Properties
+==============
+
+What is CSS? It is a language to style the HTML elements. In fact we instruct the web-browser to style the HTML elements by setting CSS properties.
+
+These are three ways to set CSS properties :
+
+ 1. inline "style" attribute 
+
+     <h2 style="color: red">Red Text</h2>
+     <h3 style="color: white;background: red">White Text Red Background</h3>
+
+   This approach should not be used because we cannot re-use the "style-set" or
+   we have to specify style-set of each element separately.
+
+ 2. Embed "style" via <style> HTML tag.
+
+    With the help of "CSS selectors", we can attribute the HTML elements.
+
+    <style>
+       selector-name {
+           property: value;
+           property: value;
+       }
+   </style>
+
+ 3. Embed external CSS file/resource.
+
+    You can create separate .css or other resouce and later embed to your page. This
+    way you can re-use CSS properties across the web-pages.
+ 
+    style.css
+    =========
+     selector-1 { ... }
+     selector-2 { ... }
+ 
+    Index.cshtml
+    =============
+    ....
+    <head>
+       <title>Sample Page</title>
+       <link rel="stylesheet" href="style.css"/>
+     </head>
+
+CSS Selectors  CSS Selectors represent CSS properties or set of properties and 
+=============  later we can applies to HTML elements.
+
+We've following types of CSS selectors:
+
+1.  *   	Universal selector - CSS properties are applies to all elements
+
+2.  tag-selector - CSS properties are assigned to specified HTML tag
+
+Example:
+
+* {
+  color: red;  /* text color of all element will be red */
+}
+
+h1 {
+  color: blue;  /* text color for h1 tags only */
+}
+
+3. class selector - CSS properties are assigned to those HTML tags where "class" 			attribute is set to given class selector name.
+
+.say-hello {
+   font-size:2em;
+}
+.red {
+  color: red;
+}
+.blue {
+  color: blue;
+}
+
+Class selectors begins with . (period) and they are case-sensitive.
+
+To apply class selectors,
+
+ <p class="say-hello">Hi</p>
+ <h3 class="red say-hello">Hello</h3>
+
+We can specify one or more class selector to each HTML element.
+
+Example: Create "Css" or "Styles" or "Content" folder into your app and add "style.css" in it. Later, embed "style.css" into your pages.
+
+WebApp/
+      |
+      |------/Content/
+                     Style.css
+      |
+      | Index.cshtml and other files
+
+and add <link rel="stylesheet" href="/content/style.css" /> inside the <head> of your page.
+
+4. id selector --- CSS properties will be glued to all HTML where "id" attribute set
+		   via the specified "id" name. Id selector begins with #.
+
+#box {
+   border: 1px solid red;
+   width: 100px;
+   height: 100px;
+}
+
+<p id="box"></p>
+<div id="box"></div>
+
+Like "class-selector" we cannot set multiple "id-selector" but we can use "id" and "class" and "tag" selector altogether.
+
+<div id="test" class="blue greeting"></div>
+
+IMPORTANT
+=========
+
+Selectors should be very small. Don't set all properties into a single selector but try to define separate selector.
+
+Selector names and CSS properties & value are case-sensitive so always use lower-case
+letters.
+
+Always uses "class" selectors because they can be used with any HTML elements and there can be multiple class selectors to a tag.
+
+The "id" HTML attribute is basically used with JavaScript and it should be unique so never use "id" selector more than once per page.
+
+Example:
+
+@using System.Data.SqlClient
+
+@{
+  var CnStr = @"your-connection-string";
+  using(var cn = new SqlConnection(CnStr))
+  {
+   using(var cmd = new SqlCommand())
+    {
+      cmd.CommandText = "select * from emp";
+      cmd.Connection = cn;
+      cn.Open();
+      using(var dr = cmd.ExecuteReader())
+       {
+         <table>
+           @while(dr.Read())
+            {
+              <tr><td>@dr[0]</td>
+                  <td>@dr[1]</td>
+                  <td>@dr[2]</td></tr>
+             }
+           </table>
+        }
+     }
+   }
+}
+OR
+
+          <select>
+           @while(dr.Read())
+            {
+              <option>@dr[1]</option>
+             }
+           </select>
+
+Add follwing selector to style the <table>
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    th {
+        background: black;
+        color: white;
+    }
+    td,th {
+        border: 1px solid #aaa;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+   
+
+  
+
+
+
+ 
+
+
+
+
+
+
+     

@@ -1,0 +1,67 @@
+The "Layout" 
+=============================================================================================
+Razor engine allow us to set such layout of the web page so its content is share by one or more pages; these pages called the "Content" pages.
+
+A "web page" which structure the page and allow other pages to add page specific content is called "Layout page" and the pages which uses the "Layout Page" are called "Content Pages".
+
+For example, for consistent layout/structure of your website, you want some content will remains common to all or some sort of pages. e.g Heading, some links or menus, footers, logo etc.
+
+How to create a "Layout" page?
+--------------------------------
+It's simply a .cshtml page with a section called "dynamic section" that allows other pages (content pages) to add page specific content/markup/code etc.
+
+This dynamic section is prepared by calling a method -- @RenderBody()
+
+So, if your .cshtml has @RenderBody() method then your page is kinda layout page.
+
+And most importantly this layout page cannot be requested by the clients. We can't request the layout pages directly instead we've to request the "content pages". The ASP.NET uses special naming conventions and one of them is _ (underscore); the files or folder names begins with underscore are automatically protected and hide by the ASP.NET so it is good practice to use underscore prefix for layout pages.
+
+Example:
+
+/yourapp/
+        _site.cshtml
+        Index.cshtml
+        About.cshtml
+
+_site.cshtml
+-------------
+<!doctype html>
+<html>
+  <head>
+       <title>@Page.Title</title>
+  </head>
+  <body>
+    <h1>ABC Site</h1>
+    <nav>
+         <a href="~/Index.cshtml">Home</a>
+         <a href="~/About.cshtml">About us</a>
+     </nav>
+     <div>
+         @RenderBody()
+     </div>
+     <footer>
+         <p>@copy; ABC Site - @DateTime.Now.Year</p>
+     </footer>
+   </body>
+</html>
+
+Index.cshtml  (a content page)
+------------
+@{
+  //Set the layout file
+ Page.Title = "Welcome Home";
+ Layout = "~/_site.cshtml";
+}
+<h3>Hey! Welcome to mysite</h3>
+
+About.cshtml (a content page)
+------------------------------
+@{
+  Page.Title = "About us";
+  Layout="~/_site.cshtml";
+}
+<h3>Who we are?</h3>
+
+
+
+

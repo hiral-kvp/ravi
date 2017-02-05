@@ -1,0 +1,250 @@
+The Request Type and HTML elements
+====================================================================================================
+
+Request Type means Request Method - a way to request the web-resources. We've have two general purpose REQUEST METHODS namely - GET (or get) and POST (or post) and also there are some special purpose request methods used by the web apis are : DEBUG, HEAD, PUT, DELETE. However these additional REQUEST METHODS are specify programatically whereas the GET and POST request methods are the fundamental methods.
+
+=> The default request method is the "GET".
+
+   When we type "url or uri" at addressbar or clicking on hyperlinks or submitting forms (submit buttons) or
+   embeding the documents via img, picture, video, audio, link, script, embed etc all are example of GET reuqest method.
+
+   GET request means to "request a resource for read purpose". Mostly GET request returns the result or GET is used to
+	read the resource however it is upto on you that you can also use it as a write purpose request type (it means
+	you can send data/instruction and your code perform actions accordingly).
+   GET request sends plain text data (human readable form) to the servers, so do not send important data & instructions    using this (GET) request method.
+
+   GET request data has a restriction on length/size. Their size is limit the web-browser and it can be 2000 byte or    4000 bytes etc.
+
+   GET don't support file upload (send binary data and also huge amount of data).
+
+=> POST request means to submit data and also read the resources.
+
+   When you want to send data and that data are crucial or serious to your app then use POST method.
+
+   POST Request method encode the form data (submitted data). [It automatically convert special characters which are harmful for communication into harmless characters called "Encoding & Decoding of Text"]
+
+   For example,   We know that the database's varchar field can't hold special char or print control characters and 
+			similar the with web, it consider as harmful chars.
+
+             You type text field content as : 
+
+                 Username :  <h1>Hello</h1>
+              Then the special chars like < > and spaces and other chars are converted into BASE64 Charset.
+
+   BASE64 is a charset name as compare to ANSI or UTF (unicode).
+
+   POST request allow us to send data (huge amount) and files.
+
+EXAMPLE: To learn the encoding of byte array and produce the simple and Base64 strings.
+
+            byte[] ar = { 7,1,66,67,97 };
+            var str = System.Text.Encoding.UTF8.GetString(ar);
+            Console.WriteLine(str);
+            Console.WriteLine(Convert.ToBase64String(ar));
+
+
+The Request Property - ASP.NET page property
+=============================================================================================================
+
+Http Request is received by the application server (ASP.NET) and allow us the "Request" property to access the request data , meta data and other useful information.
+
+In fact the "Request" is an object of HttpRequest class that is created automatically by the ASP.NET for each request. The ASP.NET also create an object called "Response" along with the "Request".
+
+So, "Request" and "Response" are two properties where a programer can interect with the "input (request)" and "output (response)".
+
+Example: Request type
+
+<!doctype html>
+<p>Request method is : @Request.HttpMethod </p>
+
+<a href="Index.cshtml">GET Request</a>
+<form>
+    <button>Submit - GET Request</button>
+</form>
+
+<form method="post">
+    <button>POST Request</button>
+</form>
+
+
+Example: To determines the requested resource name/path (Relative & absolute path)
+
+URL - Uniform Resource Locator      http://localhost  
+URI - Uniform Resource Identifier   http://localhost/abc.html
+URN - Uniform Resource Name         /abc.html
+
+
+~ Root operator (ASP.NET) tells the server side objects to consider the root of the website.
+
+~/  means root path /
+
+Example:
+
+<!doctype html>
+<p>@Request.Url</p>
+<p>@Request.FilePath</p>
+<p>@Request.CurrentExecutionFilePath</p>
+<p>@Request.Path</p>
+<p>@Request.MapPath("/Styles/style.css")</p>
+<p>@Server.MapPath("~")</p>
+
+Server.MapPath("relativePath") or Request.MapPath("relativePath") methods convert relativePath into absolutePath.
+
+GET request that sends data
+----------------------------
+
+URI form of the GET request must be:
+
+ http://siteName/resource?key1=value1&key2=value2......
+                          
+ ? - question mark separates the URI/URL from the data (pairs of key-value)
+
+ query string - Pairs of key-value separated with & sign is called "query string".
+
+To receive requested data, use following Request properties:
+
+  1. Request["key"] -- for GET & POST
+  2. Request.Form["key"] - for POST only
+  3. Request.QueryString["key"] -- for GET only 
+
+Example-1:  type /page2.cshtml?no=10&name=Raj at address bar
+
+page2.cshtml
+--------------
+
+@{
+    var no = Request["no"];  //or Request.QueryString["no"];
+    var name = Request["name"];
+    <p>@no  @name</p>
+}
+<!-- you can set query string with hyperlinks or embed tags -->
+<a href="~/page2.cshtml?no=1&name=Darshan">Meet Darshan</a>
+<style>
+    a {
+        text-decoration: none;
+        padding: 10px;
+        background: red;
+        border-radius: 50%;
+        color: white;
+    }
+    a:hover {
+        background: black;
+    }
+</style>
+@for(int i=1;i<=10;i++)
+{
+    <a href="~/page2.cshtml?no=@i">&nbsp;&nbsp;@i&nbsp;&nbsp;</a>
+}
+<form>
+    No : <input name="no" type="number"/>
+    Name : <input name="name" type="text"/>
+    <button>Submit</button>
+    <input type="submit"/>
+</form>
+
+The "name" attribute of form elements
+=====================================
+The name attribute of an element define a key for the Request (GET or POST). So it is mandatory to set the name attribute for those input/form elements whose data you want to send.
+
+Example: Cross page get request
+
+page1.cshtml
+-------------
+<a href="~/page2.cshtml?no=1&name=Darshan">Darshan</a>
+
+<form method="get" action="~/page2.cshtml">
+                      ^
+                      |------------------------- Request data will be received in "page2.cshtml"
+  <p>No : <input type="text" name="no"/></p>
+  <p>Name : <input type="text" name="name"/></p>
+  <p><button>Submit</button></p>
+</form>
+
+page2.cshtml
+--------------
+@Request["no"]
+@Request["name"]
+
+
+The form element (<form> tag)
+-----------------------------
+The form tag amaas (gether) key-value pairs and prepare a packet or envelop of data. There are other alternatives and mostly with JavaScript language to send data without using <form> tag.
+
+To submit the <form> data, we need to use one of the following elements:
+
+1. <input type="submit" value="Your label" />
+2. <button>Your Label</button>
+3. <input type="image" src="image-path" />
+
+Generally <form> markups are embed into containers like div, section , fieldset and we will select the fieldset for the good practice.
+
+Use the <label></label> inline element to enclose the <input>, <select>, <textarea> etc element. The <label> allow us to set focus automatically to the input field when it is selected or clicked.
+
+Use "placeholder" attribute of input element to show the hint.
+
+Use appropriate value for the "name" attributes.
+
+If action attribute of "form" is not specified then the currently requested page will become the action value.
+
+
+Determine the POST method in the page
+----------------------------------------
+Use "IsPost boolean" property; which returns true if request method is POST.
+@if(IsPost) {
+  ...
+}
+Cast the request data
+----------------------------------------
+All request data are represented by the string type if they exists. And we need to cast them according to their usage.
+
+In Razor view, we've extension method with Request property whose names begins with AsXXXX() -  AsInt(), AsBool etc..
+that automatically uses type.TryParse method to parse the string.
+
+Example:
+
+@if(IsPost)
+{ 
+    var no = Request["no"].AsInt();
+    var name = Request["name"] ?? "";     // ?? is null check operator
+    <p>@no @name</p>
+}
+<!doctype html>
+<body>
+    <fieldset>
+        <legend>Employee Data</legend>
+        <form method="post">
+            <p>
+                <label>No <input 
+                                 type="number" 
+                                 name="no"
+                                 placeholder="Employee Id"
+                                 /></label>
+            </p>
+            <p>
+                <label>
+                    Name <input type="text"
+                              name="name"
+                              placeholder="Employee Name" />
+                </label>
+            </p>
+            <p><button>Add Employee</button></p>
+        </form>
+    </fieldset>
+</body>
+  
+Focus on input element where the input element is not enclosed in <label>. In that case we will have to use <label for="id-of-input-element"></label>
+
+Change the code in prev example:
+
+<form method="post">
+  <p><label for="no">ID</label></p>
+  <p><input type="number" id="no" name="no"/></p>
+  .....
+</form>
+
+
+NOTE: "id" attribute is used by the browser automatically to set focus and also used by the JavaScript language.
+
+      "id" value must be unique.
+
+	

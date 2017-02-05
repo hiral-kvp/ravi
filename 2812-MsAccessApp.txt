@@ -1,0 +1,764 @@
+Ms-Access Database tables:
+  Category and 
+  Products
+
+Model classes
+---------------
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace DbApp.Models
+{
+    public class CategoryViewModel
+    {
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
+    }
+    public class ProductViewModel
+    {
+        public int ProductId { get; set; }
+        public int CategoryId { get; set; }
+        public string ProductName { get; set; }
+        public string Unit { get; set; }
+        public decimal Rate { get; set; }
+        public string Photo { get; set; }
+        public bool Available { get; set; }
+        public decimal Qty { get; set; }
+    }
+
+
+    public class MySettings
+    {
+        public static string CnStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|\ProductDb.mdb;Persist Security Info=True";
+        public static IEnumerable<string> Units()
+        {
+            yield return "Kg";
+            yield return "Gm";
+            yield return "Pack";
+            yield return "Box";
+            yield return "Nog";
+            yield return "Pc";
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Data.OleDb;
+using System.Linq;
+using System.Web;
+
+namespace DbApp.Models
+{
+    public class CategoryDao
+    {
+        public bool Add(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "insert into category (categoryname) values (@p1)";
+                    cmd.Parameters.AddWithValue("@p1", model.CategoryName);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        public bool Update(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "update category set categoryname=@p1 where categoryid=@p2";
+                    cmd.Parameters.AddWithValue("@p1", model.CategoryName);
+                    cmd.Parameters.AddWithValue("@p2", model.CategoryId);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        public bool Delete(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "delete from category  where categoryid=@p2";
+                    cmd.Parameters.AddWithValue("@p2", model.CategoryId);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        public CategoryViewModel Find(CategoryViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select * from category where categoryId=@p1";
+                    cmd.Parameters.AddWithValue("@p1", model.CategoryId);
+
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            return new
+                                CategoryViewModel
+                            {
+                                CategoryId = dr.GetInt32(0),
+                                CategoryName = dr.IsDBNull(1) ? "" : dr.GetString(1)
+                            };
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public string GetCategoryName(int categoryId)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select categoryName from category where categoryId=@p1";
+                    cmd.Parameters.AddWithValue("@p1", categoryId);
+
+                    cn.Open();
+                    return cmd.ExecuteScalar().ToString();
+                }
+            }
+        }
+        public List<CategoryViewModel> Categories
+        {
+            get
+            {
+                var list = new List<CategoryViewModel>();
+                using (var cn = new OleDbConnection())
+                {
+                    cn.ConnectionString = MySettings.CnStr;
+                    using (var cmd = new OleDbCommand())
+                    {
+                        cmd.Connection = cn;
+                        cmd.CommandText = "select * from category order by categoryname";
+
+                        cn.Open();
+                        using (var dr = cmd.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                list.Add(new
+                                    CategoryViewModel
+                                {
+                                    CategoryId = dr.GetInt32(0),
+                                    CategoryName = dr.IsDBNull(1) ? "" : dr.GetString(1)
+                                });
+                            }
+                        }
+                    }
+                }
+                return list;
+            }
+        }
+
+        public IEnumerable<CategoryViewModel> GetCategories()
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select * from category order by categoryname";
+
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                           yield return new
+                                CategoryViewModel
+                            {
+                                CategoryId = dr.GetInt32(0),
+                                CategoryName = dr.IsDBNull(1) ? "" : dr.GetString(1)
+                            };
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Data.OleDb;
+using System.Linq;
+using System.Web;
+
+namespace DbApp.Models
+{
+    public class ProductDao
+    {
+         /// <summary>
+         /// Add the product
+         /// </summary>
+         /// <param name="model"></param>
+         /// <returns>bool</returns>
+        public bool Add(ProductViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "insert into Product (CategoryId, ProductName, Unit, Rate,Photo,Available,Qty) values (@CategoryId, @ProductName, @Unit, @Rate,@Photo,@Available,@Qty)";
+                    cmd.Parameters.AddWithValue("@CategoryId", model.CategoryId);
+                    cmd.Parameters.AddWithValue("@ProductName", model.ProductName);
+                    cmd.Parameters.AddWithValue("@Unit", model.Unit);
+                    cmd.Parameters.AddWithValue("@Rate", model.Rate);
+                    cmd.Parameters.AddWithValue("@Photo", model.Photo);
+                    cmd.Parameters.AddWithValue("@Available", model.Available);
+                    cmd.Parameters.AddWithValue("@Qty", model.Qty);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool Update(ProductViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "update Product set CategoryId=@CategoryId, ProductName=@ProductName, Unit=@Unit, Rate=@Rate,Photo=@Photo,Available=@Available,Qty=@Qty Where ProductId=@ProductId";
+                    cmd.Parameters.AddWithValue("@CategoryId", model.CategoryId);
+                    cmd.Parameters.AddWithValue("@ProductName", model.ProductName);
+                    cmd.Parameters.AddWithValue("@Unit", model.Unit);
+                    cmd.Parameters.AddWithValue("@Rate", model.Rate);
+                    cmd.Parameters.AddWithValue("@Photo", model.Photo);
+                    cmd.Parameters.AddWithValue("@Available", model.Available);
+                    cmd.Parameters.AddWithValue("@Qty", model.Qty);
+                    cmd.Parameters.AddWithValue("@ProductId", model.ProductId);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool Delete(ProductViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "delete from Product Where ProductId=@ProductId";
+                    cmd.Parameters.AddWithValue("@ProductId", model.ProductId);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ProductViewModel Find(ProductViewModel model)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select * from Product Where ProductId=@ProductId";
+                    cmd.Parameters.AddWithValue("@ProductId", model.ProductId);
+
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        if(dr.Read())
+                        {
+                            return new 
+                                ProductViewModel
+                            {
+                                ProductId = dr.GetInt32(0),
+                                CategoryId = dr.IsDBNull(1) ? 0 : dr.GetInt32(1),
+                                ProductName = dr.GetString(2),
+                                Unit = dr.GetString(3),
+                                Rate = dr.GetDecimal(4),
+                                Photo = dr.GetString(5),
+                                Available = dr.GetBoolean(6),
+                                Qty = dr.GetDecimal(7)
+                              };
+                        }
+                    }
+                       
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ProductViewModel> GetProducts()
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select * from Product";
+                    
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                           yield  return new
+                                ProductViewModel
+                            {
+                                ProductId = dr.GetInt32(0),
+                                CategoryId = dr.IsDBNull(1) ? 0 : dr.GetInt32(1),
+                                ProductName = dr.GetString(2),
+                                Unit = dr.GetString(3),
+                                Rate = dr.GetDecimal(4),
+                                Photo = dr.GetString(5),
+                                Available = dr.GetBoolean(6),
+                                Qty = dr.GetDecimal(7)
+                            };
+                        }
+                    }
+
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public IEnumerable<ProductViewModel> GetProducts(int categoryId)
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = "select * from Product where CategoryId=@CategoryId";
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            yield return new
+                                 ProductViewModel
+                            {
+                                ProductId = dr.GetInt32(0),
+                                CategoryId = dr.IsDBNull(1) ? 0 : dr.GetInt32(1),
+                                ProductName = dr.GetString(2),
+                                Unit = dr.GetString(3),
+                                Rate = dr.GetDecimal(4),
+                                Photo = dr.GetString(5),
+                                Available = dr.GetBoolean(6),
+                                Qty = dr.GetDecimal(7)
+                            };
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
+}
+
+Web Pages
+-------------
+
+CategoryPage.cshtml
+=====================
+@{ 
+    var model = new DbApp.Models.CategoryViewModel();
+    var catDao = new DbApp.Models.CategoryDao();
+    model.CategoryId = Request["CategoryId"].AsInt();
+    model.CategoryName = Request["CategoryName"] ?? "";
+    var cmd = Request["cmd"] ?? "";
+    var message = "";
+    var isEdit = false;
+    if(cmd.Equals("Edit"))
+    {
+        isEdit = true;
+        var search = catDao.Find(model);
+        if(search!=null)
+        {
+            model = search;
+        }
+    }
+    if(cmd.Equals("Add"))
+    {
+        if(catDao.Add(model))
+        {
+            message = "Category added";
+        }
+        else
+        {
+            message = "Can't add category";
+        }
+    }
+    if (cmd.Equals("Update"))
+    {
+        message = catDao.Update(model) ? "Updated!" : "Can't update";
+    }
+    if (cmd.Equals("Delete"))
+    {
+        message = catDao.Delete(model) ? "Deleted!" : "Can't delete";
+    }
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <form method="post">
+            <input type="hidden" name="CategoryId" value="@model.CategoryId"/>
+            <p>
+                <label>Category Name : <input type="text" 
+                                              value="@model.CategoryName"
+                                              name="CategoryName"/></label>
+            </p>
+            <p>
+                @if (isEdit)
+                {
+                    <button name="cmd" value="Delete">Delete</button>
+                    <button name="cmd" value="Update">Update</button>
+                    <button name="cmd" value="Cancel">Cancel</button>
+                }
+                else
+                {
+                    <button name="cmd" value="Add">Add</button>
+                }
+            </p>
+            <p>@message</p>
+        </form>
+
+        <table>
+            @foreach(var c in catDao.Categories)
+            {
+                <tr>
+                    <td>
+                        @c.CategoryName
+                    </td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="CategoryId" value="@c.CategoryId"/>
+                            <button name="cmd" value="Edit">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </body>
+</html>
+
+
+ProductPage.cshtml
+===================
+@{ 
+    var model = new DbApp.Models.ProductViewModel();
+    var cDao = new DbApp.Models.CategoryDao();
+    var pDao = new DbApp.Models.ProductDao();
+    var cmd = Request["cmd"] ?? "";
+    model.ProductId = Request["ProductId"].AsInt();
+    model.CategoryId = Request["CategoryId"].AsInt();
+    model.ProductName = Request["ProductName"] ?? "";
+    model.Unit = Request["Unit"] ?? "";
+    model.Rate = Request["Rate"].AsDecimal();
+    model.Qty = Request["Qty"].AsDecimal();
+    model.Photo = Request["Photo"] ?? "";
+    model.Available = Request["Available"].AsBool();
+    var isEdit = false;
+    var message = "";
+    if ("Cancel".Equals(cmd))
+    {
+        model = new DbApp.Models.ProductViewModel();
+    }
+    if ("Add".Equals(cmd))
+    {
+        message = pDao.Add(model) ? "Added" : "Can't ";
+    }
+    if ("Update".Equals(cmd))
+    {
+        message = pDao.Update(model) ? "Updated" : "Can't ";
+    }
+    if ("Delete".Equals(cmd))
+    {
+        message = pDao.Delete(model) ? "Deleted" : "Can't ";
+    }
+    if ("Edit".Equals(cmd))
+    {
+        var search = pDao.Find(model);
+        if(search!=null)
+        {
+            model = search;
+            isEdit = true;
+        }
+    }
+
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <form method="post">
+            <input type="hidden" name="ProductId" value="@model.ProductId"/>
+            <p>
+                Category : 
+                <select name="CategoryId">
+                    <option value="0">Select Category</option>
+                    @foreach(var c in cDao.GetCategories())
+                    {
+                        <option @(c.CategoryId == model.CategoryId ? "selected" : "") value="@c.CategoryId">@c.CategoryName</option>
+                    }
+                </select>
+            </p>
+            <p>
+                Name
+                <input type="text" name="ProductName" value="@model.ProductName"/>
+            </p>
+            <p>
+                Unit
+                <select name="Unit">
+                    <option value="">Select Unit</option>
+                    @foreach (var u in DbApp.Models.MySettings.Units())
+                    {
+                        <option @(u.Equals(model.Unit) ? "selected" : "") value="@u">@u</option>
+                    }
+                </select>
+            </p>
+            <p>
+                Rate
+                <input type="text" name="Rate"  value="@model.Rate"/>
+            </p>
+            <p>
+                Qty
+                <input type="text" name="Qty" value="@model.Qty" />
+            </p>
+            <p>
+                Photo
+                <input type="text" name="Photo" value="@model.Photo" />
+            </p>
+            <p>
+                Available
+                <input type="checkbox" @(model.Available ? "checked" : "")  name="Available" value="true" />
+            </p>
+
+            <p>
+                @if(isEdit)
+                {
+                    <button name="cmd" value="Update">Update</button>
+                    <button name="cmd" value="Delete">Delete</button>
+                    <button name="cmd" value="Cancel">Cancel</button>
+                }
+                else
+                {
+                    <button name="cmd" value="Add">Add</button>
+                }
+            </p>
+        </form>
+
+        <table>
+            @foreach(var p in pDao.GetProducts())
+            {
+                <tr>
+                    <td>@p.ProductId</td>
+                    <td>@p.ProductName</td>
+                    <td>@p.Unit</td>
+                    <td>@p.Rate</td>
+                    <td>@p.Qty</td>
+                    <td>@p.Photo</td>
+                    <td>@p.Available</td>
+                    <td>@(cDao.GetCategoryName(p.CategoryId))</td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="ProductId" value="@p.ProductId" />
+                            <button name="cmd" value="Edit">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </body>
+</html>
+
+Example: Add three tables namely Country(CountryId,CountryName),
+                                 State(StateId,StateName,CountryId (FK))
+                                 City(CityId,CityName,StateId (FK))
+and design the models, daos and web interface.
+
+
+Example: List the Categories and Products in following form:
+
+|------------------------------------------------------------------------------|
+| Category : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                    |
+|------------------------------------------------------------------------------|
+| Id  | Name                            | Qty .....                            |
+| 1   | Product1	 		| 10  ..
+| x   | xxxxxxxx                         xxxx 
+|------------------------------------------------------------------------------|
+| Category : yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy                                    |
+|------------------------------------------------------------------------------|
+| Id  | Name                            | Qty .....                            |
+| x   | Product4	 		| xx  ..
+| x   | xxxxxxxx                        | xxxx 
+
+|
+
+
+@{
+    var pDao = new DbApp.Models.ProductDao();
+    var cDao = new DbApp.Models.CategoryDao();
+    var products = pDao.GetProducts().GroupBy(x => x.CategoryId).ToList();
+}
+
+<table>
+    @foreach (var c in products)
+    {
+        <tr>
+            <td>
+                @(cDao.GetCategoryName(c.Key))
+                <table>
+                    @foreach (var p in c)
+                    {
+                        <tr>
+                            <td>@p.ProductName</td>
+                            <td>@p.Rate</td>
+                            </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    }
+</table>
+
+Or you can update the ProductViewModel and ProductDao
+
+Changes: 
+1. Add  public string CategoryName { get;set;} into ProductViewModel class
+2. Change "SELECT" query of GetProducts() in ProductDao class
+
+SELECT Product.*, Category.CategoryNAme 
+    from Product, Category
+           Where Product.CategoryId = Category.CategoryId
+3.   In ProductListPage.cshtl 
+
+ var pDao = new ProductDao();
+ var query = pdo.GetProducts().GroupBy(x=>x.CategoryName)
+
+ <table>
+   @foreach(var c in query)
+    {
+     <tr>
+        <td>
+             @c.Key
+             <table>
+                    ....
+            </table>
+        </td>
+     </tr>
+    }
+ </table>
+     
+
+ public IEnumerable<ProductViewModel> GetProducts()
+        {
+            using (var cn = new OleDbConnection())
+            {
+                cn.ConnectionString = MySettings.CnStr;
+                using (var cmd = new OleDbCommand())
+                {
+                    cmd.Connection = cn;
+                    cmd.CommandText = @"
+SELECT Product.*, Category.CategoryNAme 
+    from Product, Category
+           Where Product.CategoryId = Category.CategoryId";
+                    
+                    cn.Open();
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                           yield  return new
+                                ProductViewModel
+                            {
+                                ProductId = dr.GetInt32(0),
+                                CategoryId = dr.IsDBNull(1) ? 0 : dr.GetInt32(1),
+                                ProductName = dr.GetString(2),
+                                Unit = dr.GetString(3),
+                                Rate = dr.GetDecimal(4),
+                                Photo = dr.GetString(5),
+                                Available = dr.GetBoolean(6),
+                                Qty = dr.GetDecimal(7),
+                                CategoryName = dr.GetString(8) 
+                            };
+                        }
+                    }
+
+                }
+            }
+        }

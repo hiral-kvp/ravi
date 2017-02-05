@@ -1,0 +1,99 @@
+Authentication Filter - AuthFilter
+=============================================
+The  AuthFilter is a special category of attribute or class which help us to set authorization for entire controller or a specific action.
+
+How to create Authorization filter?
+------------------------------------
+
+1. Create a public class named MyAuthorize (or You can use your own name) which extends the "AuthorizeAttribute" class.
+
+2. Override the AuthorizeCore() - This method returns bool. If logged user is of given role type then returns true; 				  returns false otherwise.
+
+				  You can use Cookie or Session (Create Wrappers classes) to set authorization flag.
+                HandleUnauthorizedRequest() - This method will be called by ASP.NET when "AuthorizeCore()" returns 						false and we will redirect the user to any other action especially
+						the /Home or /Home/Login etc.
+   public class MyAuthorize : AuthorizeAttribute 
+     {
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            return Roles.Contains(SessionWrapper.Role);
+        }
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            HttpContext.Current.Response.Redirect("~/Home/Login");
+        }
+    }
+
+How to use Authorization filter?
+--------------------------------
+As per name suggest the "filter" filters the request and perform assign tasks.
+
+We can filter entire controller,
+
+[MyAuthorize(Roles="Admin")]
+public class YourController : Controller { }
+
+
+[MyAuthorize(Roles="Clerk")]
+public class OtherController : Controller { }
+
+[MyAuthorize(Roles="Admin,Clerk")]
+public class BothController : Controller { }
+
+Or you can use same attributes for actions
+
+[MyAuthorize(Roles="Admin")]
+public ActionResult AdminTask() { .. }
+
+Example: 
+
+1. Create a SessionWrapper in Models folder (As per Authentication & Authorization code)
+
+2. Actions in HomeController
+
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View(new LoginViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                if(model.Username.Equals("a@a.com"))
+                {
+                    SessionWrapper.Role = "Admin";
+                    SessionWrapper.UserName = "Rajesh (The Admin)";
+                }
+                if (model.Username.Equals("b@b.com"))
+                {
+                    SessionWrapper.Role = "Clerk";
+                    SessionWrapper.UserName = "Manish (The Clerk)";
+                }
+                ViewBag.Message = "Valid Data";
+            }
+            else
+                ViewBag.Message = "Invalid data - Reenter please";
+            return View(model);
+        }
+        
+        [MyAuthorize(Roles ="Admin")]
+        public ActionResult AdminTask()
+        {
+            return Content("Admin Task");
+        }
+
+        [MyAuthorize(Roles = "Clerk")]
+        public ActionResult ClerkTask()
+        {
+            return Content("Clerk Task");
+        }
+
+        [MyAuthorize(Roles = "Clerk,Admin")]
+        public ActionResult BothTask()
+        {
+            return Content("Both Task");
+        }
+

@@ -1,0 +1,40 @@
+ Partial class
+ =========================================================================
+ With the help of "partial class" feature, we can split the definition of
+ single large class into two or more files or two or more locations.
+
+ partial keyword 
+ ---------------
+
+ The partial keyword creates a partial class which can be stored/saved into same or  different .cs file.
+
+Example:
+
+Student.cs
+-----------
+public partial class Student 
+{
+  public int Roll {get;set;}
+  public string Name {get;set;}
+}
+
+StudentLogin.cs
+-----------------
+public partial class Student
+{
+   public string Username {get;set;}
+   public string Password {get;set;}
+}
+
+Test.cs
+-------
+public class Test
+{
+  static void Main()
+   {
+     Student s= new Student();
+     s.Roll = 1; 
+     s.Name = "A";
+     s.Username = "abc"; s.Password="abc";
+     }
+} 

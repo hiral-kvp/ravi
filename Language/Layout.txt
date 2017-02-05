@@ -1,0 +1,453 @@
+ Prepare the following layout:
+
+ |-------------------------------|
+ | Logo+Header                   |
+ |-------------------------------|
+ | Left  | Right                 |
+ |       |                       |
+ |-------------------------------|
+ | Footer                        |
+ |-------------------------------|
+
+There are two ways -- using "float" or "display=flex" CSS properties.
+
+using display property:
+
+               <div class="flex-container">
+                    <div class="border-right w20per">One</div>
+                    <div class="w80per">Two</div>
+                </div>
+
+.border-right { border-right: 1px solid #aaa;}
+.w20per { width: 20%;}
+.w80per { width: 80%;}
+
+.flex-container {
+    display: flex;
+    width: 300px;
+    height: 200px;
+    border: 1px solid #aaa;
+}
+
+NOTE: flex is CSS3 property and it is not exists in old web-browsers.
+ 
+
+Using "float" proeprty,
+
+/*Always reset the margin of html & body */
+html, body {
+    margin: 0;
+}
+.container {
+    width: 999px;
+    border: 1px solid black;
+    margin: 0 auto;  /* set top margin 0 and rest are automatic */
+}
+.left-float { float: left;}
+.right-float { float: right;}
+.clear { clear: both;}
+.border-top { border-top: 1px solid #aaa;}
+.border-bottom { border-bottom: 1px solid #aaa;}
+.border-right { border-right: 1px solid #aaa;}
+.border-left { border-left: 1px solid #aaa;}
+.w20per { width: 20%;}
+.w80per { width: 80%;}
+
+
+    <div class="container">
+        <header class="border-bottom"></header>
+       <section>
+            <aside class="left-float border-right w20per">A</aside>
+            <aside class="left-float">B</aside>
+            <div class="clear"></div>
+        </section>
+        <footer class="border-top">
+            <p>&copy; </p>
+        </footer>
+    </div>
+     
+
+Inherited CSS properties and how they are overriden?
+-------------------------------
+Not all CSS properties support inheritance. font, color are few properties which supports inheritace.
+
+Example:
+
+.one {
+    font-size: 2em;
+    color: blue;
+}
+.two {
+    font-size: 0.4em;
+}
+.one a {
+    color: red !important;    /* Force overriden -- all children have red text color*/
+}
+.two a {
+    color: green;
+}
+
+<div class="one">
+    One<br/>
+    <p>Two</p>
+    <p><a href="#">Home</a>
+    </p>
+    <p class="two">
+        This is regular font-size  (0.4em or 40% of 2em or 200%)
+        <a href="#">About us</a>
+    </p>
+</div>
+
+CSS Selectors - Descedent or children selector
+
+   Syntax:
+
+  selector1  selector2  {
+
+  }
+
+  Properties will be applied to "selector2" which are inside the "selector1".
+
+
+Example:
+
+<div class="one">
+   <p>First Para</p>
+   <div>
+      <p>Second para</p>
+   </div>
+   <p>Third para</p>
+</div>
+ <p>Fourth para</p>
+
+.one p {              Selector "p" embed/enclosed in ".one" selector
+  color: red;
+}
+
+
+Child selector 
+
+ Syntax:
+
+  selector1 > selector2 {  }   To set properties of "selector2" exists under                                "selector2" at 1st level (not all descedent).
+
+
+Example:  In previous example,
+
+   .one > p {
+      color: red;
+   }
+ 
+
+Attribute selectors
+
+  Syntax:
+
+   selector[attribute=value] { .... }
+
+
+Example:
+
+input[type="submit"] { padding:4px; }
+input[type="text"] { padding:2px 2px 2px 10px; border:1px solid red; }
+
+
+Adjuscent sibling
+
+  Syntax:
+
+  selector1 + selector2  {  }
+
+  CSS properties will be set to "selector2" which is an adjuscent of "selector1".
+
+
+h1 + div {
+  color: red;
+}
+
+<h1>Intro</h1>
+<div>About introduction...</div>
+<div>And this is not an adjuscent</div>
+
+<h1>Chapter1</h1>
+<div>We can....</div>
+
+Example: Show an adjuscent element when mouse is over on "selector1"
+
+(In previous example)
+
+h1:hover + div {
+  display: block;
+}
+
+h1 + div {
+ color: red;
+ display: none;
+}
+ 
+
+Pseudo selectors
+
+These selectors are commands /actions to the webbrowser to set CSS properties for
+pre-defined cause.
+
+For example,
+
+  a:link, a:visited are pseudo selector for "<a href>" - anchor element.
+
+
+a:active {
+  background: yellow;
+}
+
+a:link {
+   background: red;
+}
+
+a:visited {
+   background: black;
+   color: white;
+}
+
+
+:hover - set CSS properties when mouse is over on specified selector.
+
+ Syntax:   selector:hover { ... }
+
+h1:hover { .... }
+a:hover { ... }
+
+.one:hover { }
+
+::selection { } - To set properties for selected text background on body element.
+
+Example:
+
+::selection {
+  background: yellow;
+}
+
+Vendor prefix CSS properties
+=======================================================
+Not all CSS properties of new CSS standard (CSS3) are fully available for production but some of them are under testing or development so web-browser vendors have introduce -prefix-css properties so the web developers can write selectors with appropriate fallback properties.
+
+For example,  
+
+  Mozilla don't have ::selection in production but it is exists with "testing" phase
+  and we can write selectors for different browsers:
+
+  ::selection {
+     background: red;
+  }
+
+  ::-moz-selection {
+     background: red;
+  }
+
+  ::-ms-selection {
+      background: red;
+  }
+
+  ::-khtml-selection { ... }
+    
+
+  -moz for mozilla
+  -ms  for microsoft
+  -webkit for safari, chrome etc
+
+
+selector:first-letter and selector:first-line
+---------------------------------------------
+To set properties for first letter or first line (of text).
+
+p:first-letter {
+    font-size: 4em;
+}
+p:first-line {
+    background: yellow;
+}
+
+<p>Write something in three to four lines.....</p>
+
+
+nth-child(value) - set propperties for specified element using odd or even keywords or
+setting index value.
+
+For example,
+
+p:nth-child(odd) {   /* for odd position elements*/
+  color: blue;
+}
+
+p:nth-child(1) {  /* for 1st position */
+  color:red;
+}
+
+
+Example : Setting table's row background color (odd rows).
+
+table {
+    border-collapse: collapse;
+    border: 1px solid #aaa;
+}
+td {
+    border: 1px solid #aaa;
+}
+tr:nth-child(1) {
+    background: #000 !important;
+    color: wheat;
+}
+tr:nth-child(odd) {
+    background: #aaa;
+}
+
+
+selector:after and selector:before
+-----------------------------------
+To insert the content (text-content) before or after an element. 
+
+selector:before {
+  content: 'value';
+}
+
+.my-quote:before {
+  content: '{';
+  font-size: 3em;
+}
+.my-quote:after {
+  content: '}';
+  font-size: 3em;
+}
+
+<p class="my-quote">Where there is a will there is a way</p>
+
+Example:  Create .png (via paint brush)
+
+|------------------------|
+| Circle | Rect  | Star  | <-- without background
+|--------|-------|-------|
+| Circle | Rect  | Star  | <-- with background
+|------------------------|
+
+ Assume that each "icon/symbol" has exact 68px height & width along with padding.
+
+
+.icon {   /* define an area in which icon is to be painted */
+    display: inline-block;
+    width: 68px;
+    height: 68px;
+    border: 1px solid #aaa;
+}
+.circle {
+    background: url(icons.png) no-repeat 0px 0px;
+}
+.circle:hover {
+    background: url(icons.png) no-repeat 0px -75px;
+}
+.square {
+    background: url(icons.png) no-repeat -69px 0px;
+}
+.square:hover {
+    background: url(icons.png) no-repeat -69px -75px;
+}
+.star {
+    background: url(icons.png) no-repeat -140px 0px;
+}
+.star:hover {
+    background: url(icons.png) no-repeat -140px -75px;
+}
+
+<span class="icon circle"></span>
+<div class="icon square"></div>
+
+
+position property
+------------------
+
+To position the elements, we have position CSS property:
+
+  position: static | absolute | fixed | relative;
+
+  default value is "static". The "static" value does not allow value of "left", "top",
+  "right" or "bottom".
+
+   We can set left,top,right,bottom value with absolute, fixed or relative value.
+
+
+Example:
+
+.social-media {
+  position: fixed; /* will set coordinates relative to the browser window */
+  right:0;
+  bottom:0;
+  height:200px;
+  width:20px;
+  background: blue;
+}
+
+<div class="social-media"></div>  <!--- A "strip" will be displayed at right bottom
+					of window -->
+
+Example: To display a box at x=100px  and y =150px onto the body (using absolute position) and then display some elements inside that box (using relative position)
+
+
+.box {
+    position: absolute;
+    height: 300px;
+    width: 300px;
+    border: 1px solid #aaa;
+    left: 100px;
+    top: 150px;
+}
+.one {
+    position: relative;
+    left: 10px;
+    top: 10px;
+    height: 50px;
+    width: 50px;
+    background: red;
+}
+
+<div class="box">  <!--- displayed at absolute location (x & y) --->
+  <div class="one">Hello</div>  <!-- Relative -->
+  <div>Hi! How are you?</div>   <!-- static --->
+</div>
+
+Example :CSS menu
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+.nav {
+    background: red;
+}
+.nav > li {
+    display: inline-block;
+    padding: 5px;
+}
+
+.level-1 > ul {  /* hide sub-menu */
+    position: absolute;
+    display: none;
+}
+.level-1:hover > ul {  /* show sub menu */
+    display: block;
+}
+ 
+<ul class="nav">
+   <li class="level-1">
+      File
+       <ul>
+          <li>New</li> 
+          <li>Open</li>
+        </ul>
+   </li>
+   <li class="level-1">
+       Edit
+      ......
+</ul>
+
+
+ 
+

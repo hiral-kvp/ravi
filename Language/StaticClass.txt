@@ -1,0 +1,14 @@
+ Static class
+ ------------------------------------------------------------------------------
+ If a class is created using "static" modifier then all members of that 
+ class must be static. You can't add instance fields or methods in static class.
+
+
+ Example:
+
+ public static class Util
+ {
+    public static string Server {get;set;} //valid
+    public string Username {get;set;} //Invalid because it is instance property
+    public static void Set() { } // valid
+  }

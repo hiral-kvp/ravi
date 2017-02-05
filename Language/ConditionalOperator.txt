@@ -1,0 +1,31 @@
+ Conditional Operator 
+ ----------------------
+ exp1 ? exp2 : exp3;
+
+ The exp1 must be boolean and if it is true then exp2 will be executed and if it is false then exp3 will be executed.
+
+Ex: Find max number among two values
+
+   int no1 = 3, no2 = 5;
+   int max = no1>no2 ? no1 : no2;
+
+Ex: Returns entry string if name is null.
+
+    string name = null;
+ 
+    name = name!=null ? name : "";
+
+Note: Contional operator must be written in a single line and it can be used as nested conditional operators.
+
+Ex: Find max number among three values.
+
+   int no1 = 2, no2 = 4, no3 = 1;
+
+   int max = no1>no2 && no1>no3 ? no1 : no2>no1 && no2>no3 ? no2 : no3;
+
+
+
+
+
+
+  

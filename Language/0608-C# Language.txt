@@ -1,0 +1,233 @@
+ Program file structure of C#
+ ------------------------------------------------------
+ C# code file has two kind of statements:
+
+  1. using statements - To import the namespaces
+  2. Type definitions statements
+
+ The "using" statement is an instruction for compiler to import
+ the specified namespace into current .cs file.
+
+ To import a namespace means to allow developer / user to use
+ only TypeName in his/her code without adding fully qualified  name.
+
+ Syntax:
+
+      using NamespaceName;
+      using Namespace.SubNamespace;
+
+ Rules : The using statement must appear at the top of your code
+	 file before any Type definition.
+
+         The using statement cannot use "TypeName" along with
+	 NamespaceName. eg. using System.Console; is illegal.
+Example:
+
+using System;
+
+class Test
+{
+    static void Main()
+    {
+        Console.WriteLine("Without namespace");
+        System.Console.WriteLine("Fully qualified name - with 		namespace");
+    }
+}
+
+Defining an alias
+-----------------
+Syntax:
+  
+  using alias-name = Namespace.TypeName;
+
+ The using statement allow us to create a second name or an  alias for a "Type".
+
+Example:
+
+using System;
+using Cn=System.Console;
+
+class Test
+{
+  static void Main()
+   {
+     Cn.WriteLine("An alias is used to rename or shorten the typename");
+     Console.WriteLine("However we can use fully qulified or
+		TypeName without namespace in our code");
+    }
+}
+
+Local variables
+----------------
+Variables created inside the function/method definitions are called local variables (and they are always placed into Stack Frame) and they are not initialized initially (by default), so we must have to initialize them before we use them in our code.
+
+Following code wont be compiled:
+
+class Test
+{
+    static void Main()
+    {
+        int no;
+        Console.WriteLine(no); <-- because "no" is not 
+    }					initialized.
+}
+
+Literals - value/data to initialized varibles and their types
+--------------------------------------------------------------
+
+1. int literal
+
+   Any numeric value without decimal point is consider as   "System.int32" (int) type by default and it is expressed via
+   one of the following value:
+
+      1. decimal value e.g 10, -20, 0 etc
+      2. Hexadecimal value e.g  0xF  or 0xf (0x prefix)
+      3. Octal value e.g 012 (0 prefix for octal)
+
+   The integer literal is automatically converted into
+   byte, sbyte, short, ushort, int and uint but it shows an
+   error when literal value exceed the range of target       datatypes.
+
+     e.g
+
+         byte a = 10; //OK
+         byte b = 300; //Error because range of target (byte)
+		       // type is 0 to 255
+
+Example: Code in Main
+
+byte a = 0xF;
+byte b = 0xFFF; //Error
+short c = 32768; //Error - range is -32768 to 32767
+int no = 012; //Octal
+int no1 = 20020; // decimal
+
+Example: Determine the Range value of simple types.
+
+Each simple type have public properties (fields) namely,
+  TypeName.MaxValue and TypeName.MinValue
+
+Code in Main:
+
+ Console.WriteLine(byte.MaxValue);
+ Console.WriteLine(byte.MinValue);
+
+Example: Checking overflow/underflow with "checked" block.
+There are two keywords to handle overflow/underflow for "int" family data.
+
+  1. unchecked - which is a default for entire project
+  2. checked   - It throws an error/exception when orverflow/
+			underflow occurs.
+
+ Syntax:
+    unchecked { 
+      int-family-data-operations.....
+    }
+    checked { 
+      int-family-data-operations.....
+    }
+Note: float, double and decimal has built-in ability to check overflow/underflow - which is known as "Infinity".
+
+       int no = int.MaxValue;
+        Console.WriteLine(no);
+        checked
+        {
+            no++;    // throws an OverflowException
+        }
+        Console.WriteLine(no);
+2. long literal is defined with "L" or "l" suffix.
+
+    e.g 10L or 0xFFFFL  or 044432L
+
+Code:
+        long no = 100000L * 100000L; //Remove "L" and see
+        Console.WriteLine(no);       //what happen?
+
+3. double literal is defined with "D" or "d" or you don't have
+   to use "D" or "d" because any number with decimal point is
+   consider as "double".
+ eg.	10.10  is equivalent to 10.10D
+4. float literal is defined with "F" or "f" suffix.
+    e.g  10.10 is double literal
+         10.10f is float literal
+
+Code:
+     float amount = 100.10; // throws an error 
+                            // Correction: amount = 100.10f;
+5. decimal literal is defined with "M" or "m" suffix.
+   e.g 10.10m
+6. char literal is expressed with single quote:
+
+    Syntax - 1   'A' or '?'  ' '
+    Syntax - 2 for unicode (Universal Text Format UTF)
+		'\u0000'  - \u + four-hex-digits
+ 
+ Use "charmap.exe" tool and "Arial Unicode" font to learn about
+	unicode value of each char.
+
+Code:
+
+             char ch1 = 'R',
+                   ch2 = '\u0AAE';  
+             Console.WriteLine(ch1);
+             Console.WriteLine(ch2);
+7. boolean literal is expressed via true or false keywords.
+   bool status = true;
+   bool result = false;
+8. string literal is denoted with double quotes.
+
+    For example,
+
+        "Hello World" - and string literal include escape or 			backslash characters.
+	
+    The "string" literal in .net framework is an object of     "System.String" class.
+
+    Use + operator with "string" object to concat the data of     any dtatype to the string.
+
+Example:
+
+        Console.WriteLine("Hello"); //String object
+        Console.WriteLine("Hello".Length); //Call methods of
+        Console.WriteLine("Hello".ToUpper()); // String 
+
+        int no1 = 10, no2 = 20;
+        Console.WriteLine("Sum : " + no1 + no2); // 1020
+        Console.WriteLine("Sum : " + (no1 + no2)); // 30
+        Console.WriteLine("\nSum of " + no1 + " and " 
+                               + no2 + " is " + (no1+no2));
+
+        string str = no1 + "+" + no2 + "=" + (no1+no2);
+        Console.WriteLine( str );
+
+ @ verbatim operator with string literal
+ -----------------------------------------
+ Syntax:
+
+     @"your-sttring-content"
+
+  The @ verbatim operator escapes backslash chars and allow us
+  to write string with whitespaces.
+
+Code:
+
+        string path1 = @"c:\new folder\test"; //Escape
+        string path2 = "c:\\new folder\\test";
+        string info = @"
+Dear,
+
+How are you?
+       |---------|
+       |         |
+       |---------|       
+        I hope your are OK there.
+Regards,
+";
+        Console.WriteLine(path1);
+        Console.WriteLine(path2);
+        Console.WriteLine(info);
+
+9. null literal - To set null literal to reference variable to
+    indicates that an object is missing or object is not exists.
+	
+	e.g	string name = null;
+                
