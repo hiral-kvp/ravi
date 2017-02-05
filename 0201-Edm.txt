@@ -1,5 +1,5 @@
 The Entity Data Model - EDM and Entity Framework (EF)
-=======================================================================================================
+=======
 
 As we already learnt that the SQL statements (varities of statements) needed to be construct (simple to complex statements -- joins, inner etc) and then returns the result in the form of "Objects" is little bit a complex task (but not immposible).
 
