@@ -1,3 +1,3 @@
-"This is read me file" 
-----------------------
-This is first line
+README
+=======
+My first repository.
