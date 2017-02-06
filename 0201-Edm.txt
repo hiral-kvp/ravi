@@ -1,0 +1,540 @@
+The Entity Data Model - EDM and Entity Framework (EF)
+=======
+
+As we already learnt that the SQL statements (varities of statements) needed to be construct (simple to complex statements -- joins, inner etc) and then returns the result in the form of "Objects" is little bit a complex task (but not immposible).
+
+We need to create a "Model - View Models and Dao and Bao" component to in order to perform the database & data oriented tasks.
+
+Till today, database APIs -- data providers -- is the best and efficent way to work with varities of databases but developers have to write complex models (as per system requirments). That means one must have to keep on track of each database actions and there are many actions (assume that we've 20 tables or more) if our app uses more tables, stored procedures and other entities.
+
+Here, we've number of ORM (Object-Relation Model or EDM) tools which define a relationship between "Object - CLR Plain Object - a class with properties" and the "Relation - table(s)".
+
+There are number of open source ORM tools exists but the EF - Entity Framework from the Microsoft is among the best (You can also use NHibernate from JBoss). The EF is an open source ORM tool and it is backed by the Microsoft and open souce community.
+
+Microsoft .Net Framework's Open Source Tools, APIs are available at "www.nuget.org" - A Package Manager; where we can download and upload libraries, tools and most importantly they are the lastest released APIs or tools.
+
+
+How to install the packages from www.nuget.org?
+----------------------------------------------
+
+A tool in Visual Studio called "Nuget Package Manager Console" (From Tool menu) is used to install/unstall/update/remove the open source APIs/tools.
+
+For example,
+
+PM>Install-package jQuery
+PM>Install-Package EntityFramework
+
+Note: The Visual Studio already has a slightly older version of EntityFramework; if you're interested in new version then update/install the new package.
+
+How to use the EF tools and EF API?
+----------------------------------------------------
+You can use the EF tools and APIs in any category of your application (Web, Windows, Console etc). In fact, this tool; EntityFramework uses System.Data.SqlClient Data provider. If you're working with Oracle or MySql then download the appropriate EntityFramework for an appropriate providers.
+
+1. Firstly, create / open a project (we will create a web project)
+
+2. Add local/remote database and add some tables (Use ProperCase name and always use singular words).
+
+create table Country
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique
+)
+create table State
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique,
+  CountryId int not null,
+  Foreign key(CountryId) References Country(Id)
+)
+create table City
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique,
+  StateId int not null,
+  Foreign key(StateId) References State(Id)
+)
+
+create table Dept
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique,
+  Location varchar(30) not null
+)
+
+create table Emp
+(
+  Id int primary key identity,
+  FirstName varchar(30) not null,
+  MiddleName varchar(30) not null,
+  LastName varchar(30) not null,
+  CityId int not null,
+  Address varchar(400) not null,
+  Gender varchar(1) default 'M',
+  BirthDate Date not null,
+  JoinDate Date not null,
+  DeptId int not null,
+  BasicSalary int not null
+  Photo varchar(50),
+  Foreign key(CityId) References City(Id),
+  Foreign key(DeptId) References Dept(Id)
+)
+
+Create table Salary
+(
+  EmpId int,
+  MonthNo int,
+  YearNo int,
+  Amount decimal(18,2) not null,
+  Created DateTime,
+  Primary key(EmpId,MonthNo,YearNo),
+  Foreign Key(EmpId) References Emp(id)
+)
+create table Attendence
+(
+  EmpId int,
+  AttDate Date,
+  Status varchar(1) default 'P',
+  Primary key(EmpId,AttDate),
+  Foreign Key(EmpId) References Emp(id)
+)
+  
+NOTE: You can add "Id" for the Salary & Attendence tables too.
+
+Primary Key(col1,col2,...) is called "composite column key".
+  
+
+Example: Create a "script" (EmpDb.sql) and save all above "SQL" statements into it
+
+drop table Attendence
+drop table Salary
+drop table Emp
+drop table Dept
+drop table City
+Drop table state
+Drop table country
+Drop table Login
+
+..now add above written SQL statements...
+...
+
+create table Login
+(
+  UserId int primary key identity,
+  Email varchar(255) not null unique,
+  Password varchar(MAX) not null,
+  Created DateTime not null,
+  LastLogin DateTime not null,
+  Active bit not null default 0,
+  Role varchar(10) not null default 'Guest'
+)
+
+insert into Login(Email,Password,Created, LastLogin,Active,Role)
+  values ('admin@gmail.com','admin,1234','1-Jan-2017','1-Jan-2017',1,'Admin')
+
+
+================ EmpDb.sql=======================
+
+Drop table Salary
+Drop Table Attendence
+Drop table Emp
+Drop table Dept
+Drop Table City 
+Drop Table State 
+Drop Table Country 
+Drop Table Login 
+
+create table Country
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique
+)
+create table State
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique,
+  CountryId int not null,
+  Foreign key(CountryId) References Country(Id)
+)
+create table City
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique,
+  StateId int not null,
+  Foreign key(StateId) References State(Id)
+)
+
+create table Dept
+(
+  Id int primary key identity,
+  Name varchar(50) not null unique,
+  Location varchar(30) not null
+)
+
+create table Emp
+(
+  Id int primary key identity,
+  FirstName varchar(30) not null,
+  MiddleName varchar(30) not null,
+  LastName varchar(30) not null,
+  CityId int not null,
+  Address varchar(400) not null,
+  Gender varchar(1) default 'M',
+  BirthDate Date not null,
+  JoinDate Date not null,
+  DeptId int not null,
+  BasicSalary int not null,
+  Photo varchar(50),
+  Foreign key(CityId) References City(Id),
+  Foreign key(DeptId) References Dept(Id)
+)
+
+Create table Salary
+(
+  EmpId int,
+  MonthNo int,
+  YearNo int,
+  Amount decimal(18,2) not null,
+  Created DateTime,
+  Primary key(EmpId,MonthNo,YearNo),
+  Foreign Key(EmpId) References Emp(id)
+)
+create table Attendence
+(
+  EmpId int,
+  AttDate Date,
+  Status varchar(1) default 'P',
+  Primary key(EmpId,AttDate),
+  Foreign Key(EmpId) References Emp(id)
+)
+
+create table Login
+(
+  UserId int primary key identity,
+  Email varchar(255) not null unique,
+  Password varchar(MAX) not null,
+  Created DateTime not null,
+  LastLogin DateTime not null,
+  Active bit not null default 0,
+  Role varchar(10) default 'Guest'
+)
+
+insert into Login(Email,Password,Created, LastLogin,Active,Role)
+  values ('admin@gmail.com','admin,1234','1-Jan-2017','1-Jan-2017',1,'Admin')
+
+==================================
+
+3. Add New Item (Project Menu Or Right mouse click on Solution Explorer)  
+		+ Data Section + ADO.NET Entity Data Model 
+		+ Add
+		+ Select EF Designer from Database ( Entities means classes will be created from the Database tables).
+		+ Next 
+		+ (Now in this step a connection string will be prepared and saved into web.config file automatically)
+		+ Next
+		+ (Select Version 6.x -- default)
+		+ NExt
+		+ [x] Tables or Views or Stored Proc (Select all or individual object)
+		+ Finish 
+		This tool generate "Entities -- Plain CLR objects" for each table (selected) and a very special primary class (main class of EntityFramework) called   "XXXXXXXXEntities" where XXXXXXX means your database name.
+
+		If "EmpDb" is your database then EmpDbEntities will be your primary class to access the EntityFramework 		APIS.
+
+		After few seconds, a designer will be appear and displays the classes and compositions which are created 		by the EntityFramework tool. Now, save this designer page and close it.
+
+4. Write following code in razor page or classes
+
+
+@using Yourapp
+
+@{
+  //1. Create the object of Database context class
+  var db = new EmpDbEntities();
+  
+  //2. Create entities
+  var entity = new Country { Name = "India" };
+  
+  //3. Add Entities to the collection
+  db.Countries.Add( entity );
+  db.Countries.Add( new Country { Name = "Nepal" } );
+  
+  //4. Commit the changes -- Call this method to save the changes - insert/delete/update
+  db.SaveChanges();
+
+}
+
+<h3>List the countries</h3>
+@foreach(var c in db.Countries)
+{
+  <p>@c.Id  @c.Name</p>
+}
+
+
+Example: To delete or update the record.
+
+In order to delete or update, first we need to search that record using "FirstOrDefault()" or "Where" extension method (or use LINQ query) and it is exists then you can.
+
+@{
+  //delete a country whose Id is 3
+  var id = 3;
+  var db = new EmpDbEntities();
+
+  var search = db.Countries.FirstOrDefault( x=>x.Id == id);
+  if(search == null)
+   {
+     <p>Not found</p>
+   }
+  else
+   {
+      ///update or delete
+      search.Name = "Change the country name";
+      db.SaveChanges();
+    }
+}
+
+To delete, code in else block:
+
+   db.Countries.Remove( search );
+   db.SaveChanges(); 
+
+To search an element via query:
+
+  var search = (from c in db.Countries
+                  where c.Id == id select c).FirstOrDefault();
+
+To search an element via Where:
+  var search = db.Countries.Where(x=>x.Id == id).FirstOrDefault();
+
+Example: To add "State" record (Assume that Country(1,India), Country(2,Nepal))
+
+var db = new EmpDbEntities();
+var st = new State { Name = "Gujarat", CountryId=1 };
+db.States.Add( st );
+db.SaveChanges();
+
+Example: Add "City" record. Assume State(1, "Gujarat", 1 (CountryId))
+
+var db = new EmpDbEntities();
+var ct = new City { Name="Mehsana", StateId=1 };
+db.Cities.Add( ct );
+db.SaveChanges();
+
+
+Design the ViewModel, Dao and Bao (Dal or Bal) layers
+=======================================================================================================
+In business app, it is mandatory to keep code in two or more layers; for ease of development, re-use and maintanance of code.
+
+After creating (or running EF tools) Entities components from the database in our project, add following classes into the "Models" (YourApp.Models) namespace.
+
+In this example, we will use three ViewModels (Country,State,City)
+
+public class CountryViewModel
+{
+   public int Id {get;set;}
+   public string Name {get;set;}
+}
+
+public class StateViewModel
+{
+   public int Id {get;set;}
+   public string Name {get;set;}
+   public int CountryId {get;set;}
+   public string CountryName {get;set;}   OR  public CountryViewModel Country {get;set;}
+}
+public class CityViewModel
+{
+   public int Id {get;set;}
+   public string Name {get;set;}
+
+   public int StateId {get;set;}
+   public string StateName {get;set;}
+   public int CountryId {get;set;}
+   public string CountryName {get;set;}  Or public StateViewModel State {get;set;}
+}
+
+Note: Use of "XXXXXViewModel" in other XXXXXViewModel is the best practice. (Re-use of the code)
+
+Now, design the Dao/Dal classes
+
+public class CountryDao
+{
+    public static bool Add(CountryViewModel model)
+     {
+        using(var db = new EmpDbEntities())
+         {
+           var search = db.Countries.FirstOrDefault(x=>x.Name.Equals(model.Name));
+           if(search == null)
+             {
+                db.Countries.Add( new Country { Name = model.Name } );
+                db.SaveChanges();
+                return true;
+              }   
+              return false;
+           }
+       }
+   public static bool Update(CountryViewModel model)
+     {
+        using(var db = new EmpDbEntities())
+         {
+           var search = db.Countries.FirstOrDefault(x=>x.Id == model.Id);
+           if(search != null)
+             {
+                search.Name = model.Name;
+                db.SaveChanges();
+                return true;
+              }   
+              return false;
+           }
+      }
+   public static bool Delete(CountryViewModel model)
+     {
+        using(var db = new EmpDbEntities())
+         {
+           var search = db.Countries.FirstOrDefault(x=>x.Id == model.Id);
+           if(search != null)
+             {
+                db.Countries.Remove( search );
+                db.SaveChanges();
+                return true;
+              }   
+              return false;
+           }
+      }
+    public static CountryViewModel Get(CountryViewModel model)
+     {
+        using(var db = new EmpDbEntities())
+         {
+           var search = db.Countries.FirstOrDefault(x=>x.Id == model.Id);
+           if(search != null)
+             {
+                return new CountryViewModel { Id = search.Id, Name= search.Name };
+              }   
+              return null;
+           }
+      }
+   public static List<CountryViewModel> Gets()
+     {
+       var list = new List<CountryViewModel>();
+        using(var db = new EmpDbEntities())
+         {
+            foreach(var c in db.Countries)
+             {
+               list.Add( new CountryViewModel { Id = c.Id, Name = c.Name });
+              }
+          }
+         return list;
+      }
+}//End class - CountryDao
+
+public class StateDao
+{
+   public static bool Add(StateViewModel model) { ... }
+   public static bool Update(StateViewModel model) { ... }
+   public static bool Delete(StateViewModel model) { ... }
+   public static StateViewModel Get(StateViewModel model)
+    {
+       using(var db = new EmpDbEntities())
+       {
+          var search = db.States.FirstOrDefault(x=>x.Id == model.Id);
+          if(search!=null)
+           {
+             return new StateViewModel 
+              {
+                Id = search.Id,
+                Name = search.Name,
+                Country = new CountryViewModel { Id = search.Country.Id, Name = search.Country.Name}
+               };
+            }
+          return null;
+       }
+
+    public static List<StateViewModel> Gets(int countryId) { }
+}
+
+
+Design the Bao -- Bao always uses Dao+ViewModel and additional code.
+--------------------------------------------------------------------
+ public class CountryBao
+    {
+        public static bool Add(string name)
+        {
+            if (name == null) return false;
+            if (name.Length <= 1) return false; //Business logic
+
+            //return CountryDao.Add(new Models.CountryViewModel { Name = name });
+            return Add(new CountryViewModel { Name = name });
+        }
+        public static bool Add(CountryViewModel model)
+        {
+            return CountryDao.Add(model);
+        }
+        public static bool Update(int countryId,string name)
+        {
+            return Update(new CountryViewModel { Name = name , Id=countryId});
+        }
+        public static bool Update(CountryViewModel model)
+        {
+            return CountryDao.Update(model);
+        }
+        public static bool Delete(int countryId)
+        {
+            return CountryDao.Delete(new Models.CountryViewModel { Id = countryId });
+        }
+        public static bool Delete(CountryViewModel model)
+        {
+            return CountryDao.Delete(model);
+        }
+        public static IEnumerable<CountryViewModel> SortByName()
+        {
+            return CountryDao.Gets().OrderBy(x => x.Name);
+        }
+        public static IEnumerable<CountryViewModel> SortById()
+        {
+            return CountryDao.Gets()
+.OrderBy(x => x.Id);
+        }
+    }
+
+
+Skip(n) and Take(n) extension methods of Linq  
+=============================================
+
+Skip(n) will skip "n" elements from the collections and
+Take(n) will return "n" elements (n items) from the collections.
+
+We will use these methods to get records/objects page wise ( for example, 10 records per page )
+
+It is important to note that the Skip and Take uses ordered items so use OrderBy along with these methods.
+
+int []nos = { 11,22,33,44,55,66,77,88};
+
+foreach(var n in nos.Skip(3))  //44 to 88
+   Console.WriteLine(n);
+
+foreach(var n in nos.Skip(3).Take(2))  // 44 55
+   Console.WriteLine(n);
+
+Add following methods in Dao:
+
+     public static List<CountryViewModel> Gets(int page, int pageSize)
+        {
+            var list = new List<CountryViewModel>();
+            using (var db = new EmpDbEntities())
+            {
+                foreach (var c in db.Countries.OrderBy(x=>x.Name).Skip(page*pageSize).Take(pageSize))
+                {
+                    list.Add(new CountryViewModel { Id = c.Id, Name = c.Name });
+                }
+            }
+            return list;
+        }
+     
+      // Count of rows
+     public static int Count 
+      {
+         get
+           {
+             using(var db = new EmpDbEntities())
+               {
+                 return db.Countries.Count();
+               }
+            }
+        }   

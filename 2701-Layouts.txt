@@ -1,0 +1,23 @@
+Layouts Pages in MVC app
+------------------------
+
+Layouts are generally saved into ~/Views/Shared (or /AreaName/Views/Shared) and they are marked as hidden using _ underscore prefix.
+For example,
+
+/Views/Shared/_Site.cshtml
+---------------------------
+<!doctype html>
+<head><title>@ViewBag.Title</title></head>  
+<body>
+  <h1>Site Name</h1>
+  <nav><a href="/home/index">Home</a><a href="/home/login">Login</a></nav>
+  <section>@RenderBody()</section>
+</body>
+
+and apply this layout page to content pages.
+e.g
+/Views/Home/Index.cshtml
+@{ Layout = "~/Views/Shared/_Site.cshtml"; }
+<h3>Welcome Home</h3>
+
+ 

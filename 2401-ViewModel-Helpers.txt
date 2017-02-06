@@ -1,0 +1,557 @@
+HTML Helper class and the Model property, ViewBag Property
+==========================================================================================================
+In Razor (.cshtml) page, we've some special purpose classes which produces dynamic content of HTML markup
+when requested. These classes have methods and they uses ViewBag or Model data implicitly. So, these classes
+are known as "Helper" classes because they help us to define the markup using industry standard and with less
+error prone.
+
+Mostly Helper methods are used for <input> and <form> related actions.
+
+Html Encoding
+--------------
+Any content / data pass via action of controller to the view will be encoded - HTML tags will be encoded via HTML entities.
+
+Example: code in Index
+
+ ViewBag.Data = "<h1>Hello World</h1>";
+
+code in Index.cshtml
+
+ @ViewBag.Data  
+
+ Ouput will be : &lt;h1&gt;......
+
+@Html.XXXXXXX methods to show data along with tags
+--------------------------------------------------
+
+1. Html.Raw(data) - It displays data without encoding the text
+
+Example: Index action
+
+  ViewBag.Data = "<h1>Hello World</h1>";
+  ViewBag.No = 10;
+  ViewBag.Status = true;
+  return View();
+
+Code in Index.cshtml,
+
+@ViewBag.Data
+@Html.Raw( ViewBag.Data )
+@Html.Editor("No") 
+@Html.Editor("Status")
+@Html.TextBox("Data")
+
+As we can see that the @Html's some method automatically uses "ViewBag" properties - Data, No, Status etc and produce dynamic content of HTML.
+
+2. There are two categories of methods of Html helper:
+	=> Methods uses ViewBag and       
+        => Methods uses "Model" property. 
+  
+   @Html.Editor("ViewBagProperty")
+   @Html.TextBox("ViewBagProperty")
+   and many more
+
+
+   @Html.EditorFor(model property)
+   @Html.TextBoxFor(model property)
+   and many more.
+
+
+
+HTML <form> using @Html.BeginForm()
+-----------------------------------
+
+Syntax: The using() { } automatically closes the <form> with </form>
+
+   @using (Html.BeginForm())
+     {
+         //
+     }
+                          "action","Controller" /Home/Emp
+    @using (Html.BeginForm("Emp","Home"))
+    {
+        //
+    }
+    @using (Html.BeginForm("Emp", "Home",FormMethod.Get))
+    {
+        //
+    }
+    @using (Html.BeginForm("Emp",
+        "Home",
+        FormMethod.Post,
+        new
+        {
+          id = "form1",
+          @class="my-selector border"
+        }))
+    {
+        //
+    }
+
+Use @ prefix to escape the C# language resevered words. Here, the "class" is a keyword but we want it as an attribute of HTML tag.
+
+1. @Html.Label("Key") - To generate <label>
+2. @Html.Editor("Key") - Produce <input> based upon the datatype of ViewBag's key
+3. @Html.TextBox("Key") - <input type="text">
+4. @Html.Checkkbox("Key")
+5. @Html.RadioButton("Key") 
+6. @Html.Password("Key")
+7. @Html.TextArea("Key")
+8. @Html.DropDownList("Key",Collections)
+9. @Html.ListBox("Key",Collections)
+
+Example:
+
+public ActionResult Index()
+{
+   ViewBag.No = 10;
+   ViewBag.Name = "Raj";
+   ViewBag.Gender = "Male";
+   return View();
+}
+
+Index.cshtml
+--------------
+   @using (Html.BeginForm())
+   {
+         <p>
+            @Html.Label("No")
+            @Html.Editor("No")
+         </p>
+        <p>
+            @Html.Label("Name")
+            @Html.TextBox("Name")
+        </p>
+        <p>
+            @Html.Label("Gender")
+           Male @Html.RadioButton("Gender",false)
+           Female @Html.RadioButton("Gender",false)
+        </p>
+        <p>
+            <button>Submit</button>
+        </p>
+     }
+
+@Html.DropDownList & @Html.ListBox uses collection "SelectListItem" objects
+--------------------------------------
+1. Create a class in Models folder.
+
+public class Lists
+    {
+        public static IEnumerable<SelectListItem> Countries()
+        {
+            yield return new SelectListItem { Text = "India", Value="India" };
+            yield return new SelectListItem { Text = "United Kingdom", Value = "UK" };
+            yield return new SelectListItem { Text = "Nepal", Value = "Nepal" };
+        }
+    }
+
+2. code in .cshtml
+
+    @using (Html.BeginForm())
+     {
+        <p>
+            @Html.Label("Country")
+            @Html.DropDownList("Country", FirstMvcApp.Models.Lists.Countries(),"select country")
+        </p>
+        <p>
+            @Html.Label("CountryList")
+            @Html.ListBox("CountryList", FirstMvcApp.Models.Lists.Countries())
+        </p>
+        <p>
+            <button>Submit</button>
+        </p>
+     }
+
+The Model and @Html.XXXXXFor() methods
+=======================================
+The use of "Model" property is the best and secure way to design the input form because lots of background activities are automatically performed by Helper and controller's action method.
+
+Example: Steps to create a ViewModel ( LoginViewModel.cs) and a form design
+
+1. Create a class and we will use "ClassNAmeViewModel" however you may use your own prefix or suffix.
+
+2. In ASP.NET, we've some attributes to control the user input validation both at server code as well as client code (JavaScript) -- We don't have to write a single line of code for the input validation.
+
+ These validation attributes are called "Data Annotations".
+
+  First of all import  the System.ComponentModel.DataAnnotations and write code in ViewModel file,
+
+
+   public class LoginViewModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Username { get; set; }
+
+        [Required]
+        [RegularExpression("\\w{4,40}")]
+        public string Password { get; set; }
+    }
+
+3. Create two actions
+
+  [HttpGet]
+  public ActionResult Login()
+        {
+            //Create a model object
+            var model = new LoginViewModel();
+            return View(model);
+        }
+  [HttpPost]
+   public ActionResult Login(LoginViewModel model)
+        {
+            //Validation
+            if(ModelState.IsValid)
+            {
+                //OK
+                ViewBag.Message = "Valid Data";
+            }
+            else
+                ViewBag.Message = "Invalid data - Reenter please";
+            return View(model);
+        }
+
+Login.cshtml
+---------------
+@model FirstMvcApp.Models.LoginViewModel
+
+@using (Html.BeginForm())
+{
+    <p>
+        @Html.LabelFor(x=>x.Username)
+        @Html.EditorFor(x=>x.Username)
+        @Html.ValidationMessageFor(x => x.Username)
+    </p>
+    <p>
+        @Html.LabelFor(x => x.Password)
+        @Html.PasswordFor(x => x.Password)
+        @Html.ValidationMessageFor(x => x.Password)
+    </p>
+    <p>
+        <button>Login</button>
+    </p>
+    <div>
+        @Html.ValidationSummary()
+    </div>
+    <p>@ViewBag.Message</p>
+} 
+
+Data Annotations and its usage
+---------------------------------------------
+Each Data annotation is used with "Property" with default or specified information via parameters.
+
+
+public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [RegularExpression(@"\w{5,40}", ErrorMessage = "Password length must be 5 to 40 chars")]
+        public string Password { get; set; }
+
+        [Display(Name ="Confirm Password")]
+        [Compare("Password",ErrorMessage = "Password and confirm password are not match")]
+        public string ConfirmPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime BirthDate { get; set; }
+
+
+        [Display(Name = "Twitter or Facebook Url")]
+        [DataType(DataType.Url)]
+        public string TwitterUrl { get; set; }
+
+        [Range(13,100,ErrorMessage = "Invalid range value. Should be 13 to 100")]
+        public int Age { get; set; }
+    }
+
+
+Example:
+
+Create table Category
+(
+   Id int primary key identity,
+   Name varchar(50) not null unique,
+   Description varchar(MAX) 
+ )
+ create table Product
+(
+   Id int primary key identity,
+   Name varchar(100) not null unique,
+   Unit varchar(10) default 'Nog',
+   Rate Decimal(18,2) not null,
+   Qty  Decimal(18,3),
+   Avail bit default 1,
+   CategoryId int not null,
+   Created Datetime,
+   Foreign Key (CategoryId) References Category(Id)
+ )
+
+1. Create two controllers CategoryController and ProductController and each controller has Create(2), Edit(2), Delete(2) and Index(1) actions.
+
+2. Create two tables namely Category & Product. Configure EF + assume that "ShopDbEntities" is our context class.
+
+3. We've following view models
+
+
+public class CategoryViewModel
+{
+   public int Id {get;set;}
+   [Required]
+   public string Name {get;set;}
+   [Required]
+   [StringLength(1000)]
+   public string Description {get;set;}
+} 
+ 
+
+4. CategoryController actions
+
+   public class CategoryController : Controller
+    {
+        public ActionResult Index()
+        {
+            using (var db = new ShopDbEntities())
+            {
+                ViewBag.List = db.Categories.ToList();
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View(new CategoryViewModel());
+        }
+        [HttpPost]
+        public ActionResult Create(CategoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var db = new ShopDbEntities())
+                {
+                    var search = db.Categories.FirstOrDefault(x => x.Name.Equals(model.Name));
+                    if (search == null)
+                    {
+                        var cat = new Category { Name = model.Name, Description = model.Description };
+                        db.Categories.Add(cat);
+                        db.SaveChanges();
+                        ViewBag.Message = "Category Added successfully";
+                        ModelState.Clear();
+                        model.Id = 0;
+                        model.Name = "";
+                        model.Description = "";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Duplicate Category!!!";
+                    }
+
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            CategoryViewModel model = new CategoryViewModel();
+            using (var db = new ShopDbEntities())
+            {
+                var search = db.Categories.FirstOrDefault(x => x.Id == id);
+                if (search == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                model.Id = search.Id;
+                model.Name = search.Name;
+                model.Description = search.Description;
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Edit(CategoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var db = new ShopDbEntities())
+                {
+                    var search = db.Categories.FirstOrDefault(x => x.Id == model.Id);
+                    if (search != null)
+                    {
+                        search.Name = model.Name;
+                        search.Description = model.Description;
+                        db.SaveChanges();
+                        ViewBag.Message = "Category updated successfully";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Cannot update!!!!";
+                    }
+
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int? id)
+        {
+            CategoryViewModel model = new CategoryViewModel();
+            using (var db = new ShopDbEntities())
+            {
+                var search = db.Categories.FirstOrDefault(x => x.Id == id);
+                if (search == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                model.Id = search.Id;
+                model.Name = search.Name;
+                model.Description = search.Description;
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Delete(CategoryViewModel model)
+        {
+            using (var db = new ShopDbEntities())
+            {
+                var search = db.Categories.FirstOrDefault(x => x.Id == model.Id);
+                if (search != null)
+                {
+                    try
+                    {
+                        db.Categories.Remove(search);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.Message = "Cannot delete!! Category already used by other table(s)";
+                    }
+
+                }
+                else
+                {
+                    ViewBag.Message = "Cannot delete!!!!";
+                }
+
+            }
+
+            return View(model);
+        }
+    }
+
+Index.cshtml
+============
+
+<!doctype html>
+
+<h3>Category List</h3>
+<h4><a href="/Category/Create">Create</a></h4>
+<table>
+    @foreach(var c in ViewBag.List)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Name</td>
+            <td>@c.Description</td>
+            <td>
+                <a href="/Category/Edit/@c.Id">Edit</a>
+                <a href="/Category/Delete/@c.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+Create.cshtml
+============
+
+@model FirstMvcApp.Models.CategoryViewModel
+<!doctype html>
+
+<h3>New Category</h3>
+<h4><a href="/Category/Index">Back to list</a></h4>
+@using (Html.BeginForm())
+{
+
+    <p>@Html.LabelFor(x=>x.Name)</p>
+    <p>
+        @Html.EditorFor(x => x.Name)
+        @Html.ValidationMessageFor(x => x.Name)
+    </p>
+
+    <p>@Html.LabelFor(x => x.Description)</p>
+    <p>
+        @Html.TextAreaFor(x => x.Description)
+        @Html.ValidationMessageFor(x => x.Description)
+    </p>
+    <p>
+        <button>Submit</button>
+    </p>
+    <p>@ViewBag.Message</p>
+    <p>
+        @Html.ValidationSummary()
+    </p>
+}
+
+
+Edit.cshtml
+============
+
+@model FirstMvcApp.Models.CategoryViewModel
+<!doctype html>
+
+<h3>Edit Category Data</h3>
+<h4><a href="/Category/Index">Back to list</a></h4>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(x=>x.Id)
+    <p>@Html.LabelFor(x => x.Name)</p>
+    <p>
+        @Html.EditorFor(x => x.Name)
+        @Html.ValidationMessageFor(x => x.Name)
+    </p>
+
+    <p>@Html.LabelFor(x => x.Description)</p>
+    <p>
+        @Html.TextAreaFor(x => x.Description)
+        @Html.ValidationMessageFor(x => x.Description)
+    </p>
+    <p>
+        <button>Submit</button>
+    </p>
+    <p>@ViewBag.Message</p>
+    <p>
+        @Html.ValidationSummary()
+    </p>
+}
+
+
+Delete.cshtml
+============
+
+@model FirstMvcApp.Models.CategoryViewModel
+<!doctype html>
+
+<h3>Delete Category Data</h3>
+<h4><a href="/Category/Index">Back to list</a></h4>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.Name)
+    @Html.HiddenFor(x => x.Description)
+    <h4>Are you sure to delete @Model.Name ( @Model.Description) record?</h4>
+         
+    <p><button>Delete the record</button></p>
+    <p>@ViewBag.Message</p>
+    
+}
+

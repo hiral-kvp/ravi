@@ -1,0 +1,1029 @@
+Example-1 Determine which submit button is pressed.
+---------
+
+Use common name attribute value for "buttons".
+
+You can use <button name="cmd" value="yourValue">Button's Caption</button> syntax OR
+            <input type="submit" name="cmd" value="yourValue" /> <--- There is no way to set separate caption an that's
+								      why use the <button> markup.
+
+            <input type="image" src="image-path" name="cmd" value="yourValue" />
+
+None other than these three buttons are used to submit the form. However you can use JavaScript language code to submit the form data.
+
+
+<!doctype html>
+@{ 
+    var cmd = Request["cmd"] ?? "";
+    var message = "";
+    if(cmd.Equals("Add"))
+    {
+        message = "Add";
+    }
+    else
+        if(cmd.Equals("Update"))
+    {
+        message = "Update";
+    }
+    if(cmd.Equals("Delete"))
+    else
+    {
+        message = "Delete";
+    }
+}
+
+<form method="post">
+    <button name="cmd" value="Add">Add Employee</button>
+    <button name="cmd" value="Update">Update Employee</button>
+    <input type="submit" name="cmd" value="Delete" />
+</form>
+<p>@message</p>
+
+Example: Perform addition, subraction of two input numbers.
+
+<!doctype html>
+@{ 
+    var cmd = Request["cmd"] ?? "";
+    var no1 = Request["no1"].AsDecimal();
+    var no2 = Request["no2"].AsDecimal();
+    var result = 0.0m;
+    if(cmd.Equals("Add"))
+    {
+        result = no1 + no2;
+    }
+    else
+        if(cmd.Equals("Sub"))
+    {
+        result = no1 - no2;
+    }
+
+}
+
+<form method="post">
+    <p>
+        <input type="number" placeholder="Enter no" name="no1" />
+        <input type="number" placeholder="Enter no" name="no2" />
+    </p>
+    <button name="cmd" value="Add">+</button>
+    <button name="cmd" value="Sub">-</button>
+</form>
+@if (IsPost)
+{
+    <p>Result : @result</p>
+}
+@if (!string.IsNullOrWhiteSpace(cmd))
+{
+    <p>Result : @result</p>
+}
+
+Example: Re-write the data to HTML attributes and CSS Properties
+
+@{
+  var no = 10;
+  var name = "Raj";
+}
+
+<form method="post">
+  <p>No : <input type="number" name="no" value="@no"/></p>
+  <p>Name : <input type="text" name="name" value="@name"/></p>
+</form>
+
+Example: Change the background color of a button which is just clicked.
+
+<style>
+  .pressed { background: red; }
+</style>
+
+@{
+  var cmd = Request["cmd"] ?? "";
+}
+
+<form method="post">
+    <button name="cmd" class="@(cmd.Equals("A") ? "pressed"  : "" )" value="A">Home</button>
+    <button name="cmd" class="@(cmd.Equals("B") ? "pressed"  : "" )" value="B">About us</button>
+    <button name="cmd" class="@(cmd.Equals("C") ? "pressed"  : "" )" value="C">Contact us</button>
+</form>
+
+Example: Sticky form elements. Or Rewrite the submitted form values.
+
+<form method="post">
+  <input type="number" name="no" value="@Request["no"]" />
+  <input type="text" name="name" value="@Request["name"]" />
+  <button>Submit</button>
+</form>
+
+OR
+
+@{
+  var no = Request["no"].AsInt();
+  var name = Request["name"] ?? "";
+}
+<form method="post">
+  <input type="number" name="no" value="@no"/>
+  <input type="text" name="name" value="@name"/>
+  <button>Save</button>
+</form>
+
+Example: Radio button <input type="radio"> --- use common name to create a group for option buttons/radio buttons.
+
+@{
+ var gender = Request["gender"];
+ var profession = Request["profession"];
+}
+<p>@gender @profession</p>
+
+<form method="post">
+   <p>Gender - Male <input type="radio" name="gender" value="M" />
+               Female <input type="radio" name="gender" value="F"/>
+   </p>
+   <p>Profession - 
+                Doctor <input type="radio" name="profession" value="Doctor" />
+                Teacher <input type="radio" name="profession" value="Teacher" />
+   </p>
+   <p><button>Submit</button></p>
+</form>
+
+Example: Display gender and profession
+
+@{
+    var gender = "F";          // Request["gender"] ?? "";
+    var profession = "Doctor"; // Request["profession"] ?? "";
+}
+<p>@gender @profession</p>
+<form method="post">
+    <p>
+        Gender - Male <input @(gender.Equals("M") ? "checked" : "" ) type="radio" name="gender" value="M" />
+        Female <input @(gender.Equals("F") ? "checked" : "" ) type="radio" name="gender" value="F" />
+    </p>
+    <p>
+        Profession -
+        Doctor <input @(profession.Equals("Doctor") ? "checked" : "" ) type="radio"  name="profession" value="Doctor" />
+        Teacher <input @(profession.Equals("Teacher") ? "checked" : "" ) type="radio" name="profession" value="Teacher" />
+    </p>
+    <p><button>Submit</button></p>
+</form>
+
+The "radio" and "checkbox" input type uses "checked" attribute to show the selection.
+   <input type="radio" checked />
+   <input type="radio" checked="checked" />
+   <input type="checkbox" checked />
+
+Example: Use unique name for each checkbox because one or more checkboxes will be selected.
+
+@{
+  var read = Request["read"] ?? "";
+  var write = Request["write"] ?? "";
+  var play = Request["play"] ?? "";
+}
+
+<form method="post">
+<p>Hobbies</p>
+Read books <input type="checkbox" name="read" value="read" @(read.Equals("read") ? "checked" : "") /> <br/>
+Write poetry ....
+Play cricket ....
+<button>Submit</button>
+</form>
+ 
+Example: Dropdown (combobox) and listbox -- <select> and <select size="n">
+
+@{
+    var city = Request["city"] ?? "";
+    var cityList = Request["cityList"] ?? "";
+
+}
+@city  @cityList
+<form method="post">
+   <select name="city">
+       <optgroup label="North Gujarat"></optgroup>
+       <option value="Meh">Mehsana</option>
+       <option>Patan</option>
+       <optgroup label="South Gujarat"></optgroup>
+       <option>Surat</option>
+       <option>Rajkot</option>
+   </select>
+    <select name="cityList" size="4">
+        <optgroup label="North Gujarat"></optgroup>
+        <option value="Meh">Mehsana</option>
+        <option>Patan</option>
+        <option>Surat</option>
+        <optgroup label="North Gujarat"></optgroup>
+        <option>Rajkot</option>
+    </select>
+    <button>Submit</button>
+</form>
+
+Example: Show the selection or preserve the selection of list or combo -- The selected or selected="selected" attribute is used.
+
+@{
+  string []cities = { "Meh", "Pat", "Raj", "Sur" };
+  var city = Request["city"] ?? "";
+}
+@city
+
+<form method="post">
+  <select>
+   <option value="">Select the city</option>
+   @foreach(var c in cities) 
+    {
+      <option @(city.Equals(c) ? "selected" : "")>@c</option>
+     }
+  </select> <button>Submit</button>
+</form>
+
+NOTE: To create a list, change <select size="4"> is previous program.
+
+The required attribute of input elements, select and textarea elements
+------------------------------------------------------------------------
+required or required="required" attribute define a mandatory input field.
+
+<input type="number" required .....>
+<input type="text" reuired ...>
+<select name="name" required>  
+    <option value="">Select</option  <---- value="" is mandatory because it conside it as default value
+</select>
+
+Multiple line or multiline text input - <textarea></textarea>
+------------------------------------------------
+@{
+ var address = Request["address"] ?? "";
+}
+<form method="post">
+ Address
+ <textarea name="address" required>@address</textarea>
+<button>Submit</button>
+</form>
+
+Other <input> elements 
+-----------------------
+<input type="password" > - Password text
+<input type="number"   > - number input
+<input type="text"     > - single line text
+<input type="date"     > - Date selector/input
+<input type="color"    > - Color picker or input
+<input type="search"   > - single line text for search
+<input type="range"    > - number slider
+<input type="file"     > -- File selector for file upload
+<input type="hidden"   > - Keep value without showing it.
+<input type="email"    > - Email
+<input type="tel"      > - Telephone number
+<input type="button"   > - Non submit button
+<input type="reset">     - Reset will clear all input element with blanks or default value.
+<input type="submit"    > - submit button
+<input type="image"     > - submit button
+<input type="checkbox"  > - Checkbox
+<input type="radio"     > - Radio button
+
+Example: A page has two buttons (submit) namely - Next and Previous that navigate the content from array/list.
+
+We will use the input type="hidden".
+
+@{ 
+    string[] quotes = { "First quote", "Second quote", "Thid quote" };
+    var i = Request["index"].AsInt();
+    var cmd = Request["cmd"] ?? "";
+    if(cmd.Equals("Next"))
+    {
+        i++;
+    }
+    else if(cmd.Equals("Prev"))
+    {
+        i--;
+    }
+
+    if (i >= quotes.Length)
+    {
+        i--;
+    }
+    if (i < 0)
+    {
+        i = 0;
+    }
+} 
+<q>@quotes[i]</q>
+<form method="post">
+    <input type="hidden" name="index" value="@i"/>
+    <button name="cmd" value="Prev">&lt;</button>
+    <button name="cmd" value="Next">&gt;</button>
+</form>
+
+[Note: Add doctype and <html lang="en"> to above markup so the <q> smartquote will be displayed instead of ordinary quote.]
+
+<q> small quote element
+------------------------
+It automatically inserts start quote char at begin of text and also at the end of text with end quote. You can use :after or :before pseudo selector to change the content.
+
+q:before {
+  content: '[';
+}
+q:after {
+  content: ']'
+}
+
+blockquote - a block display style used to specify the quote things.
+----------------------------------------------
+<blockquote>
+  Where there is a will, there is a way
+  <p>-Anonymous</p>
+</blockquote>
+
+<style>
+ blockquote {
+   padding: 10px;
+   border-left: 5px solid #eee;
+ }
+ blockquote > p {
+   font-syle: italic;
+ }
+</style>
+
+Example: Navigate images (Change the code in previous program that displays the quotes)
+
+string []images = { "a1.png", "a2.png", "a3.png" };
+
+[Use images insead of quotes and also assume that we've ~/Images folder that contains images]
+
+ And the code to render the image
+     <style>
+         img {
+           padding: 10px;
+           border: 5px solid #eee;  
+         }
+     </style>
+     <img src="/Images/@images[i]" alt="Your text will be displayed when an image is disapeared or not rendered" />
+     <form ....>
+
+Example: We've some items (names of people or products etc) and we want to display them as a group of five items page wise. 
+
+Item1
+Item2
+Item3
+Item4
+Item5
+
+[Prev][Next]  -- Next button will shows the Item6 to Item10
+
+
+
+@{
+    string[] items =
+   {
+        "Item1","Item2","Item3","Item4","Item5","Item6","Item7",
+        "Item8","Item9","Item10","Item11","Item12"
+    };
+    var cmd = Request["cmd"] ?? "";
+    var pageSize = 5;
+    var totalPages = items.Length / pageSize;
+    if(items.Length % pageSize!=0)
+    {
+        totalPages++;
+    }
+    var currentPage = Request["currentPage"].AsInt();
+    if (cmd.Equals("Next"))
+    {
+        currentPage++;
+    }
+    else if (cmd.Equals("Prev"))
+    {
+        currentPage--;
+    }
+    if(currentPage<0)
+    {
+        currentPage = 0;
+    }
+    if(currentPage>=totalPages)
+    {
+        currentPage--;
+    }
+    var startIndex = pageSize * currentPage;
+}
+
+    <ul>
+        @for (int i=startIndex;i<pageSize+startIndex && i<items.Length ;i++)
+        {
+            <li>@items[i]</li>
+        }
+    </ul>
+    <form method="post">
+        <input type="hidden" name="currentPage" value="@currentPage" />
+        <button name="cmd" value="Prev">&lt;</button>
+        <button name="cmd" value="Next">&gt;</button>
+    </form>
+
+
+<datalist> -- To define list backing store for the <input type="text">
+----------------------------------------------------------------------
+The list attribute of <input type="text"> addresses the <datalist>'s id value.
+
+Example:
+
+<form method="post">
+    <input type="text" name="city" list="cityList"/>
+
+    <datalist id="cityList">
+        <option>Mehsana</option>
+        <option>Mevu</option>
+        <option>Mehrwada</option>
+        <option>Surat</option>
+    </datalist>
+</form>
+
+
+The <ol> <ul> and <dl> -- lists to display data 
+------------------------------------------------------------------------------
+ol - ordered list (bulletted list with number or alphabet or roman letter as to define the order of each element.
+ul - unorder list -- just different types of symbols are used
+dl - data list - to show data and its term (label)
+
+<dl> - data list, <dt> data term and <dd> data definition
+Example:
+
+<style>
+    dd{
+        margin: 0;
+    }
+    dt {
+        font-weight: 900;
+    }
+</style>
+<dl>
+    <dt>No</dt>
+    <dd>10</dd>
+    <dt>Name</dt>
+    <dd>Raj</dd>
+</dl>
+
+Example: <ul> is mainly used to display hierarchy of data and hyperlinks & menus.
+
+[Note: The <li> is a block display element]
+
+CSS Menu:
+
+<!doctype html>
+
+<style>
+    ul {
+        margin: 0;
+        list-style: none;
+        padding: 2px;
+        background: red;
+        color: white;
+    }
+    .menu > li {
+        display: inline-block;
+    }
+    .item-1 > ul {
+        display: none;
+        position: absolute;
+    }
+    .item-1:hover > ul {
+        display: block;
+    }
+</style>
+<ul class="menu">
+    <li class="item-1">File
+      <ul>
+          <li>New</li>
+          <li>Open</li>
+          <li><a href="#">Test link</a></li>
+      </ul>
+    </li>
+    <li class="item-1">Edit
+        <ul>
+            <li>Cut</li>
+            
+            <li><a href="#">Paste</a></li>
+        </ul>
+    </li>
+    <li class="item-1">Help
+        <ul>
+            <li>About us</li>
+
+            <li><a href="#">Who am I</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
+    </li>
+</ul>
+
+
+Example: Add [First] and [Last] Buttons to the previous program ( show page wise items).
+Item1
+...
+...
+Item5
+[First][Prev][Next][Last]
+Example: Add [1] [2] [3] ....[n] page number instead of first,prev, next and last buttons.
+
+Example: List the images page wise. Use the following layout.
+
+|----------- <  > ---------------|
+| Image1     Image2      Image3  |
+| Image4     Image5      Image6  |
+|--------------------------------|
+[Across and than down]
+
+Example: Create a product class (Id, Name, Rate, Unit). Add some objects of product class into the page using list or array and list them as follows:
+
+|----------------- <  >--------------------
+| [Product1]       [Product2]          ......
+|   image1            Image2           ......
+| Rate xx per xx   Rate xx per xx
+| [Add To Cart]    [Add to Cart]
+|
+| ......           ............         .......
+|-----------------------------------------------
+[Note: Add "Category" and "Photo" properties to the Product class]
+
+Example: Update previous program; add a <select> that represent category and list the products based upon the selected category:
+
+Category
+[             v] [Show]
+|-----------------------------------|
+| [Product1]  [Product2] ...........|
+| ......       ........             |
+|-----------------------------------|
+
+Example: Create "Category.cshtml" which displays the product categories using <a> hyperlinks:
+
+Category.cshtml
+-----------------
+<h3>Categories</h3>
+<p><a href="ProductPage.cshtml?Category=Pen">Pen</a></p>
+<p><a href="ProductPage.cshtml?Category=Book">Book</a></p>
+........
+
+and when you click on the hyperlink, it will request "ProductPage.cshtml" along with category value. In ProductPage.cshtml list all the products that belongs to the specified category.
+
+Example: Now, edit the previous example and replace/remove hyperlinks:
+
+<h3>Categories</h3>
+<form method="post" action="ProductPage.cshtml">
+ <button name="Category" value="Pen">Pen</button>
+ <button name="Category" value="Pencil">Pencil</button>
+ ...
+</form>
+[Note: No changes in code of ProductPage.cshtml]
+
+IMPORTANT NOTE about <form> element
+=====================================
+
+Never nest the <form> element. The <form> cannot be nested within another <form>.
+
+  <form>
+    <form> <--- is illegal and wont work either
+  </form>
+
+It is possible that the document has one or more <form> elements but they are not nested.
+
+Example:
+
+@Request["test"]
+
+@for(var i = 1; i <= 5; i++ )
+ {
+   <form method="post">
+     <input type="hidden" name="test" value="@i" />
+     <button>Submit</button>
+   </form>
+  }
+
+[Or just use <button>@i</button> instead of Submit text]
+
+In this case, we've five forms and each form has two elements.
+
+Example: Write a code that displays products based upon the searched product name or product name pattern.
+
+Product Name
+[                      ] [searchButton]
+----------------------------------------------------------
+
+[Product1]            [Product2] ..........
+
+Example: You can change previous program that display product based upon the given "category" or "rate range" etc.
+
+Category
+[              ]
+Rate range from [    startRange  ] to [ endRange  ] [searchButton]
+---------------------------------------------------------------------
+List the products here........
+
+Example: We've the list of Emp objects and the following code display each employee record with "edit" option.
+
+Employee.cs
+------------
+using System;
+
+namespace MyWeb
+{
+ public class Employee
+  {
+     public int ID { get; set; }
+     public string Name { get; set; }
+     public string Gender { get; set; }
+     public string Department { get; set; }
+     public override string ToString()
+     {
+        return  ID + " " + Name + " " + Gender + " " + Department;
+     }
+  }
+}
+
+EmpPage.cshtml
+----------------
+@using MyWeb
+
+@{ 
+    var receive = new Employee();
+    receive.ID = Request["id"].AsInt();
+    receive.Name = Request["name"] ?? "";
+    receive.Department = Request["department"] ?? "";
+    receive.Gender = Request["gender"] ?? "";
+    var cmd = Request["cmd"] ?? "";
+
+    var emps = new List<Employee>
+    {
+        new Employee {  ID=1, Name="A", Department="Acc", Gender="M"},
+        new Employee {  ID=2, Name="B", Department="PRD", Gender="F"},
+        new Employee {  ID=3, Name="Z", Department="Acc", Gender="M"},
+        new Employee {  ID=11, Name="W", Department="HR", Gender="F"},
+        new Employee {  ID=6, Name="S", Department="Acc", Gender="M"},
+        new Employee {  ID=23, Name="C", Department="HR", Gender="F"},
+        new Employee {  ID=8, Name="M", Department="Acc", Gender="M"},
+    };
+    string []depts = { "Acc", "HR", "PRD" };
+    var i = 1;
+}
+<style>
+    form {
+        border: 1px solid black;
+        display: inline-block;
+        padding: 5px;
+        margin: 5px;
+    }
+</style>
+
+@if (IsPost)
+{
+    <div>
+        @receive for @cmd action
+    </div>
+}
+
+@foreach(var e in emps)
+{
+    <form method="post">
+        <p><label>ID</label></p>
+        <p><input type="number" name="id" value="@e.ID"/></p>
+        <p><label>Name</label></p>
+        <p><input type="text" name="name" value="@e.Name" /></p>
+        <p><label>Gender</label></p>
+        <p>
+           Male <input type="radio" name="gender" value="M" @(e.Gender.Equals("M") ? "checked" : "") />
+           Female <input type="radio" name="gender" value="F" @(e.Gender.Equals("F") ? "checked" : "") />
+        </p>
+        <p>Department</p>
+        <p>
+            <select name="department">
+                @foreach(var d in depts)
+                {
+                    <option @(d.Equals(e.Department) ? "selected" : "" ) value="@d">@d</option>
+                }
+            </select>
+        </p>
+        <p>
+            <button name="cmd" value="Update">Update</button>
+            <button name="cmd" value="Delete">Delete</button>
+        </p>
+    </form>
+    if(i % 3 ==0) 
+    {
+        <div></div> <!-- add a block element -->
+    }
+    i++;
+}
+
+Example:
+
+@{ 
+    var receive = new Employee();
+    receive.ID = Request["id"].AsInt();
+    receive.Name = Request["name"] ?? "";
+    receive.Department = Request["department"] ?? "";
+    receive.Gender = Request["gender"] ?? "";
+    var cmd = Request["cmd"] ?? "";
+
+    var emps = new List<Employee>
+    {
+        new Employee {  ID=1, Name="A", Department="Acc", Gender="M"},
+        new Employee {  ID=2, Name="B", Department="PRD", Gender="F"},
+        new Employee {  ID=3, Name="Z", Department="Acc", Gender="M"},
+        new Employee {  ID=11, Name="W", Department="HR", Gender="F"},
+        new Employee {  ID=6, Name="S", Department="Acc", Gender="M"},
+        new Employee {  ID=23, Name="C", Department="HR", Gender="F"},
+        new Employee {  ID=8, Name="M", Department="Acc", Gender="M"},
+    };
+    string []depts = { "Acc", "HR", "PRD" };
+    var i = 1;
+}
+<style>
+    form {
+        border: 1px solid black;
+        display: inline-block;
+        padding: 5px;
+        margin: 5px;
+    }
+    .selected-form {
+        background: #eee;
+    }
+</style>
+
+@if (IsPost)
+{
+    <div>
+        @receive for @cmd action
+    </div>
+}
+
+@foreach(var e in emps)
+{
+    <form method="post" class="@(e.ID == receive.ID ? "selected-form" : "")">
+        <p><label>ID</label></p>
+        <p><input type="number"  name="id" value="@e.ID"/></p>
+        <p><label>Name</label></p>
+        <p><input type="text" name="name" value="@e.Name" /></p>
+        <p><label>Gender</label></p>
+        <p>
+           Male <input type="radio" name="gender" value="M" @(e.Gender.Equals("M") ? "checked" : "") />
+           Female <input type="radio" name="gender" value="F" @(e.Gender.Equals("F") ? "checked" : "") />
+        </p>
+        <p>Department</p>
+        <p>
+            <select name="department">
+                @foreach(var d in depts)
+                {
+                    <option @(d.Equals(e.Department) ? "selected" : "" ) value="@d">@d</option>
+                }
+            </select>
+        </p>
+        <p>
+            <button name="cmd" value="Update">Update</button>
+            <button name="cmd" value="Delete">Delete</button>
+        </p>
+    </form>
+    if(i % 3 ==0)
+    {
+        <div></div>
+    }
+    i++;
+}
+
+Example: Set background for the <form> which is currenly submitted.
+
+ <form method="post" class="@(e.ID == receive.ID ? "selected-form" : "")">
+    .....
+ </form>
+
+<style>
+  .selected-form { background: #eee; }
+</style>
+
+To disabled the <input> or form element
+-------------------------------------------
+use disabled or disabled="disabled" attribute.
+
+<input type="text" value="Raj" disabled>
+<select name="dept" disabled>
+  ..
+</select>
+<input type="radio" disabled >
+<button disable>Submit</button>
+
+It is important to note that we cannot submit the value of disabled elements via submit buttons.
+
+For example:
+
+@Request["no"]
+<form method="post">
+  <input type="text" name="no" disabled value="100">
+  <button>Submit</button>
+</form>
+
+So, it is better to avoid the "disabled" attribute with form elements. However, you can use if your client code enabled them before posting the data (via JavaScript).
+
+
+Example:
+
+@{ 
+    var receive = new Employee();
+    receive.ID = Request["id"].AsInt();
+    receive.Name = Request["name"] ?? "";
+    receive.Department = Request["department"] ?? "";
+    receive.Gender = Request["gender"] ?? "";
+    var cmd = Request["cmd"] ?? "";
+
+    var emps = new List<Employee>
+    {
+        new Employee {  ID=1, Name="A", Department="Acc", Gender="M"},
+        new Employee {  ID=2, Name="B", Department="PRD", Gender="F"},
+        new Employee {  ID=3, Name="Z", Department="Acc", Gender="M"},
+        new Employee {  ID=11, Name="W", Department="HR", Gender="F"},
+        new Employee {  ID=6, Name="S", Department="Acc", Gender="M"},
+        new Employee {  ID=23, Name="C", Department="HR", Gender="F"},
+        new Employee {  ID=8, Name="M", Department="Acc", Gender="M"},
+    };
+    string []depts = { "Acc", "HR", "PRD" };
+    var i = 1;
+    var disabled = "disabled";
+
+    
+}
+<style>
+    form {
+        border: 1px solid black;
+        display: inline-block;
+        padding: 5px;
+        margin: 5px;
+    }
+    .selected-form {
+        background: #eee;
+    }
+</style>
+
+@if (IsPost)
+{
+    <div>
+        @receive for @cmd action
+    </div>
+}
+
+@foreach(var e in emps)
+{
+    if(e.ID== receive.ID && cmd.Equals("Edit"))
+    {
+        disabled = "";
+    }
+    <form method="post" class="@(e.ID == receive.ID ? "selected-form" : "")">
+        <input type="hidden" name="id" value="@e.ID"/>
+        <p><label>ID</label></p>
+        <p><input type="number" @disabled  name="id" value="@e.ID"/></p>
+        <p><label>Name</label></p>
+        <p><input type="text" @disabled name="name" value="@e.Name" /></p>
+        <p><label>Gender</label></p>
+        <p>
+           Male <input type="radio" @disabled name="gender" value="M" @(e.Gender.Equals("M") ? "checked" : "") />
+           Female <input type="radio" @disabled name="gender" value="F" @(e.Gender.Equals("F") ? "checked" : "") />
+        </p>
+        <p>Department</p>
+        <p>
+            <select @disabled name="department">
+                @foreach(var d in depts)
+                {
+                    <option @(d.Equals(e.Department) ? "selected" : "" ) value="@d">@d</option>
+                }
+            </select>
+        </p>
+        <p>
+            @if (string.IsNullOrWhiteSpace(cmd))
+            {
+                <button name="cmd" value="Edit">Edit</button>
+            }
+            else
+            {
+                if (e.ID == receive.ID)
+                {
+                    <button name="cmd" value="Update">Update</button>
+                    <button name="cmd" value="Delete">Delete</button>
+                }
+                else
+                {
+                    <button name="cmd" value="Edit">Edit</button>
+                }
+            }
+        </p>
+         
+    </form>
+    if(i % 3 ==0)
+    {
+        <div></div>
+    }
+    i++;
+}
+
+
+Multiple selection or mutiple items sent via Http request
+-------------------------------------------------------------
+ASP.NET automatically concate these items with comma when these value are received.
+
+Especially, when we want to use "multiple" attribute to select & submit multiple item from the <select> listbox or want to use common name for <input> elements.
+
+We will have to use the String's Split() method which returns an array of string by splitting a string based upon the given character or patterns.
+
+Example-1 Multiple listbox items
+
+         @{ 
+            var cities = new string[] { "Meh", "Patn", "Raj", "Sur", "Ahm" };
+            var cityString = Request["city"] ?? "";
+            var selectedCities = cityString.Split(',');
+
+            @** For understanding only **@
+            <p>@cityString</p>
+            foreach(var sc in selectedCities)
+            {
+                <br/>@sc
+            }
+        }
+       <form method="post">
+           <select name="city" multiple>
+               @foreach (var c in cities)
+               {
+                   <option @(selectedCities.Contains(c) ? "selected" : "")>@c</option>
+               }
+           </select>
+           <button>Submit</button>
+       </form>
+
+Example-2 Receive multiple value
+
+       @{ 
+
+            var numString = Request["no"] ?? "";
+            var nos = numString.Split(',');
+            if(nos.Length == 1)
+            {
+                nos = new string[4];
+            }
+
+            foreach(var no in nos)
+            {
+                <br/>@no
+            }
+        }
+       <form method="post">
+           <br/> <input type="number"  value=@nos[0] name="no"/>
+           <br /> <input type="number"  value=@nos[1] name="no" />
+           <br /> <input type="number"  value=@nos[2] name="no" />
+           <br /> <input type="number"  value=@nos[3] name="no" />
+           <button>Submit</button>
+
+       </form>
+
+Submit the form without using "submit" buttons -- via JavaScript code.
+-----------------------------------------------------------------------
+[JavaScript language is case sensitive so write the code in lower letter]
+        @Request["test"]
+        <form id="form1" method="post">
+            <input type="text" name="test"/>
+            <a href="#" onclick="form1.submit()">Submit (Hyperlink)</a>
+            <div onclick="form1.submit()">Submit (DIV)</div>
+            <input type="button" onclick="form1.submit()" value="Button" />
+            <button type="button" onclick="form1.submit()">Regular Button</button>
+        </form>
+
+The "id" attribute of the <form> set the unique identifier (name of object ref) and the submit() is a method.
+
+ So, form1.submit() will send the <form> data when we click on one of the HTML object. Each object has number of events and here we've used "onclick". (onmousemove, onkeypress, and many more...)
+
+Another example populate the country and related state name:
+
+    @{
+        var countries = new Dictionary<string, List<string>>();
+        countries.Add("India", new List<string>() { "Guj", "Raj", "UP" });
+        countries.Add("UK", new List<string>() { "Sc", "En", "Ld" });
+
+        var country = Request["country"] ?? "";
+        var state = Request["state"] ?? "";
+    }
+    <p>@country  @state</p>
+    <form id="form1" method="post">
+        <select name="country" required onchange="form1.submit()">
+            <option value="">Select country</option>
+            @foreach (var c in countries)
+            {
+                <option @(c.Key.Equals(country) ? "selected" : "")>@c.Key</option>
+            }
+        </select>
+
+        <select name="state" required onchange="form1.submit()">
+            <option value="">Select State</option>
+            @if (!string.IsNullOrWhiteSpace(country))
+            {
+                foreach (var s in countries[country])
+                {
+                    <option @(s.Equals(state) ? "selected" : "")>@s</option>
+                }
+            }
+        </select>
+        <button>Submit</button>
+    </form>
+
+Example: Display product cateory first and based upon the category show the products using above code:
+ [            v] <--- Category
+ [            v] <--- Product
+Example: Allow users to choose the page size dynamically,
+
+Items per page [3 v] 
+--------------------
+Item1
+Item2
+Item3
+
+[Prev][Next]

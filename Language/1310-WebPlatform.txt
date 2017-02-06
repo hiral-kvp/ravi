@@ -1,0 +1,88 @@
+ The Web Platform
+ =================
+
+ The Web Platform is an architecture to develop & deploy the web applications.  Basically the "web-platform" as a whole is falls into two sub-platforms:
+     1. Server Web Platform and 
+     2. Web Client Platform
+ The Server-Web-Platform can be .Net Framework, PHP, Java, Ruby, Python and many more whereas WEb Client Platform is composed of three integrated elements - HTML (Markup Language), CSS (Cascading Stylesheet - Style language) and JavaScript (a programming language).
+
+The Server platform can be any one of the said platforms (.net,Java etc) but the client platform remains constant and it is the web-browser. All three languages - HTML,CSS & JavaScript are exists in any kind of web-browser.
+
+How the web-client (web-browsers or mobile apps or desktop apps) apps interact with server platforms?
+-------------------------------------------------------------------------------------
+The HTTP-Server or Web-Server software provide a bridge between client app and server-platform (programs/app). That means a web-browser or client request is only sent to the HTTP-Server.
+
+|----------  Request
+| Client   |----------------> |--------------------
+| Browser  |                  | Web Server (Http) |
+|----------|<---------------- |-------------------|
+              Response              |  ^
+              (Http Protocol)       |  |  (Http or Vendor specific protocols)
+                                    v  |
+                               |-----------------------|
+                               | Server Platforms      |
+                               | (Application Server)  |------- File Servers (FTP)
+                               |-----------------------|
+                                    |           |
+                                    |           |
+                                   Database     Mail servers
+                                      servers
+
+Note that all kind of communications held between  web-client to web-server and web-server to application-server and application-server to database or mail etc servers are via evergreen protocol - the TCP/IP. Of course different types of servers uses different sub-protocols but all these are backed by the TCP/IP.
+
+Following are names of most commonly used HTTP-Servers:
+   1. IIS - Internet Information Services from Microsoft
+   2. Apache - from Apache foundation
+   3. nginx  - an open source HTTP-server
+
+Important: Basically or by default, HTTP-server uses the PORT number 80. However, it can be any number between 1024 to 65535.
+  e.g  http://www.google.com:80   or http://www.google.com
+       http://www.google.com:8080
+The domain name (www.google.com) represent the IP-address (machine's identity) and the port number represents the program's identity. Port numbers between 1 to 1024 are reserved by the OS for different type of server programs (port 80 is reserved for HTTP server, 21 for SMTP and so on).
+
+Installing, Configuring & deploying web-apps into the HTTP-server
+===================================================================================
+For ASP.NET apps, we will use IIS web-server. There are two kind of IIS server instances :
+
+  1. IIS Express or Development Web Server - that is installed with Visual Studio and      it is started or stopped via Visual Studio's project system.
+
+  2. IIS (Commercial) Web-server - this kind of instance is not available in our
+     local machine. We've to install it via "Control Panel".
+
+     => Control Panel + Programs & Features +  Turn on/off windows components +
+         [x] Internet Information Services
+             [x] Web Management Tools
+                 [x] IIS Management Console
+             [x] World Wide Web Services
+                 [x] Application Development Features
+                       [x] ASP.NET 4.6 (or other versions)
+
+          Click on [OK] to update the components (from local disk or remote )
+
+     => Once, we install the IIS, a folder named c:\inetpub will be created and the folder named c:\inetpub\wwwroot is consider as the "Home" of IIS - all apps are deployed (installed) inside the context of HOME or ROOT.
+
+    => To create a new app or deploy an app or manage the apps and HTTP-server or
+       configure the IIS web-server -- Open the control Panel + Administrator Tools +
+       Internet Information Services Manager applet.
+
+
+ How to deploy/create an app?
+ -----------------------------
+ 1. Create a folder at your local disk (e.g d:\test )
+ 2. Open IIS Manager + Expand > Server-name node
+                                  >Sites
+                                     >Default Web Site + Right click on it + Add  Application, set directory path and "virtual or alias" name + OK
+ 3. Create "index.html" or "index.htm" page inside the d:\test and
+    navigate via http://localhost/test
+
+ Deploy website/webapp via Visual Studio
+ ---------------------------------------
+ Open the Visual Studio + File New Web Site + Select Web-site path (folder name of your webapp) + ASP.NET Empty WebSite 
+
+ After creating a web-site, click on "WebSite Menu" or Right mouse click on Solution Explorer to add new item + Select .html (name it) + Add it + Press F5 or Ctrl+F5 to run it.
+
+ The visual studio will starts IIS Express automatically when you press F5 or Ctrl+F5 and remains alive till visual studio is opened. [IIS Express settings icon will appears at System-Tray]
+
+
+
+ 

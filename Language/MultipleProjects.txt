@@ -1,0 +1,20 @@
+ The Solution -- Multiple projects
+ ========================================================================
+ When we creates a project, our project will be added into a solution by default. A  solution (.sln file) is a group project file which contains one or more projects, so  we can work on more than one projects at a time.
+
+ The solution file helps us to compile all these projects at onces, close or open  these projects at onces and also add references of one project to another project.
+
+ Steps to create multi project environment
+ -------------------------------------------
+
+ 1. File + New + Project + Other Project Types + Visual Studio Solutions + Blank     Solution + Name your solution e.g MultiApp and press OK.
+
+ 2. Once a solution is created, use File + Add + New Project to add one or more     projects into currently created solution.
+
+ Startup project setting - Right mouse click on project name in solution explorer +
+                           click on "Set as Startup Project". 
+
+ To compile all projects - Build + Build Solution
+ To remove all compilation code - Build + Clean Solution
+ To close all projects - File + Close Solution
+ To open all projects - File + Open + Select solution file

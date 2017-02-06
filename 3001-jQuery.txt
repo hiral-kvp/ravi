@@ -1,0 +1,552 @@
+jQuery - JavaScript Library
+============================
+jQuery is an open source general purpose library - The $ is the namespace of jquery and its objects. There is another namespace "jQuery" can also represent the jQuery objects.
+
+
+jQuery library includes:
+   1. DOM functions - allow us to select, delete, insert DOMs. Set/get attributes and CSS properties
+   2. Language utility and
+   3. Ajax - XMLHttpRequest functions
+
+We will use jQuery to improve the productivity - we need to write consize JavaScript code the written code must be run on different web-browsers including the old web browsers. The jQuery library's main objective is to provide cross browser portability.
+
+We can download jQuery.js files from jquery.com Or use Nuget package manager to install jquery.
+   PM>install-package jquery
+However demo templates and scafolding templates automatically copy the jquery library into "Scripts" folder.
+
+
+The Selectors
+=============
+The power of jquery is lie in its CSS style selectors which selects one or more HTML objects and offers DOM APIs.
+
+Syntax: To select HTML objects.
+
+1. $("*") - Select all DOMs
+
+2. $("ElementName") -- Select all DOMs belongs to given element name
+
+3. $(".className") -- Collection of HTML objects that matches given "className" class selector
+
+4. $("#id")   - Id selector - sigle object
+
+5. $("selector[attribute=value]") - Attribute selector
+
+6. $("selector1 selector2") - Descendent selector - Children selector
+
+7. $("selector1 > selector2") - Child selector
+
+8. $("selector1+selector2") - Sibling selector
+
+9. $("selector~selector2") - General sibling selector
+
+10. $("<elementName>") - It creates a new HTML object
+
+11. css(name,value) - Set property
+12. css(name)       - get property
+
+13. html(htmlcontent) - Set HTML content
+14. html()            - Get Html content (value from innerHTML)
+
+15. val(value)        - Set value for <input> elements
+16. val()             - get value
+
+17. attr(name,value) - Set HTML attribute
+18. attr()           - Get attribute
+
+19. addClass         - Add "class" value
+20. toggleClass      - Toggle (add/remove) class
+
+21. show(interval)   - Show DOMs
+22. hide(interval)   - Hide Doms
+
+23. existingDOM.append( newDOM ) - Append the DOM
+24. newDOM.appendTo( existingDOM ) - Append the DOM  
+
+25. jQuery event names - these names are JavaScript event names but prefix "on" is removed.
+	e.g onclick is JavaScript event attribute whereas in jQuery it will be "click"      
+            onmouseover will be mouseover an so on
+26. text(textContent) - Set the text - innerText
+27. text()            - Get the text 
+
+
+Example:
+
+    <h1>Hello</h1>
+    <h3>Sample Site</h3>
+    <h1>World</h1>
+    <input type="text"> <input type="button" value="Button">
+    <input type="text" >
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+
+    <script>
+        console.log( $('*') );  
+        console.log( $('h1') );
+        console.log( $('h2') ); //No object 
+        console.log( $('input') );
+        console.log( $('input[type="text"]') );
+    </script>
+
+Note: $(selector) or jQuery(selector) returns jQuery object and hence we can call jqUery methods.
+
+Example: Set red border to all elements
+
+  $("*").css("border", "1px solid red");
+
+Example: Set background red to all h1 and green text color 
+
+ $("h1").css("color","green").css("background","red");
+
+Example: Set border for those whose class name "simple"
+
+<div class="simple">Hello</div>
+<h2 class="simple">Hi</h2>
+<div>Hello World</div>
+
+ <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+ <script>
+    $(".simple").css("border","1px solid red");
+ </script>
+
+Example:
+    <div class="simple"></div>
+    <div id="help"></div>
+    <input type="text" name="firstName"/> 
+    <input type="text" name="lastName" /> 
+    <input type="number" id="age" value="4"/>
+   
+    <script>
+        $(".simple").html("<h2>Welcome</h2>");      //class selector
+        $("#help").text("<h2>Welcome</h2>");        //id selector
+        $("input[name='firstName']").val("Rajesh"); //attribute selector
+        $("input[name='lastName']").attr("value", "Shah");
+
+        console.log($("#age").val());
+        console.log($("div").text());
+        console.log($("div").html());
+    </script>
+
+Example: Sibling selector
+
+    <h3>A1</h3>
+    <div>B1</div>
+    <h3>A2</h3>
+    <div>B2</div>
+    <h3>A3</h3>
+    <div>B4</div>
+
+    <button id="btn1">Show</button>
+    <script>
+        $("h3+div").css("color", "green")
+                   .css("font-size","1.6em")
+                   .hide();
+
+       //Handle the event
+        $("#btn1").click(function () {
+            //$("h3+div").show(2000);
+            // $("h3+div").show();
+            $("h3+div").toggle(2000);
+        });
+    </script>
+
+Example: 
+
+<input type="number" id="no1"/>
+<input type="number" id="no2"/>
+<div id="out"></div>
+<script>
+  var no1= $("#no1");
+  var no2= $("#no2");
+  var out= $("#out");  
+
+  function calc() {
+    var sum = parseFloat( no1.val() ) + parseFloat( no2.val() );
+    if(sum) {
+       out.html("<p>Result <strong>" + sum + "</strong></p>");
+    } else {
+       out.html("");
+    }
+  }
+
+  no1.keyup( calc );
+  no2.keyup( calc );
+</script>
+
+Example: New objects and append them to existing tree
+
+    <div id="out"></div>
+
+    <script>
+        //new HTML object
+        p1 = $("<h1>");
+        p1.html("Hello World");
+
+        p2 = $("<input>");
+        p2.attr("type", "text").attr("value", "Raj");
+
+        p1.appendTo("#out");
+        $("#out").append(p2);
+    </script>
+
+Example: add an item to the dropdown
+
+<select id="city"></select>
+<script>
+ var city = $("#city");
+ var cities = ["Meh","Pat","Raj"];
+ for(index in cities) {
+     var opt  = $("<option>");
+     opt.val( cities[index] );
+     city.append( opt);
+ }
+</script>
+
+Example: Add items into list 
+
+    <select id="city"></select>
+    <ul id="cityUl"></ul>
+    <input type="text" id="cityInput" />
+    <button onclick="doAdd()">Add</button>
+    <script>
+        var cityInput = $("#cityInput");
+
+        function doAdd() {
+            var opt = $("<option>");
+            opt.html(cityInput.val());
+            opt.val(cityInput.val());
+            opt.appendTo("#city");
+
+            //Add to UL
+            var li = $("<li>");
+            li.html(cityInput.val());
+            li.appendTo("#cityUl");
+        }
+
+        cityInput.keypress(function (event) {
+            console.log(event.which);
+            if (event.which == 13) {
+                doAdd();
+                cityInput.val("");
+            }
+        });
+    </script>
+
+
+Example: Input digits only
+<input type="text" id="no"/>
+<input type="text" id="name"/>
+<script>
+  $("#no").keypress( function(event) {
+     if(event.which>=48 && event.which<=57) {
+        return true;
+     }
+     return false;
+  });
+  $("#name").keypress( function(event) {
+     if(event.which>=65 && event.which<=131) {
+        return true;
+     }
+     return false;
+  });
+</script>
+
+AJAX Functions and call to actions of controller
+=================================================
+XMLHttpRequest and its method are encapsulate by the $.get, $.post and other ajax functions.
+
+ Syntax:  $.get(url,data,success-function(result) {});
+          $.post(url,data,success-function(result) {});
+Example:
+    <span id="dateOutput"></span>
+    <button onclick="showDate()">Show Date</button> 
+    <hr/>
+    <input type="number" id="no1"/>
+    <input type="number" id="no2" />
+    <span id="sumOutput"></span>
+    <button onclick="showSum()">Sum</button> 
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script>
+        function showDate() {
+            $.get("/Home/Now", function (result) {
+                $("#dateOutput").html(result);
+            });
+        }
+        function showSum() {
+            var data = {
+                "no1": $("#no1").val(),
+                "no2": $("#no2").val()
+            };
+            $.post("/Home/Sum", data, function (result) {
+                $("#sumOutput").html(result);
+            });
+        }
+    </script>
+
+Actions:
+       public ActionResult Now()
+        {
+            return Content(DateTime.Now.ToString());
+        }
+        public ActionResult Sum(int no1,int no2)
+        {
+            return Content( (no1+no2).ToString() );
+        }
+
+Example: Returns JSON string by calling Json() in action methods.
+
+Actions:
+      public ActionResult Now()
+        {
+            //Create anonymous object
+            var output = new
+            {
+                Indian = DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt"),
+                Iso = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
+            return Json(output);
+        }
+        public ActionResult Sum(int no1,int no2)
+        {
+            var output = new {
+                sum = no1+no2,
+                mul = no1 * no2,
+                sub = no1 - no2,
+            };
+            return Json(output);
+        }
+
+and use $.post() to request both these actions.
+
+... as per previous code...
+<script>
+        function showDate() {
+            $.post("/Home/Now", function (result) {
+                console.log(result);
+                $("#dateOutput").html(result.Indian);
+            });
+        }
+        function showSum() {
+            var data = {
+                "no1": $("#no1").val(),
+                "no2": $("#no2").val()
+            };
+            $.post("/Home/Sum", data, function (result) {
+                console.log(result);
+                $("#sumOutput").html("<br/>Sum : " + result.sum + "<br/>Mul : " + result.mul + "<br/>Subtraction" + result.sub);
+            });
+        }
+    </script>
+
+dom.load(url) - Ajax method to request url and insert result into innerHTML of the DOM.
+--------------------------
+    <h1>Request Views - Multiple Views (Layout)</h1>
+    <a href="#" onclick="showPage('Home')">Home</a>
+    <a href="#" onclick="showPage('About')">About</a>
+    <a href="#" onclick="showPage('Contact')">Contact</a>
+    <a href="#" onclick="showPage('Login')">Login</a>
+    <br/>
+    <div id="output"></div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script>
+        function showPage(action) {
+            $("#output").load('/Home/' + action);
+        }
+    </script>
+   [Code in Index Page]
+Note: Create Index, Home,About,Contact, Login actions and add view for each action.
+
+API - Application Programming Interface Controller 
+--------------------------------------------------
+Normally, AJAX routines always request the actions or pages that send or receive some sort of data. In rate cases they need to  return markup (as we've used $.load()).
+
+The regular controllers have varitities of actions which returns HTML content, string content or Json and many more.
+
+In ASP.NET MVC, we've a special category of controller called API controller which always returns and receive data in the form of JSON or XML.
+
+1. Create a web project by setting both [x] MVC and [x] Web API
+2. Add Home and other controllers (We will add HomeController and an action Index) + Add JavaScript jQuery so we can    request the methods of web api.
+3. Add an API controller. e.g. BasicController
+
+4. The api methods behavior is controlled by the "argument name" and request method type i.e. GET, POST, DELETE, PUT.
+
+ Use $.get() and $.post() jQuery function for GET and POST action respectively but use 
+  $.ajax({
+    type: 'delete', /* post, get, put etc */
+    url: '/api/Basic?data....',
+    success: function(result) {
+      //
+    }
+  });
+
+5. Api Controller sub class
+
+  public class BasicController : ApiController
+    {
+        private static List<int> ints = new List<int>();
+
+        //GET /api/Basic
+        public List<int> Gets()
+        {
+            return ints;
+        }
+        //GET /api/Basic/10
+        public string Get(int id) { return "GET Action"; }
+
+        //POST api/Basic?no=10
+        public void WriteNo(int no)
+        {
+            ints.Add(no);
+        }
+
+        //DELETE api/Basic?no=10
+        public void DeleteNo(int no)
+        {
+            ints.Remove(no);
+        }
+
+       
+       //POST api/Basic?n1=10
+        public int Square(int n1)
+        {
+            return n1 * n1;
+        }
+     
+        //POST api/Basic?a=10&b=90
+        public int Mul(int a,int b)
+        {
+            return a * b;
+        }
+    }
+
+6. Client code (in any page)
+
+<input type="number" id="no" />
+<button onclick="addIt()">Add</button>
+<button onclick="deleteIt()">Delete</button>
+<select size="10" id="list"></select>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    var no = $("#no");
+    var list = $("#list");
+
+    function addIt() {
+        addNo(no.val());
+        listNos();
+    }
+    function deleteIt() {
+        removeNo(no.val());
+        listNos();
+    }
+
+    function addNo(no) {
+        $.ajax({
+            type: 'post',
+            url: '/api/Basic?no=' + no,
+            success: function (result) {
+                console.log(result);
+            }
+        });
+    }
+
+    function removeNo(no) {
+        $.ajax({
+            type: 'delete',
+            url: '/api/Basic?no=' + no,
+            success: function (result) {
+                console.log(result);
+            }
+        });
+    }
+
+    function listNos() {
+        $.get("/api/Basic", function (result) {
+            console.log(result);
+            list.empty();
+            for (i in result) {
+                var o = $("<option>");
+                o.html(result[i]);
+                o.appendTo(list);
+            }
+        });
+    }
+
+    listNos();
+</script>
+
+jQuery Validation Plug-in (Small library of jQuery)
+--------------------------------------------------
+The data annotation allows server-side validation but the jQuery's ubobstrusive plug-in validates the each input element at client using same error message and validation contract exist in ViewModel classes.
+
+1. First of all we must have to download / install
+  Install-Package Microsoft.jQuery.Unobtrusive.Validation
+2. Add the reference of jQuery.Validation nad jQuery.Validation.Ubobstrusive files into your layout or in current page:
+
+   <script src="first of all embed jquery.js"></script>
+   <script src="jquery-validation...></script>
+   <script src="jquery-validation-unobstrusive..."></script>
+   other script files....
+
+3. To set error message text format:
+
+.field-validation-error {
+  color: red;
+}
+.field-validation-valid {
+  color: green;
+}
+
+jQuery Ajax Plug-in
+----------------------
+This plug-in and @Ajax.BeginForm() helper allow us to request a form using $.ajax functions of jquery.
+
+1. Download / install and add reference of .js file into layout after the jquery.js  
+ > Install-Package Microsoft.jQuery.Unobtrusive.Ajax
+
+2. Assume that we've StudentViewModel with Roll and Name fields
+3. Actions:
+
+[HttpGet]
+public ActionResult Student() { return View(new StudentViewModel()); }
+
+
+[HttpPost]
+public ActionResult Student(StudentViewModel model)
+{
+ return Content("Received data : " + model.Roll + " " + model.Name);
+}
+
+4. Student.cshtml
+
+@model Ns.Models.StudentViewModel
+@using (Ajax.BeginForm("Student",
+    new AjaxOptions
+    {
+        HttpMethod = "POST",
+        Confirm = "Are you sure to insert", //Optional
+         OnSuccess = "doOk",  // JavaScript Function
+         UpdateTargetId ="message",  // Id of html object
+         Url="/Home/Student" //Url
+    }))
+{
+    <p>
+        @Html.LabelFor(x=>x.Roll)
+        @Html.EditorFor(x => x.Roll)
+        @Html.ValidationMessageFor(x=>x.Roll)
+    </p>
+    <p>
+        @Html.LabelFor(x => x.Name)
+        @Html.EditorFor(x => x.Name)
+        @Html.ValidationMessageFor(x => x.Name)
+    </p>
+    <p>
+        <button>Submit</button>
+    </p>
+    <p id="message"></p>
+
+    <script>
+        function doOk(result) {
+            console.log(result);
+        }
+    </script>

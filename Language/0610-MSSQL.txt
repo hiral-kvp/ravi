@@ -1,0 +1,176 @@
+ Microsoft SQL Server Database
+ ====================================================================================
+ MSSQL Server is a relational database product from Microsoft and it has following
+ editions:
+
+    1. MSSQL Enterprize (Commercial)
+    2. MSSQL Standard (Commercial)
+    3. MSSQL LocalDb or Express (Free)
+
+ All three editions have equal number of features except the LocalDb or Express  edition support "single user".
+
+ MSSQL versions can be MSSQL 2005, 2008, 2010, 2012, 2014. Currently we've MSSQL  Server 2012.
+
+ MSSQL Server LocalDb/Express is installed along with Visual Studio, however you
+ can install other editions of MSSQL server along with LocalDb too.
+
+ MSSQL Server environment
+ ------------------------
+ Database File -  Database files namely - master database file (.mdf) and log database
+		  file (.ldf) represent the database or schema or catalog or 
+                  data dictionary.
+ Server Name   -  Default server name is  (localdb)\v11.0
+		  And it can be IP address e.g  22.11.2.33\myserver
+
+ Login (Authentication)
+ system		 - MSSQL server has two kind of login system:
+
+                        1. Windows Authentication System - This system uses credetails
+			   (username & password) of currently logged windows user.
+			  It means operating system's user account is used to logged
+				the MSSQL server database.
+
+  			2. SQL Server - This system allow us to create our own
+				user accounts but this is not a safe because
+				weak usernames & password offers venerabilities.
+  
+  [NOTE: (localdb) MSSQL supports "Windows Authentication" only]
+
+Types of Database - There are two kind of "databases" created with MSSQL server:
+			1. Local Database - This kind of database will be created
+				inside the project folder and it will be used
+				by that particular project only.
+
+                           Steps to create "Local Database":
+                             1. Create or Open project (of any type)
+                             2. Add New Item + Click on "Data" section + "Service-Base 				 Database" + Name your database (User ProperCase to
+				name the Database, Tables, Fields etc).
+				e.g ProductDb, EmpDb
+
+			2. Remote Database - It is the database which will be
+				created under "common" folder and it will be
+				accessed / used by one or more projects/apps/users.					
+                           Steps to create "Remote Database":
+
+				1. View Menu + Server Explorer
+				2. Right mouse click + Data Connections + Create New
+					SQL Server Database + Set Server Name 					(localdb)\v11.0 + Name the database + OK
+
+
+How to design Database Schema - Tables, Views, Functions etc?
+====================================================================================
+The "Server Explorer" and "SQL Server Object Explorer" tools are used to design the database schema.
+
+SQL Server Object Explorer should be used to list the databases and also remove/delete along with other database opertions.
+
+We will use "Server Explorer" to design the schema.
+
+In Server Explorer, we cannot delete databases however we can delete the connection info from the server explorer. To delete a database, use SQL Server Object Explorer.
+
+To create a table, views, functions etc, right mouse click on "Nodes = Tables, Views,
+Functions etc" + Add New Table/View/Function Or you can use "New Query" to write & execute SQL statements.
+
+
+Example:
+
+create table Dept
+(
+  DeptId int primary key identity,
+  DeptName varchar(50) not null unique
+)
+
+create table Emp
+(
+  EmpId int primary key identity,
+  EmpName varchar(100) not null,
+  JoinDate DateTime,
+  DeptId int not null,
+  Foreign key(DeptId) References Dept(DeptId)
+)
+
+Fields DataTypes
+==================
+Use  int,tinyint, smallint, bigint to represent number without decimal
+	 tinayint (1 byte), smallint(2 bytes) and bigint(8 bytes), int(4 bytes)
+
+Use decimal(s,p) to represent amount.  e.g decimal(18,2), decimal(7,2)
+
+Use Date,DateTime to represent date or DateTime
+
+Use varchar(size) for ANSI char with specified size
+    varchar(MAX)  for ANSI charset with MAX (8KB) size
+Use nvarchar(size), nvarchar(MAX) for UTF or Unicode string (Multi-lingual feature)
+
+Use bit to represent true/false or 1 or 0.
+
+Use varbinary(size) varbinary(MAX) to represent byte arrays or binary data.
+
+use char(size) - Fixed length string of ANSI charset
+    nchar(size) - Fixed length string for UTF
+
+Note: nvarchar uses 2 bytes per char whereas varchar type uses 1 byte per char.
+
+
+create table Category
+(
+   CategoryId int primary key identity,
+   CategoryName varchar(50) not null unique
+)
+create table Product
+(
+   ProductId int primary key identity,
+   Name varchar(100) not null,
+   Rate decimal(18,2) check(Rate>=1 and Rate<=99999),
+   Available bit default 1,
+   Unit varchar(10) default 'Pack',
+   CategoryId int not null,
+   Foreign key(CategoryId) references Category(CategoryId)
+)
+
+insert into Category (CategoryName) values ('Pen');
+insert into Category (CategoryName) values ('Pencil');
+
+insert into Product (Name,Rate,CategoryId) values ('Natraj',50,1);
+insert into Product (Name,Rate,CategoryId,Available) values ('Rotomac',150,2,0);
+insert into Product (Name,Rate,CategoryId,Unit) values ('Raynold',7,1,'Nog');
+
+select Category.CategoryName
+       Product.Name,
+       Product.Rate
+         From Category, Product
+               Where Category.CategoryId = Product.CategoryId
+
+Or
+
+Select CategoryName,
+       Product.*
+         from Category
+               Join Product on Product.CategoryId = Category.CategoryId
+
+  
+What is "Index" in a  table design?
+
+ To improve the search, database has a unique feature called "Index". You can use "index" constraints to any column that is frequently used with "where condition".
+
+   e.g select * from product where name like 'App%'
+  So to enhance the search for product name, columne "name" should be index.
+
+   e.g create table Product
+       (
+         ...
+         Name varchar(100) not null index,
+         ...
+        )
+
+Apart from the "index" constraints, primary key, unique and foreign key are "index" automatically.
+
+
+
+
+
+
+
+
+
+  	
+			 

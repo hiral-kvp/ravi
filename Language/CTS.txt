@@ -1,0 +1,223 @@
+ CTS - Common Types System
+ ==============================================================
+ What is CTS? It is the "TYPES" system that is used by all CLS- Compliant languages to develop applications.
+
+ TYPES stands for "Data Type" or "Classes (In general way)".
+
+ Based upon memory architecture of .net framework, TYPES falls
+ into two category:
+
+   1. Value Types and 
+   2. Reference Types
+
+  When we launch/run an app (.net app), the .net framework's CLR  (runtime) allocate 1 MB RAM for local variables, method  parameters, method return type and method call. The 1 MB RAM which is allocated by the CLS when an app starts and will remain available till an app is running. This kind of "allocated memory region" is called "Stack Frame Memory".
+
+  If we want to store/hold more data into memory or the stack   memory region is not fit to store our data or we don't want
+  to use "Stack Frame" to store data then we must have to tell
+  the CLR for more memory. We will use "new" keyword to instruct
+  the CLR to allocate additional memory and this kind of   allocation is known as "Heap Frame Memory".
+
+  It is important to note that the size of "Heap Frame" can be
+  vary from 1 byte to 2GB, 4GB etc (depends upon the avail   memory).
+
+  Value Types
+  ============
+  Types having fixed length/size are known as "Value" types.
+
+  In CTS, we have two category of Value TYPES:
+ 
+         1. Structure and
+         2. Enum
+
+  Value Types can use "Stack Frame" or "Heap Frame" memory.
+
+  If Value Types are used to create local variables, method   parameters, return type then they will use "Stack Frame".
+
+  If Value Types are used with "Reference Types" then they
+  will use "Heap Frame".
+
+   Reference Types
+  =================
+
+   Types having variable length/size to represent data are
+   called "Reference Types". In other words, Types which are
+   not Value types are "Reference Types".
+
+   CTS has four reference Types:
+
+      1. class 
+      2. interface
+      3. delegate ( like a function pointer in C language)
+      4. arrays
+
+    Reference Types always uses "Heap Frame".
+
+    Value Types variables can hold exact value (data) of that
+    type that is used to create a variable.
+         e.g    int no = 10;
+                int no = 10.10; <-- Error
+                float no = 10.10; <--Error 
+                
+          NOTE: Any numeric value without decimal is treated as
+		"int" or "integer".
+                Any numeric value with decimal is treated as 		"double" (not a float).
+     
+   Reference Types variables can hold memory reference (Address)    of a heap (or object) or null.
+
+            For example,
+
+                String name = "Mr.A";
+                 
+                       A heap will be created ( say 8 bytes of 			heap)  and its address or reference will
+			be returned and assigned to "name" 			reference variable (pointer variable).
+
+                You can write following statement, if you don't
+		have a heap.
+
+                 String name = null;  This statement says the
+					heap is not exists or
+					object is missing.
+
+                 [Note: String is a reference type]
+
+    The Nullable<T> type is introduced in .net framework which
+    is used to wrap the "Value Types" data and if "data" is     missing then it acts as "Reference Type".
+
+
+  CTS Architecture - Class Library Architecture
+  ===========================================================
+  The CTS ( class library ) is designed using "Unified   Programming Model" - It is a "standard" to design the APIs   (Application programming Interface) or "libraries".
+  Java, C++, .Net and other platforms uses "Unified Programming
+  Model".
+
+  Based upon the usage or application of "classes", CTS is   divided into two categories of classes/Types.
+
+     1. Fundamental Class Library (FCL) or Base Class Library         (BCL)
+        This category includes :
+            1. Primitive types ( char, byte, int, float etc)
+            2. Device Input / Output
+            3. Date & Time
+            4. Text, Encoding, RegularExpression
+            5. Debug, Diagnostics
+            6. Runtime, Process, Thread, Exception, Remoting etc
+
+      2. Extended Class Library 
+         This category classes/types are developed using "Base 	 class library" for application specific implementation.
+
+         So, application specific class library is called 		"Extended class lib" and it includes:
+
+		1. ADO.NET - Database Integration APIs
+                2. XML.NET - XML parsers
+                3. WinForm - Desktop APIs
+                4. WPF - Window Presentation Framework - Desktop
+				Application APIs
+                5. WCF - Window Communication Framework (Network
+			 APIs)
+                6. WWF - Window Workflow Foundation
+                7. ASP.NET -  Web App APIs
+                8. SilverLight, DirectX APIs
+                9. WinPhone - Window Phone APIs and many more...
+               10. LINQ - Language Integrated Query
+               11. EDM - Entity Data Model (EntityFramework 			APIs)
+
+     As per unified programming model (there are number of properties of this model but we will learn two of them):
+
+       1. Each TYPE must be created under named "package or           namespace" to avoid name mangling (name conflict).
+       2. Each TYPE must have one and only super type (class).
+
+     What is namespace or package ?
+
+             [In .net framework we will use "namespace". The             "package" term is used by Java and other platforms].
+
+        A namespace is mechanism to create a group of related
+        "TYPES" and keep one group of TYPES distinct from 	another group of "TYPES". 
+        [Note: Assume the "namespace" as a file system folder].
+
+         In CTS, the "System" is root namespace and it is  	reserved for CTS. 
+
+         System.Object  <---- Class
+          ^        
+          |
+    Namespace   sub NS  sub-sub NS 
+          |      |        |
+          V      V        V
+         System.Data.SqlClient.SqlConnection <-- Class
+          | 
+          V
+         System.Int32 <-- structure
+ 
+ NOTE: Namespace names other than "System" are not part of .net        framework CTS API and they are known as "Third Party        APIs" or "Vendor Specific APIs".
+
+       e.g.  NewtonSoft.Json.JsonParser
+             Sunil.Db.Common
+              
+
+1 byte = 8 bits
+2 bytes = 16 bites
+4 bytes = 32 bits
+8
+16
+32
+64
+128
+256
+512
+1024
+2048
+
+
+ The Primitive Types
+ --------------------
+
+ The "System" namespace has all the primitive types exists in
+ .net framework.
+
+
+ CTS Name		C# Alias	Size (Bytes)
+ ----------------------------------------------------
+ System.Byte		byte		1 (0 to 255)
+ System.SByte		sbyte		1 (-128 to 127)
+ System.Int16		short		2 (-32768 to 32767)
+ System.UInt16		ushort		2 (unsigned short)
+						(0 to 65535)
+ System.Int32		int		4
+ System.UInt32		uint		4
+ System.Int64		long		8
+ System.UInt64		ulong		8
+
+ System.Single  	float		4
+ System.Double		double		8
+ System.Decimal		decimal		14
+ 
+ System.Char		char		2 (It can represent any
+					charset including 					English and non-English)
+					ANSI is for English and
+					UTF (Universal Text 					Format) is for 								English & non-English
+                                        (Unicode charset)
+ System.Bool		bool		Not Available (possibly
+					1 bit).
+
+					true and false keywords
+					are used to set boolean
+					value.
+
+ All above mentioned TYPES are "structure" (Value TYPES). 
+
+ Here we have two most commonly used "classes" namely : 
+
+   1. System.String   whose C# alias is "string" (small letter)
+
+   2. System.Object   whose C# alias is "object" (small letter)
+
+ Anything you write in between double quotes are objects of  System.String class. 
+        For example, "Hello"  -- is an object of System.String
+					or string class.
+					
+ The ultimate super/base class - System.Object
+ -----------------------------------------------
+ Any type you create or any type of .net framework are sub- classes of "System.Object" class. 
+
+ The System.Object is belongs to value types and reference types  so sometime people say that this is "Neutral Class".
+
+ In other words, all TYPES extends System.Object directly or  indirectly.
+

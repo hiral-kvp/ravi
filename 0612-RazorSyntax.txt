@@ -1,0 +1,224 @@
+The Razor View Engine - (.cshtml for C# and .vbhtml for VB.NET language)
+==================================================================================================================
+The "Razor" view engine and "ASPX" view engine are the part of ASP.NET framework but we will use "Razor" view engine because of its simple syntax and light-weight framework.
+
+The Razor view engine cannot be used with "Web Form App" but it is introduced to work with MVC and Single Page or Web Page application.
+
+Razor pages and code snippets
+-----------------------------
+You can create/open website or Project (web) and add Razor web pages via "Project Menu + Add New Item" Or Add New Item sub menus from the solution explorer's context (right mouse click menu) menu.
+
+The VS will provide intellesense and code snippet (press TAB key and the VS will insert default syntax for the specified Tag/Element) to ease the markup writing and also hightlight the syntax.
+
+Razor pages for C# language uses .cshtml extension and inside the .cshtml page we can embed C# code, HTML markup, CSS selectors and JavaScript program.
+
+In Razor pages, you can embed HTML/CSS/JavaScript into C# code and vice versa.
+
+Razor Syntax:
+
+1.  @expression    -- This syntax write the value produced by the "expression" into the response buffer (Output that
+			is stored into intermediate memory at server machine is called "Response Buffer/Memory).
+
+2. @{               
+    //C# statements, HTML/CSS/JavaScript code
+}
+		   -- This syntax allow us to write C# code and then embed HMTL/CSS/JavaScript code.
+3. @statement {
+
+   }   		   -- Same as Razor block ( @{....} ) but it starts with for, while, if, switch etc statement
+
+4. @** **@  	   -- Razor comment -- Text inside the comment will not be processed
+
+5. @:text  or <text></text>  -- To embed text especially when we want to write anything without wrapping the content 				into HTML tags.	
+
+
+Important Note:
+
+Embed HTML content inside the block:
+
+@{
+  ...
+  ... //your C# code
+  <HtmlTag>...</HtmlTag>
+  ...
+  <HtmlTag>...</HtmlTag>
+   ....
+}
+Above code snippet is valid/correct but following will shows an error:
+
+@{
+ ...
+ ...//Your C# code
+ Hello World <--- Any content without enclosing HTML tag will throws an error
+ ....
+}
+So, in that case you can use @:Hello World Or <text>Hello World</text> Razor markup.
+
+
+Examples:   First of add "Index.cshtml"  or any cshtml file into your project and write/add following code snippet to practice the syntax. Note that the "Razor" is not a programming language but it is a "parser or View engine" that allows us to use C# language code along with client programming elements.
+
+
+1. 
+@** This is the comment **@
+@
+{
+  var no = 10;
+  var name = "Raj";
+  
+   //This is C# comment
+   //Embed the HTML markup
+
+   <h3>Hello my name is @name and my Id is @no</h3>
+}
+<!-- This is the HTML comment -->
+<!-- You can embed C# code into the HTML Tags
+
+<h4>ID : @no </h4>
+<h4>Name : @name</h4>
+
+2. 
+
+@** Write data (without using HTML Tags) **@
+@
+{
+  var no = 10;
+  var name = "Raj";  /* You can also uses <text> tag too */
+  @:My name is @name and my Id is @no   
+}
+
+
+3.
+@for(var i = 1; i<=10; i++)
+{
+  <h3>@i</h3>
+}
+
+4.  Dropdown list
+
+<select>
+@for(var i =1; i<=10;i++)
+{
+    <option>@i</option>
+}
+</select>
+
+ 
+5.  <table> tag 
+
+<table>
+  <tr>
+     <td>11</td>
+     <td>Raj</td>
+  </tr>
+  <tr>
+     <td>22</td>
+     <td>Man</td>
+  </tr>
+</table>
+
+@** Multiplication table **@
+<table>
+ @for(var i =1;i<=10;i++)
+  {
+    <tr>
+      @for(var j=1;j<=10;j++)
+        {
+          <td>@(i*j)</td>
+         }
+     </tr>
+   }
+</table>
+
+The HTML - Hypertext Markup Language
+===================================================================================================================
+
+HTML is a markup language to present data on the web. In fact HTML is a standard and it is maintained by the W3C - World Wide Web Consortium (W3C defines Standards for Web that includes - HTML, CSS, SVG, SGML, MathML etc) and this standard is then implemented by the browser vendors (google, mozilla, mocrosoft etc).
+
+Current HTML standard is 5 (Note that it is not a version or edition) - HTML5 and previous standards were HTML2,4. It is important to note that the new standard carries all the features of old standards.  Some of the old features are marked as "depricated" in new standard because of their absurd use in current standard of web. 
+   For example,  <font> HTML tag is depricated (retired) because there are some better alternatives with great    significance are available in new standards but if you use <font> then web-browser will not complain because this
+   tag is retired but not removed.
+
+
+The HTML elements
+------------------
+
+The markup or tag or element of HTML is enclosed in < (less) and > (greater) sign and we've two types of markup:
+
+1. closed element/tags and 
+2. open elements
+
+For example,    <input type="text">   <--- There is not such a symbol that ends or terminates the <input>
+
+		<p>
+                  Thi is closed tag
+                 </p>
+
+However, open tags can be written with empty body:
+              <input type="text" />     The / in /> indiates that there is no body of the element. 
+So, following two syntax are valid:
+  <input type="button" />
+  <input type="button" >
+
+Each html tag will be an Element (object) because each markup you write is a "class". 
+For example, 
+
+  Tag ===>   <p> .. </p>
+Class ===>   HtmlParagraph 
+And the web browser will creates four objects for the following content:
+
+     <p>This is my first para</p> 
+     <p>This is my second para</p>
+     <p>This is my third para</p>
+     <p>This is my fourth para</p>
+
+You can learn more about Html objects & Elements via "Developer Tool" -- Press F12 (Ctrl+Shift + I) at web-browser.
+
+Each web-browser has a "Developer Tool" to test, debug and learn things related to request, response, cookies, client code - objects - CSS properties etc.
+
+
+HTML Elements are falls into two group based upon their display. 
+--------------------------------------------------------------------
+These elements are:
+  1. Block Elements   --- Block element's width will be the width of their parent elements. The height of the block
+  			 elements is depends upon the content they hold.
+
+  2. Inline Elements  --- Inline elements's height & width are computed from the content/text they represent and we
+				can't change height & width of "inline" elements.
+
+			Note that the block element's height & width can be changed via CSS properties but inline's 
+			height/width can't be changed.
+
+Some of the HTML elements support both - block & inline display. So these elements are known as "block-inline or inline-block" elements.  <input> elements are example of inline block.
+
+The <!doctype html>
+---------------------------------------------
+The <!doctype html> is an instruction to the browser to select current (new) standard of HTML to create HTML objects. If this preprocessor (<!doctype > is called preprocessor) is missed then your browser will entered into "quirk mode" and that generate HTML objects from old or new or mixed standard and hence the output of the brower will always surprise you.
+
+So, the web document must begins with <!doctype html> and this statement instructs browser to select HTML5 standard.
+
+
+Example: Remove <!doctype html> and test this page on diff browsers and then add <doctype> and see the result
+
+@{ 
+    var title = "Never misses the doctype";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@title</title>
+    <style>
+        html {
+            background: red;
+        }
+        body {
+            background: blue;
+        }
+        h1 {
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome</h1>
+</body>
+</html>

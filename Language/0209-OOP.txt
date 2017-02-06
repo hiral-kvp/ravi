@@ -1,0 +1,369 @@
+Linked List
+===========
+LinkedList is a way to represent objects in a sequence where one object holds memory reference of another and so on. The last object in the linkedlist cannot have any object reference at all (i.e. null).
+
+
+using System;
+
+public class Student
+{
+    public string Name { get; set; }
+    //Pointer to represent address of next student
+    public Student Link { get; set; }
+}
+class Test
+{
+    private static void Main()
+    {
+        //Create objects
+        Student a = new Student() {Name="Raj"};
+        Student b = new Student() {Name="Man"};
+        Student c = new Student() { Name="Harsh"};
+        Student d = new Student() {Name="Rohit"};
+
+        //Set links
+
+        d.Link = a;
+        a.Link = b;
+        b.Link = c;
+
+/*  d                    a                b                    c
+ |------------|     |-------------|    |-------------|     |-------------|
+ | Rohit |    | <-- | Raj |  Link | <--| Man |  Link | <-- |Harsh | Link| <--null
+ |-------------     |-------------|    |-------------|     |-------------|
+
+ 
+              |------------|
+              | Ram | Link |
+              |------------|
+*/
+        //Rohit
+        Console.WriteLine(d.Name);
+        Console.WriteLine(d.Link.Name); //Raj
+        Console.WriteLine(d.Link.Link.Name); //Man
+        Console.WriteLine(d.Link.Link.Link.Name); //Harsh
+        //Attach new objects to the list
+        c.Link = new Student {Name = "Mohan"};
+        c.Link.Link = new Student {Name = "Rati"};
+
+        Student start = d; //store reference of 1st object of the linkedlist
+        while (start != null)
+        {
+            Console.WriteLine(start.Name);
+            start = start.Link;
+        }
+
+        //Insert a node/student
+        Student newS1 = new Student{Name="Ram"};
+        newS1.Link = d.Link; // Store "Raj" address
+        d.Link = newS1;      //Store  "Ram" address to Rohit's link
+
+        //Delete "Man" object from the linked list
+        a.Link = c;
+        Console.WriteLine("After insertion & deletion");
+        start = d; //store reference of 1st object of the linkedlist
+        while (start != null)
+        {
+            Console.WriteLine(start.Name);
+            start = start.Link;
+        }
+    }
+}
+
+Example: Represent "geneology" - family-tree
+
+public class Person
+{
+   public string Name {get;set;}
+   public Person Father {get;set;}
+   public Person Mother {get;set;}
+}
+
+//Grandfather
+Person dashrath = new Person { Name  = "Dasharath", Father = null, Mother = null };
+Person wifeDasharath = new Person { Name  = "Wife", Father = null, Mother = null };
+//Children
+Person ram = new Person { Name="Ram", Father = dashrath, Mother = wifeDashrath };
+Person luv = new Person { Name="Luv", Father = ram, 
+                        Mother = new Person { Name="Seeta", Mother=null,Father = null}
+                         };
+
+Student Linked list
+------------------------
+using System;
+
+public class Student
+{
+    public string Name { get; set; }
+    //Pointer to represent address of next student
+    public Student Link { get; set; }
+}
+
+public class StudentList
+{
+    private Student first, last;
+    //Add student object
+    public void Add(Student obj)
+    {
+        if (first == null)  //If list is empty
+        {
+            first = last = obj;
+        }
+        else
+        {
+            last.Link = obj;  //Attach an object at the end of list
+            last = obj;
+        }
+    }
+    public void Print()
+    {
+        Student temp = first;
+        while (temp != null)
+        {
+            Console.WriteLine(temp.Name);
+            temp = temp.Link;
+        }
+    }
+}
+class Test
+{
+    private static void Main()
+    {
+        StudentList list = new StudentList();
+
+        list.Add(new Student{Name = "Raj"});
+        list.Add(new Student{Name = "Man"});
+        list.Add(new Student{Name="Rakesh"});
+
+        list.Print();
+    }
+}
+ 
+Note: Add methods - Delete(), Search() and InsertAt() into "StudentList" class.
+
+
+public void Delete(string name) { .... }
+public Student Search(string name) { ... }
+public void InsertAt(Student newObj, string whereName ) { ... }
+
+Example: Full example
+
+using System;
+
+public class Student
+{
+    public string Name { get; set; }
+    //Pointer to represent address of next student
+    public Student Link { get; set; }
+}
+
+public class StudentList
+{
+    private Student first, last;
+    //Add student object
+    public void Add(Student obj)
+    {
+        if (first == null)
+        {
+            first = last = obj;
+        }
+        else
+        {
+            last.Link = obj;
+            last = obj;
+        }
+    }
+    public void Print()
+    {
+        Student temp = first;
+        while (temp != null)
+        {
+            Console.WriteLine(temp.Name);
+            temp = temp.Link;
+        }
+    }
+    public Student  Search(string name)
+    {
+        Student temp = first;
+        while (temp != null)
+        {
+            if (name.Equals(temp.Name))
+            {
+                return temp;
+            }
+            temp = temp.Link;
+        }
+        return null;
+    }
+    public void InsertAt(Student obj,string whereName)
+    {
+        Student temp = first;
+        while (temp != null)
+        {
+            if (whereName.Equals(temp.Name))
+            {
+                if (temp.Link == null)
+                {
+                    last = obj;
+                }
+                obj.Link = temp.Link;
+                temp.Link = obj;
+                
+            }
+            temp = temp.Link;
+        }
+        
+    }
+    public void Delete(string name)
+    {
+        if (name.Equals(first.Name))
+        {
+            first = first.Link;
+            return;
+        }
+        Student temp = first;
+        while (temp != null)
+        {
+            if (name.Equals(temp.Link.Name))
+            {
+                temp.Link = temp.Link.Link;
+                if (temp.Link == null)
+                {
+                    last = temp;
+                }
+                return;
+            }
+            temp = temp.Link;
+        }
+         
+    }
+}
+class Test
+{
+    private static void Main()
+    {
+        StudentList list = new StudentList();
+
+        list.Add(new Student{Name = "Raj"});
+        list.Add(new Student{Name = "Man"});
+        list.Add(new Student{Name="Rakesh"});
+
+        list.Print();
+
+        Student result = list.Search("Man");
+        if (result != null)
+        {
+            Console.WriteLine(result.Name);
+        }
+        else
+        {
+            Console.WriteLine("Not exists");
+        }
+
+        Console.WriteLine("After deletion");
+        list.Delete("Raj");
+        list.Add(new Student{Name="A"});
+        list.Print();
+        Console.WriteLine("Insert At");
+        list.InsertAt(new Student{Name="B"},"Man");
+        list.InsertAt(new Student { Name = "C" }, "A");
+        list.Add(new Student{Name="D"});
+        list.Print();
+    }
+}
+ 
+
+ClassNote
+---------
+Add following methods into "StudentList" class.
+
+  public Student  Search(string name)
+    {
+        Student temp = first;
+        while (temp != null)
+        {
+            if (name.Equals(temp.Name))
+            {
+                return temp;
+            }
+            temp = temp.Link;
+        }
+        return null;
+    }
+
+
+    public void InsertAt(Student obj,string whereName)
+    {
+        Student temp = first;
+        while (temp != null)
+        {
+            if (whereName.Equals(temp.Name))
+            {
+                if (temp.Link == null)
+                {
+                    last = obj;
+                }
+                obj.Link = temp.Link;
+                temp.Link = obj;
+            }
+            temp = temp.Link;
+       }
+    }
+
+    public void Delete(string name)
+    {
+        if (name.Equals(first.Name))  //Remove the first node
+        {
+            first = first.Link;
+            return;
+        }
+        Student temp = first;
+        while (temp != null)
+        {
+            if (name.Equals(temp.Link.Name))
+            {
+                temp.Link = temp.Link.Link;
+                if (temp.Link == null)  //Set if node is the last node
+                {
+                    last = temp;
+                }
+                return;
+            }
+            temp = temp.Link;
+        }
+    }
+
+And code in Main method:
+
+        StudentList list = new StudentList();
+
+        list.Add(new Student{Name = "Raj"});
+        list.Add(new Student{Name = "Man"});
+        list.Add(new Student{Name="Rakesh"});
+
+        list.Print();
+
+        Student result = list.Search("Man");
+        if (result != null)
+        {
+            Console.WriteLine(result.Name);
+        }
+        else
+        {
+            Console.WriteLine("Not exists");
+        }
+
+        Console.WriteLine("After deletion");
+        list.Delete("Raj");
+        list.Add(new Student{Name="A"});
+        list.Print();
+
+        Console.WriteLine("Insert At");
+        list.InsertAt(new Student{Name="B"},"Man");
+        list.InsertAt(new Student { Name = "C" }, "A");
+        list.Add(new Student{Name="D"});
+        list.Print();
+
+
+
+  

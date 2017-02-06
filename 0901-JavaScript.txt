@@ -1,0 +1,1136 @@
+JavaScript Or ECMAScript Or Mocha Language
+=============================================================================================================
+
+The word "JavaScript" is registered trademark of "Oracle Inc,USA" and nothing else; it is a programming language which is created using a specification called ECMA (European Computer Merchant Associate) specification and that's why it is also known as "ECMAScript". There are two ECMAScript specifications : ECMAScript 5 and the newly introduced ECMAScript 6. ECMAScript a.k.a ES; ES5 or ES6. ES6 is not fully implemented by the browser vendors but it will be implemented in all browser in couple of years. So ES5 is the common and stable specification. JavaScript is also known as "Mocha".
+
+JavaScript is a scripting programming language runs by the JavaScript Engine (Runtime installed into web-browser or your OS); Each web-browser has a JavaScript Engine (ES5 and ES6 may be) and you can install NodeJS JavaScript runtime engine to your OS.
+
+Scripting language means "interpreter based language".
+
+JavaScript mostly used to develop client apps; especially with web-browser but you can develop apps - server, mobile & delstop using NodeJs and other third party libraries.
+
+
+Language basics
+----------------
+  => JavaScript is case sensitive
+  => Syntax is derived from C/C++
+  => It is dynamic language - Type of value will be determined during program execution.
+  => It supports object-oriented program design methodology
+  => It supports funtional programming program design methodology ( to ease or improve the OOP design)
+  => IT supports modular programming program design methodology; A module is a collection of code mostly independent
+		and it can be added or removed from the app without affecting other components.
+
+Where to write code and how it is executed/run?
+--------------
+You can use HTML element "script" to embed JavaScript code within the web-document.
+
+1. Embed JavaScript code directly into the web-document
+
+<body>
+  <script>
+    //code
+  </script>
+  ...
+  ....
+  <script>
+    //code
+  </script>
+</body>
+	
+2. Write code into separate file (.js) and then embed it
+
+<body>
+  ....
+  ....
+  <script src="file.js"></script>
+  ...
+</body>
+
+file.js
+-------
+//JavaScript code
+....
+
+To run the code; JavaScript Engine, which is installed & exist in every browser, will be used. JavaScript engine interpret each statement one after one and produce the intermediate output or message or provide a way to debug the app code via "Developer Tool". Use "console" section of "Developer Tool".
+
+  Exception (Error), Debug symbols and JavaScript engine's background activities will not be displayed on the browser but these content easily navigate via Developer Tool's debugger (console window).
+
+Example: Code in your web doc
+
+<script>
+  length = myAddress.length();
+</script>
+
+The JavaScript engine uses "console" object and its method to show the content (error, info, trace result etc)
+
+  We can also use following methods:
+    1. console.log(value1,value2,...); write value at console
+    2. console.error(write-error-message)
+    3. console.info(write-info messsage)
+    4. console.debug(write debug message)
+    5. console.dir( write object along with properties)
+    6. console.assert( bool ) - stop the debugger if bool expression is false
+
+Example:
+<script>
+  console.log(10, "Raj", 'Mehsana', true);
+  console.dir( new Date() );
+  console.info("This is info category statement.");
+  console.error("Error statement.");
+  console.assert(10 == 10.11);
+  console.info("End of script");
+</script>
+
+Like C/C++/C#, JavaScript statement ends with ; semi-colon. The syntax of if, switch, for, while and do while are same as these languages.
+
+Types and variables
+---------------------
+JavaSCript is untype and hence it is dynamic; no explicit type name as exists in other languages (int,char etc) and you can create a variable just by assigning value.
+
+<script>
+  no = 10;
+  amt = 10.10;
+  str1 = 'Single quoted string can include "Double" quotes';
+  str2 = "Double quoted string can include 'Single' quotes";
+  console.log( no, typeof( no ));  // 10  number
+  console.log( amt, typeof(amt));  //10.10 number
+  console.log(str1,str);
+</script>
+
+The typeof keyword is used to examine the type of value.
+
+You can use "var" keyword to create variables.
+
+<script>
+  var age;
+  var firstName = "Raj";
+  var address = '12, "Parth" Bunglows';
+  console.log( typeof(age) ); // undefined - no type exist because of no value
+  console.log(no, firstName, address);
+</script>
+
+The number type : Number is 64 bits to store any number (integral or real)
+The string type : Store unicode chars; uses single or double quote syntax.
+The bool type: Special keyword true and false but JavaScript uses following value as
+               falsy value:
+
+			0  means false
+			0.0 means false
+                        "" or '' means false
+                        null means false
+                        NaN  Not a number error message means false
+                        Infinity error message means false
+                        undefined means false
+
+		And any other value other than "falsy" is "truthy" or "true".
+
+
+ Example:
+<script>
+  var no = 0;
+  if(no)
+    console.log("Truthy", no);
+  else
+    console.log("Falsy",no);
+</script>
+
+ set var no = 10 * "abc";  or 0.0 or "" or '' or false etc and check the result.
+
+The window namespace
+----------------------
+Each name you create (variable, object, function, class) will be automatically added into the default namespace of JavaScript and its name is "window".
+However, we can define our own namespace via "function" keyword.
+
+<script>
+  no = 10; 
+  var firstName = 'Raj';
+  window.lastName = 'Shah';
+  window.salary = 10000;
+
+  console.log( window.no, window.firstName, lastName, salary);
+</script>
+
+The number and string functions
+-----------------------------------
+We can examine the functions of number, string and other types within the code or at console window.
+
+At console window,
+>no = 100000.1002992
+>no  Press enter will display value
+>no = no * 34.5
+>no
+>no.toFixed()
+>no.toFixed(2)
+>no.toExponential(2)
+
+ Or in code file,
+
+<script>
+  var no = 2999299.2323;
+  console.log( no.toFixed(2) , no.toExponential(2));
+<script>
+  
+Example:
+
+ <script>
+   var name ="    the red sun   ";
+   console.log('[',name,']');
+   console.log('[',name.trim(),']'); // remove spaces
+   console.log(name.toUpperCase());
+   console.log(name.anchor("http://abc.com"));
+  </script>
+
+Variable and its scope
+-----------------------
+The variables created inside the functions have global scope if they are created using "window" namespace or created without using "var" keyword.
+
+<script>
+  var testNo = 10;
+  function myFunc() {
+      anotherNo = 20;
+  }
+
+  console.log(testNo);
+  console.log(anotherNo); // error
+  //call the myFunc
+  myFunc(); 
+  console.log(testNo);    // 10
+  console.log(anotherNo); //  20
+</script>  
+
+Now, comment at // console.log(anotherNo) and that will be 10 and 20 
+But, change the statement,
+       var anotherNo = 20; and there will be an error at last statement  because "anotherNo" is a local scope variable.
+
+So, it is good practice to use "var" to create variables.
+
+The array type
+---------------
+
+Use [] subscript operator or Array() object to create arrays
+
+<script>
+  var nos = [];
+  var nos1 = Array();
+
+  console.dir(nos);
+  console.dir(nos1);
+
+  nos[0] = 100;
+  nos[10] = 200;
+  nos[100] = "Hello";
+  nos[2] = 'Test';
+
+  console.log( nos );
+  nos1 = Array(10,20,30,40);
+  console.log(nos1);
+  nos = [100,200,300,400];
+  console.log(nos);
+</script>
+
+Example:
+
+<script>
+  var nos = [10,20];
+  console.log( nos[0] ); // 10
+  nos[100] = 300;
+  console.log( nos.length ); //101 items 
+  //traverse the array using for each loop (for in)
+
+  for(var index in nos) {
+    console.log( index, nos[index]);
+  }
+</script>
+
+Array method/functions
+-------------------------------
+
+        var nos = [10, 20];
+
+        //append
+        nos.push(30);
+        nos.push(40);
+        
+        console.log(nos.pop()); //Remove 40
+
+        //insert at index
+        nos.splice(0, 0, 70);  //index, num_deleted, new-value
+        nos.splice(2, 0, 100);
+
+        //Update
+        nos[1] = 900;
+        console.log(nos);
+
+        //Delete at index
+        nos.splice(1, 1); // ast 1 (2nd) index and 1 element
+        console.log(nos);
+
+The object type via { } object literal
+========================================================
+In JavaScript, { } is called object literal or JavaSCript Object Notation and it is used to creates an object.
+
+Syntax:
+ {
+   "key1": value,
+   "key2": value,
+   ...
+  }
+
+An object is composed of one or more key-value pairs where key must be string and the value can be any valid value of any datatype.
+
+Example:
+
+<script>
+  var emp = {
+     "id": 10,
+     "name": {
+           "firstName": "Raj",
+           "lastName": "Shah"
+      },
+     "salary": 2000.22
+ };
+
+ console.log ( emp );
+
+ //access property using . or [ ] 
+ console.log( emp.id, emp.name.firstName, emp.name.lastName, emp.salary);
+ console.log( emp["id"], emp["name"].firstName, emp["name"]["lastName"], emp["salary"]);
+
+ //add new properties
+ emp.city = "Mehsana";
+ 
+ console.log( emp );
+ 
+ //delete a property
+ delete emp.salary;
+ console.log ( emp );
+</script>
+
+JSON object method
+======================
+
+JSON.parse( str ) - Will returns JSON object from given "str" (string).
+JSON.stringify( jsonObject) - Returns a string from the JSON object
+
+
+<script>
+    var str = '{"id": 10, "name": "Rajesh"}';
+    var std = JSON.parse(str);
+    console.log(std);
+    console.log(std.id, std.name);
+
+    var str1 = JSON.stringify(std);
+    console.log(str1);
+</script>
+
+List of JSON objects -- Array of objects
+==========================================
+
+<script>
+  var emps = [
+     {
+       "id": 10, "name": "Raj" },
+      {"id": 20, "name": "Kumar"}
+   ];
+ for(index in emps) {
+    var e = emps[index];
+    console.log (e.id , e.name);
+ }
+</script>
+
+The function keyword - to create functions/methods
+=====================================================
+There are two syntax to create a function.
+
+1. Declarative way - In this method function is created using function keyword and it has a name. The JavaScript
+			engine loads these functions before executing any code inside the file/document.
+2. Variable function 
+ Or Anonymous function - In this way, the function has no name but its reference is saved into variable or pass as it
+			 a parameters.
+
+
+Example:
+
+<script>
+  function addNums(no1,no2) {
+    console.log( no1 + no2 );
+    return no1+no2;
+  }
+  
+  var add = function(no1,no2) {
+    console.log(no1+no2);
+    return no1+no2;
+  }
+
+  //call these functions
+  
+   addNums(10,20);
+   console.log(addNums(6,8));
+
+   console.log( add(4,5) );
+   add(90,20);
+</script>   
+ 
+     
+Function receive parameters even its parameter list is empty
+============================================================
+The JavaScript function has an array called "arguments" (local scope) that holds the parameters.
+
+<script>
+    function printSomething() {
+        console.log(arguments);
+        if (arguments.length == 3) {
+            console.log("There are three items");
+        }
+    }
+
+    printSomething();
+    printSomething(10, 20, 30);
+
+</script>  
+
+Passing varities of parameters 
+--------------------------------
+<script>
+    function printSomething(first,second,third) {
+        console.log(first, second, third);
+    }
+    printSomething();
+    printSomething(10, 30);
+    printSomething({}, function () { }); // object, function
+</script>  
+
+The "callback" function - A function is pass to another function (reference of the function) and via this reference we can call the function and it is known as a callback.
+
+<script>
+  function add(no1,no2) { return no1+no2; }
+  function sub(no1,no2) { return no1-no2; }
+  function mul(no1,no2) { return no1*no2; }
+
+  function action(no1,no2, func) {
+      console.log( func(no1,no2) );
+  }
+
+ //pass add, sub, mul to action()
+  action(10,10,add);
+  action(20,2, sub);
+  action(3,2, mul);
+</script>
+    
+Callback mechanism - use of events of HTML objects
+----------------------------------------------------
+HTML objects have number of events whose name will be start with "on" - onclick, onkeypress, onblur, onmouse etc; these are events or a variable that can hold memory reference of a function.
+
+<p onclick="myFunc()">Click Me</p>
+<button onclick="myFunc()">Click Me</button>
+<a href="#" onclick="hitMe()">Hit me</a>
+
+<script>
+  function myFunc() { console.log("I'm pressed!"); }
+  function hitMe() { console.log("OK!"); }
+</script>
+
+The function that returns another function - Closure object
+=============================================================================
+A "Closure" is an object that persists the function reference and function specific data.
+
+Example:
+
+ 
+<script>
+    function myClosure() {
+        return function () {
+            console.log("I'm a function object created inside the myClosure");
+        }
+    }
+    var result = myClosure();
+    result();
+</script>
+
+Here is an example that demonstrate how the inner function persists the outer function specific data and also data of the same function.
+
+ 
+<script>
+    function myClosure(size) {
+        return function (no) {
+            size = size + no;
+            console.log("Value " + size);
+        }
+    }
+    var result = myClosure(20);
+    result(2);
+    result(-10);
+    var another = myClosure(50);
+    another(-3);
+    result(5);
+</script>
+
+A function that returns JSON that contains data & functions (Complex closure object)
+======================================
+ 
+<script>
+    function myClosure(size) {
+        return {
+            "size": size,
+            "incr": function () {
+                size++;
+                console.log(size);
+            },
+            "decr": function () {
+                size--;
+                console.log(size);
+            }
+        };
+    }
+    var result = myClosure(20);
+    result.incr();
+    result.incr();
+    result.decr();
+    console.log(result.size);
+</script>
+
+The user-defined class - a new datatype
+--------------------------------------------------------
+We can construct our own object of unknown type via JSON syntax. Here, we can the "function" keyword to create a type or custom type.
+
+Syntax:
+
+function YourTypeName(constructor-parameters.....) {
+  this.field1 = value1;
+  this.field2 = value2;
+   ...
+  this.func1 = function(..) { };
+  this.func2 = function(..) { };
+  ....
+};
+
+All fields and methods (data members & member functions) must uses "this" keyword to qualify them as a "class's members". If "this" is not used then they will be consider as "local" scope variables or global scope variables - depedeps upon you use the "var" keyword.
+
+To create objects, use the "new" keyword.
+
+ var refVar = new YourTypeName(...);
+
+Example:
+
+<script>
+    function EmpViewModel(id, name) {
+        this.id = id;
+        this.name = name;
+        this.set = function (id, name) {
+            this.id = id;
+            this.name = name;
+        };
+        this.getId = function () { return this.id; }
+        this.getName = function () { return this.name; }
+        this.printAtConsole = function () {
+            console.log(this.id, this.name);
+        }
+    }
+
+    //Create objects
+
+    var p1 = new EmpViewModel();
+    p1.printAtConsole();
+    var p2 = new EmpViewModel(10, "Rohan");
+    p1.set(30, "Man");
+    console.log(p1.getId(), p1.getName());
+    p2.printAtConsole();
+</script>
+
+Example: Collection of Emps
+<script>
+   function EmpViewModel(..) { . as per previous example .. }
+   function Emps() {
+       this.emps = [];
+       this.add = function(emp) { this.emps.push( emp ) );
+       this.get = function(index) { return this.emps[index]; }
+       this.insert = function(emp,at) { this.emps.splice(at,0,emp); }
+       this.print = function() {
+          for(index in this.emps) {
+               this.emps[index].printAtConsole();
+           }
+       }
+    }
+  
+  //create the Emps object
+  var e1 = new Emps();
+  e1.add( new EmpViewModel(10,"Amar") );
+  e1.add( new EmpViewModel(20,"Raj") );
+  e1.insert( new EmpViewModel(30,"Harsh"), 0);
+  e1.print();
+</script>
+
+The Regular Expression object - create an object via RegExp or / / operators.
+-------------------------------------------------
+The "Regular Expression" mechanism mainly used to search/replace/split strings based upon the given "patterns".  
+
+Following example (methods of string object) shows how to search on the "content".
+
+<script>
+    var str = "The red sun and red rose";
+    console.log(str.substring(4, 7));
+    console.log(str.indexOf("red"));  // returns 1st index
+    console.log(str.indexOf("red",5));  // returns 2nd index
+    console.log(str.indexOf("rod")); //-1 if not found
+</script>
+
+The RegExp uses following character classes to create  or compose a pattern.
+
+Character class		Meaning
+.			It matches any character
+\d			It matches any digit char
+\w			It matches any word char
+\D			It matches any non-digit
+\W			It matches any non-word char
+\s			It matches any whitespace char
+\S			It matches any non-whitespace char
+[set]			It matches any char from the given "set"
+				[a-z]
+				[a-zA-Z0-9]
+				[abcd]
+				[1 2,3]
+(group)			It matches any "group" 
+
+
+Boundary marker char class
+
+^			Begin of the input string
+$			End of the input string
+
+ var reg = /^[abc][abc]\d\d$/;  First two alphabet (abc or abc) and then two digits 
+ console.log( reg.test('cc01') ); true
+ console.log( reg.test('pc01') ); false
+
+
+Quantifiers characters - to add repeat or occurences of other char classes
+--------------------------------------------
+
+?			It matches zero or one 
+*			It matches zero or more
++			It matches one or more
+{n}			It matches {n} occurences
+{n,m}			It matches n to m occurences
+
+Example :   pincode   /^\d{6}$/.test('345434');
+            month no  /^[01][12]$/.test('21');
+	    one or more digit :  /^\d+/
+            one or more word char  /^\w+/
+            number between 5 to 10 digit /^\d{5,10}$/	
+
+	   Valid human name : /^[a-zA-Z ]*$/
+           Address field    : /^[a-zA-Z0-9 ,-]+$/
+
+	Email :  xx@xx.com   :  \w+[@]\w+[.]\w+
+      xx.xx.xx@xx.xx.xx      :  \w+([.]\w+)*[@]\w+([.]\w+)+                 
+
+Example: Split the string into an array based upon given pattern.
+    var str = "10,20|30,40.50";
+    var array = str.split(/[,|]/);
+    console.log(array);
+
+Example : Replace the string
+
+   var str = "T13h123e re324d s543un";
+   
+    while( /\d+/.test(str))  //Remove all digits
+    {
+        str = str.replace(/\d+/, '');
+        console.log(str);
+    }
+    console.log("the red sun and red rose".replace("red", "white")); //replace with value
+
+The Date object - To set/get date/time parts
+----------------------------------------------------------------
+
+<script>
+  //local datetime instance
+   var now = new Date();
+   console.log( now );
+   console.log( now.getDate() ); // day of month
+   console.log( now.getMonth() ); /month number
+   now.setMonth(5);  // month set to 6th because month begins with 0 (1st month)
+   console.log(now);
+ 
+</script>
+
+The DOM APIs
+==========================================================================
+The Document Object Model Application Programming Interface is a universal library (standard lib) through which we can
+hold the references of HTML objects which are already created by the web-browser and also create brand new objects with the help of JavaScript language.
+
+  DOM object's properties and methods are accessed via [index] or  . (dot ) member access operators.
+
+The entire DOM is exposed to us (developers) via "document" built-in object.
+
+In fact, the document holds HTML objects in a tree-hierarchy also called "Document Tree". Any object added to the document tree will be added & used to render its content depends upon the position in the document tree where it is added. For instance, object added inside the <head> DOM wont displays or renders the content.
+
+Example:
+<script>
+   document.body.style.backgroundColor = "#f00";
+   document["body"]["style"]["color"]="white";
+   document.body.style.fontSize = "2em";
+</script>
+
+There are two main objects - document.head and document.body and each object has number of childrens (object tree).
+
+Basic methods of DOM:
+
+1. document.createElement("Element") -- Create an object of specified element
+2. dom.appendChild( dom ) - To append a child Dom into an existing tree
+3. document.createTextNode("Text data") - Create a node of Text data
+Example:
+
+   <script>
+        //create a h1 object
+        var refVar = document.createElement("h1");
+        refVar.appendChild(document.createTextNode("Hello World"));
+        document.body.appendChild(refVar);
+    </script>    
+4. document.getElementsByTagName("element") - It returns element collection object called "NodeList" of given element
+						type.
+
+					The NodeList has length and item(index) method.
+
+Example: 
+<h1>Head1</h1>
+<h2>Head2</h2>
+<p>Para1</p>
+<h1>Head1  - Seond </h1>
+
+<script>
+  var list = document.getElementsByTagName("h1");  //two h1 object list
+  console.log( list );
+  for(i=0;i<list.length;i++) {
+     var obj = list.item(i);  
+     obj.style.color = "blue";
+
+   }
+</script>
+
+ 
+5. dom.innerHTML - set/get html of the given DOM
+6. dom.innerText - set/get text of the DOM
+7. dom.outerHTML - innerHTML  + DOM itself
+8. dom.outerText - innerText + DOM itself
+
+<div>
+  <h1>Test</h1>
+  <p>Para</p>
+</div>
+
+<script>
+  var list = document.getElementsByTagName("div"); 
+  for(i=0;i<list.length;i++) {
+     var obj = list.item(i);
+     console.log(obj.innerHTML);
+     console.log(obj.innerText);
+     console.log(obj.outerHTML);
+     console.log(obj.outerText);
+   }
+</script>
+
+9. value - to set/get value of <input>, <select> <textarea> elements (Form elements)
+10. document.getElementsByName("name-atribute-value") - Returns a Nodelist
+11. document.getElementById("id-attribute") - Returns a DOM or null as per given "id" of a dom.
+
+Example:
+<div name="one">This is div</div>
+<input type="text" name='one">
+<textarea name="one"></textarea>
+
+<script>
+  var list = document.getElementsByName("one");
+  for(i=0;i<list.length;i++) {
+    var o = list.item(i);
+    console.log( o );
+  }
+</script>
+ 
+Example:
+
+<input type="text" id="no"/>
+<input type="email" id="email"/>
+
+<script>
+  var no = document.getElementById("no");
+  var email = document.getElementById("email");
+  no.value="100";
+  email.value="aa@aa.com";
+  no["style"]["color"]="green";
+</script>
+
+Example: Create DOMs and append them to existing DOM.
+
+   <div id="out"></div>
+    <script>
+        var no = document.createElement("input");
+        var email = document.createElement("input");
+        no.setAttribute("type", "number");
+        email.setAttribute("type", "email");
+        no.value = "100";
+        email.value = "aa@aa.com";
+        no["style"]["color"] = "green";
+
+        var out = document.getElementById("out");
+        out.appendChild(no);
+        out.appendChild(email);
+    </script>
+Example: Write a class to encapsulate DOM actions
+
+    <div id="out"></div>
+    <script>
+        var d = new Dom();
+        var out = d.get("out");
+        var no = d.create("input");
+        d.attr(no, "value", 100);
+        out.appendChild(no);
+        function Dom() {
+            this.create = function (element) {
+                return document.createElement(element);
+            };
+            this.attr = function (obj, name, value) {
+                obj.setAttribute(name, value);
+            };
+            this.get = function (id) {
+                return document.getElementById(id);
+            }
+        }
+    </script>
+
+Example: Attach/Detatch event handlers (functios)
+
+<div onclick="doThis()">This is a declarative way to attach a handler!</div>
+<div id="p1">Click of this DOM is attach to handler programatically</div>
+
+<script>
+  var p1 = document.getElementById("p1");
+
+  p1.onclick = function() {
+     console.log("Attached programatically!");
+  }
+
+  function doThis() {
+      console.log("Attached declaratively");
+  }
+</script>
+
+Example:
+
+<a href="#" id="up">A+</a>
+<a href="#" id="down">A-</a>
+<p>Other text..</p>
+
+<script>
+  //closure
+  function Size(n) {
+    return {
+       incr: function() {
+          n = n + 0.1;
+          document.body.style.fontSize = n + "em";
+       },
+       decr: function() {
+          n = n - 0.1;
+          document.body.style.fontSize = n + "em";
+       }
+    };
+  }
+
+
+  var size = Size(1);
+  document.getElementById("up").onclick = size.incr;
+  document.getElementById("down").onclick = size.decr;
+</script>
+
+Example:
+No :_____________
+No: _____________
+
+[Add] [Sub] [Mul] [Div]
+
+[Result-here]
+
+Add four event handler and display result at [Resultant DOM]
+
+No:<input type="number" id="no1"/>
+No:<input type="number" id="no2"/>
+<button onclick="addIt()">Add</button>
+<button onclick="subIt()">Sub</button>
+....
+<div id="result"></div>
+
+<script>
+  var no1 = document.getElementById("no1");
+  var no2 = document.getElementById("no2");
+  var result = document.getElementById("result");
+
+  function addIt() {
+     var r = parseFloat(no1.value) + parseFloat(no2.value);
+     result.innerHTML = r;
+   }
+ ...
+</script>
+
+Example: Single handler for all four action by setting a fixed parameter
+
+...
+...
+<button onclick="doIt('Add')">Add</button>
+<button onclick="doIt('Sub')">Sub</button>
+...
+<script>
+  ....
+  ....
+  function doIt(param) {
+    if(param=="Add") {
+       result.innerHTML = parseFloat(no1.value) + parseFloat(no2.value);
+    }
+    ....
+   }
+</script>
+
+Example: Input city name and there is a button called "Add" will add city to the <select> object. (Populate dropdown).
+
+<input type="text" id="cityName" />
+<button onclick="doAdd()">Add</button>
+<select id="cityList"></select>
+
+<script>
+  function doAdd() {
+     var opt = document.createElement("option");
+     var cityName = document.getElementById("cityName");
+     var cityList = document.getElementById("cityList");
+     opt.innerHTML = cityName.value;
+     cityList.appendChild( opt );
+  }
+</script>
+
+Example: Input product name, qty, unit, rate and add items into <table> as follows:
+
+
+Name             Unit     Qty   Rate
+   
+______________   ______v  ____  _____    [Add]
+
+|-----------------------------------------------------------------|
+| Name     | Unit   |  Qty       | Rate        | Amount | Action  |
+|-----------------------------------------------------------------|
+| Pen      | No     |   2        |  10         | 20     |  [x]    |  <-- delete button
+ .....
+
+Example: Populate rows of <table> 
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+
+    <script>
+        var cities = ["Mehsana", "Patan", "Rajkot"];
+        var tbody = document.getElementById("tbody");
+      
+        for (index in cities) {
+            var tr = document.createElement("tr");
+            var td1 = document.createElement("td");
+            var td2 = document.createElement("td");
+            td1.innerHTML = cities[index];
+
+            var link = document.createElement("a");
+            link.setAttribute("href", "#");
+            link.innerHTML = "X";
+            /*  link.onclick = (function (tr) {
+                  return function () {
+                      tr.remove();
+                  }
+              })(tr);*/
+
+            /* Improper
+            link.onclick = function () {
+                tr.remove();
+            }*/
+
+            link.onclick = myClosure(tr);
+
+            td2.appendChild(link);
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+
+            tbody.appendChild(tr);
+        }
+
+        function myClosure(tr) {
+            return function () {
+                tr.remove();
+            }
+        }
+  </script>
+
+The XMLHttpRequest class - To request the web-resources programatically
+==========================================================================
+XHR - XMLHttpRequest object allow us to request (send data via POST & GET) the resource and receive the data (Response) via JavaScript code.
+
+The way to achieve request-response backgroundly is called "AJAX - Asynchronious JavaScript And Xml". This object and its methods send & receive data in the one of the two form - JSON or XML. At server code, we must have to instruct the client about the "TYPE of the content" or "content-type". The "content-type" describes the nature of data. For example, the default content type is html/text. You can change it to "plain/text" or 'xml/text' or 'image/jpg' or 'image/png' or application/pdf etc.
+
+Example: Request "getdate.cshtml" programatically.
+
+getdate.cshtml
+-------------
+<h1>@DateTime.Now</h1>
+
+
+Index.cshtml   AJAX code
+-------------
+
+<div id="result"></div>
+<script>
+    //1. Create XHR
+    var xhr = new XMLHttpRequest();
+
+    //2. Set Request 
+    xhr.open("post", "getdate.cshtml");
+
+    //3. Set callback (response handler)
+    xhr.onreadystatechange = thisIsResponse;
+
+    //4. send the request
+    xhr.send();
+
+    function thisIsResponse() {
+        if (xhr.DONE == xhr.readyState) {
+            console.log(xhr.responseText);
+            document.getElementById("result").innerHTML = xhr.responseText;
+        }
+    }
+</script>
+    
+
+Example: Send data to the resource.
+
+The data must be formed as "name=value&name=value" and set them as query string.
+
+
+<input type="number" onchange="performCalc()" id="no1"/>
+<input type="number" onchange="performCalc()" id="no2" />
+<button onclick="performCalc()">Calculate</button>
+<div id="add"></div>
+<div id="sub"></div>
+
+<script>
+    //1. Create XHR
+    var xhr = new XMLHttpRequest();
+
+    function performCalc() {
+        var no1 = document.getElementById("no1");
+        var no2 = document.getElementById("no2");
+        var dataString = "no1=" + no1.value + "&no2=" + no2.value;
+     
+        //2. Set Request 
+        xhr.open("post", "getdata.cshtml?" + dataString, true);
+
+        //3. Set callback (response handler)
+        xhr.onreadystatechange = thisIsResponse;
+
+        //4. send the request
+        xhr.send();
+    }
+    function thisIsResponse() {
+        if (xhr.DONE == xhr.readyState) {
+            var obj = JSON.parse(xhr.responseText);
+            console.log(obj);
+            document.getElementById("add").innerHTML = obj.add;
+            document.getElementById("sub").innerHTML = obj.sub;
+        }
+    }
+</script>
+    
+getdata.cshtml
+----------------
+@{ 
+    var no1 = Request["no1"].AsInt();
+    var no2 = Request["no2"].AsInt();
+    Response.ContentType = "application/json";
+}
+{
+ "no1": @no1,
+ "no2": @no2,
+ "add": @(no1+no2),
+ "sub": @(no1 - no2)
+}
+
+
+Example: Layout page "Index.cshtml" that uses XHR to request other pages.
+
+home.cshtml
+------------
+<h3>Welcome home</h3>
+
+about.cshtml
+------------
+<h3>About us</h3>
+
+contact.cshtml
+-------------
+<h3>Contact us</h3>
+
+index.cshtml
+-------------
+ 
+<h1>Site Title</h1>
+<nav>
+   <a href="#" onclick="showPage('home.cshtml')">Home</a>
+   <a href="#" onclick="showPage('about.cshtml')">About us</a>
+   <a href="#" onclick="showPage('contact.cshtml')">Contact us</a>
+</nav>
+<div id="out"></div>
+
+<script>
+    function showPage(page) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", page , true);
+        xhr.onreadystatechange = myClosure(xhr);
+        xhr.send();
+    }
+    function myClosure(xhr) {
+        return function () {
+            if (xhr.DONE == xhr.readyState) {
+                document.getElementById("out").innerHTML = xhr.responseText;
+            }
+        }
+    }
+</script>
+    
+
+setInterval and setTimeout functions
+========================================
+setInterval() executes the code on given "interval" specified in milliseconds.
+setTimeout will call a function after ellapsed on time out in given millis seconds.
+
+<script>
+   setInterval( function() {
+      console.log( new Date() );
+    }, 1000);  // 1000 millis = 1 second
+
+   setTimeout( function() {
+      console.log("This function will be called after 3 seconds (3000 ms)");
+   }, 3000);
+</script>
+
+The setInterval() returns timer_id (reference of object) which is used to stop the function by calling clearInterval(timer_id).
+
+Example: Stop the setInterval
+
+<script>
+  var timerId= setInterval( function() {
+      console.log( new Date() );
+    }, 1000);   
+
+   setTimeout( function() {
+       clearInterval(timerId); // stop the interval after 10 secs
+   }, 10000);  
+</script>
+    

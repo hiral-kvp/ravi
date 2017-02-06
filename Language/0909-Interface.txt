@@ -1,0 +1,200 @@
+ Interface Type
+ -----------------------------------------------------------------------------------
+
+ In C language, we've used "function declaration & function definition" approach to
+ define a behavior or action or method or function.
+
+ The "function declaration" is used mainly for the following purposes in different
+ programming languages:
+
+     1. To define a standard or protocol - That means it tells what to do?
+     2. To enable function pointer mechanism to store memory reference of functions.         (In C/C++, it is called function pointer).
+     3. To define documentation for the users of your code.
+
+ In .NET Framework and other programming frameworks including C++, Java, PHP, etc, the "interface" type is introduced to create a declaration scope of methods/functions.
+
+ General Syntax
+ --------------
+ access_modifier  interface  InterfaceName : superInterface1,superInterface2,....
+  {
+     //method declaration only
+     void foo();
+     int bar();
+   }
+ NOTE: All members inside the interface are "public" by default and remains "public"        forever.
+
+ An interface tells "What to do?" to the people? Whereas "classes" which implements  interfaces explains "How to do?".
+
+ Syntax to implement interfaces
+ --------------------------------
+ access_modifier class ClassName: SuperClass, Interface1, Interface2, .... 
+  {
+  }
+
+ NOTE: In above syntax, the name of superClass must appear first if it is exists.
+
+ Example:
+
+ using System;
+
+ public interface IShape
+ {
+    void Draw();
+    void Fill();
+  }
+
+ // In CTS, interface names begins with "I" - stands for Interface so we will use
+ // same naming conventions.
+
+ public class Circle : IShape  // class "Circle" implements IShape interface
+  {
+     public void Draw()
+      {
+        Console.WriteLine("Circle is drawn.");
+       }
+     public void Fill()
+      {
+        Console.WriteLine("Circle is filled.");
+       }
+  }
+
+ public class Rect : IShape  // class "Rect" implements IShape interface
+  {                          //In VS editor, right mouse click on IShape + 
+     public void Draw()      // Implements Interface menu item will add methods def.
+      {
+        Console.WriteLine("Rect is drawn.");
+       }
+     public void Fill()
+      {
+        Console.WriteLine("Rect is filled.");
+       }
+  }
+
+ class Test
+  {
+    static void Main()
+     {
+        Rect rect = new Rect();
+        Circle circle = new Circle();
+        rect.Draw(); 
+        circle.Draw();
+        circle.Fill();
+        rect.Fill();
+       }
+   }
+
+Now, we will learn how to represent memory reference of methods of class.
+
+When we declare a reference variable of "class" or "interface" or "delegate", the system automatically creates a following table which is known as "Virtual Method Table" or "Virtual Table" or "Virtual Method Map".
+
+
+Example:
+
+.... as per previous example ....
+
+class Test
+{ 
+  static void Main()
+   {
+     Rect rect = new Rect();
+     /* 
+       |---------------------------|
+       | Method Name  | Reference  |
+       |--------------|------------|
+       | Draw         | Rect.Draw()|
+       | Fill         | Rect.Fill()|
+       |---------------------------|
+     */
+     Circle circle = null;
+     /* 
+       |---------------------------|
+       | Method Name  | Reference  |
+       |--------------|------------|
+       | Draw         | null       |
+       | Fill         | null       |
+       |---------------------------|
+     */
+     circle = new Circle();
+     /* 
+       |---------------------------|
+       | Method Name  | Reference  |
+       |--------------|------------|
+       | Draw         | Circle.Draw|
+       | Fill         | CircleFill |
+       |---------------------------|
+     */
+     
+      //Interface variable
+       IShape shape = null;
+     /* 
+       |---------------------------|
+       | Method Name  | Reference  |
+       |--------------|------------|
+       | Draw         | null       |
+       | Fill         | null       |
+       |---------------------------|
+     */
+
+      shape = circle;   //Set method references of circle object to IShape
+     /* 
+       |---------------------------|
+       | Method Name  | Reference  |
+       |--------------|------------|
+       | Draw         | Circle.Draw|
+       | Fill         | Circle.Fill|
+       |---------------------------|
+     */
+      shape.Draw(); shape.Fill();
+
+      shape = rect;   //Set method references of rect object to IShape
+     /* 
+       |---------------------------|
+       | Method Name  | Reference  |
+       |--------------|------------|
+       | Draw         | Rect.Draw|
+       | Fill         | Rect.Fill|
+       |---------------------------|
+     */
+      shape.Draw(); shape.Fill();
+
+     }
+}
+
+Example: We can creates an array IShape to represent memory references of methods of "Circle" and "Rect" classes.
+
+..... As per previous example ....
+class Test
+{
+    static void Main()
+    {
+        IShape[] shapes =
+        {
+            new Rect(),
+            new Circle(), 
+            new Rect(),
+            new Rect(),
+            new Circle()
+        };
+        foreach (var shape in shapes)
+        {
+            shape.Draw();
+            shape.Fill();
+        }
+    }
+}
+
+Polymorphism - Above, last two samples are example of Polymorphism - Same action name has various forms. ie. shape.Draw() will call Draw() method of Circle or Rect object depending upon the object reference you've set.
+
+So, using interface we can achieve "truly" polymorphism. (Real world polymorphism.)
+
+Example:
+public interface Language 
+{
+   void Speak();
+   int NumberOfAlphabets();
+}
+public class English : Language { .... }
+public class Gujarati : Language { .... }
+
+ 
+ 

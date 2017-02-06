@@ -1,0 +1,205 @@
+ Generics
+ ------------------------------------------------------------------------------
+ The meaning of term "generic" is a general purpose or common to all. Generic is also
+ refered as "Parameterized Datatypes" or "Templated DataTypes". 
+
+ Generic is a language feature which allow us to pass "Types" to another "Type" or  "Methods" just like arguments of methods.
+
+ Before we learn generic, conside the problem or issue :
+
+    Suppose I need a Stack class to represent int numbers so my class definition will     be:
+         class StackInt { 
+              int []items;
+              public void Push(int item) { . .}
+              public int Pop() { .. }
+          }
+    And to represent "String" items, I need to create another class.
+         class StackString { 
+              string []items;
+              public void Push(string item) { . .}
+              public string Pop() { .. }
+          }
+   And also for any other type, I 've to rewrite the entire class
+   definition.
+
+If I can design very same class using "generic" then my class definition for "Stack" would be:
+ 
+    class Stack<T> {
+        T []items;
+        public void Push(T item) { .. }
+        public T Pop() { .. }
+    } 
+   And to create stack of int : Stack<int> a = new Stack<int>();
+   and to create stack of str : Stack<string> b = new Stack<string>();
+   and to create stack of Student: Stack<Student> c = new Stack<Student>();
+
+Role of "Generics"
+------------------
+Generic is mainly used with complex "Data-structure" APIs where we need to use them with different datatypes including Stack,Queue, LinkedList, Dictionary, Graph, Sort, Search etc.
+
+Syntax
+-------
+class ClassName<T1,T2,...> {}
+interface InterfaceName<T1,T2,...> {}
+ 
+   <> operator is called "diamond operator".
+   Identifiers (T1,T2 etc) are called Type Parameters. Type parameter should be upper
+   letters to avoid naming issues with fields and local variables.
+
+    e.g  class Stack<E> {} or class Stack<T> {} or class Stack<ITEM> {}
+         class Pair<K,V> {} or class Pair<KEY,VALUE> { } etc
+
+Example:
+
+using System;
+
+public class Data<T>
+{
+    public T Value {get;set;}
+}
+
+class Test
+{
+   static void Main()
+    {
+       Data<int> n = new Data<int>();
+       Data<string> s = new Data<string>();
+       Data<double> d = new Data<double>();
+
+       n.Value = 10; 
+       s.Value = "Hello";
+       d.Value = 10.10;
+ 
+       Console.WriteLine( n.Value + " " + s.Value + " " + d.Value );
+     }
+}
+
+Example: Represent Key-Value pair of data.
+
+public class Pair<K,V>
+{
+   public K Key {get;set;}
+   public V Value {get;set;}
+}
+
+code in Main method:
+
+    //City-pin
+    Pair<string,int> city =new Pair<string,int>();
+    city.Key = "Mehsana";  city.Value = 384001;
+    //Roll-Name
+    Pair<int,string> s1 = new Pair<int,string>();
+    s1.Key = 10;
+    s1.Value = "Raj";
+
+    Console.WriteLine( city.Key + " " + city.Value );
+    Console.WriteLine( s1.Key + " " + s1.Value );
+
+Example: Stack implementation
+
+using  System;
+
+public class Stack<T>
+{
+    private T[] items;
+    private int top = -1;
+
+    public Stack(T[] mitems)
+    {
+        items = mitems;
+    }
+
+    public void Push(T item)
+    {
+        top++;
+        items[top] = item;
+    }
+
+    public T Pop()
+    {
+        return items[top--];
+    }
+}
+class Test
+{
+    static void Main()
+    {
+         Stack<int> si = new Stack<int>(new int[4]);
+        si.Push(10); 
+        si.Push(20);
+        si.Push(30);
+
+        Console.WriteLine(si.Pop());
+        Console.WriteLine(si.Pop());
+        Console.WriteLine(si.Pop());
+    }
+}
+
+Example: Adding sorting capability to array of custom types.
+
+ The Array.Sort() methods takes differet kind of arguments and here we will use,
+     Array.Sort(array, System.Collections.Generic.IComparer<T>)
+
+using  System;
+
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+/* IComparer<T> interface has a following declaration:
+
+     int Compare(T x, T y) { } 
+
+       This method returns 0, if x data are equals to y data.
+                           >0 (positive), if x data is greater than y data and
+                           <0 (Negative), if x data is less than y data.
+ */
+
+public class IdComparer : System.Collections.Generic.IComparer<Product>
+{
+    public int Compare(Product x, Product y)
+    {
+        if (x.Id == y.Id) return 0;
+        if (x.Id > y.Id) return 1;
+        return -1;                      // Or  return x.Id - y.Id;
+    }
+}
+public class NameComparer : System.Collections.Generic.IComparer<Product>
+{
+    public int Compare(Product x, Product y)
+    {
+        return x.Name.CompareTo(y.Name);  //String.CompareTo() returns 0, >0 or <0
+    }
+}
+
+class Test
+{
+    static void Main()
+    {
+        Product[] products =
+        {
+            new Product{Id=10,Name="Pen"},
+            new Product{Id=1, Name="Book"},
+            new Product{Id=20,Name="Abc"},
+            new Product{Id=4,Name="Z"}
+        };
+
+        IdComparer byId = new IdComparer();
+        Array.Sort(products,byId);
+        foreach (var p in products)
+        {
+            Console.WriteLine(p.Id + " " + p.Name);
+        }
+        Console.WriteLine("Name wise...");
+        Array.Sort(products, new NameComparer());
+        foreach (var p in products)
+        {
+            Console.WriteLine(p.Id + " " + p.Name);
+        }
+    }
+}
+
+
+

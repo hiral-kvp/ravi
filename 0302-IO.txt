@@ -1,0 +1,182 @@
+System.IO - Device Independent Input Output classes
+====================================================
+
+The namespace System.IO includes file system classes:
+   1. DriveInfo - To obtain drive/partition info
+   2. File or FileInfo - To Get or set file and related methods
+   3. Directory or DirectoryInfo - To get or set folder/directory and their meta data.
+	Note: File and Directory are static classes whereas FileInfo and DirecotryInfo are instance classes.
+   4. Path - To expose the path related actions
+
+The Stream ( flow of bytes -- read from or write into ) classes:
+    1. System.IO.Stream - it is an abstract class and super class of all "Stream" classes in CTS
+    2. FileStream - File related input & output
+    3. MemoryStream - Memory related (RAM) input & output
+
+    Note: Stream objects are subject to memory leaking so it is best practice to call "Dispose" or use the
+	   using(...) { } block syntax.
+
+Example: List drives
+
+      foreach(DriveInfo info in DriveInfo.GetDrives())
+        {
+            if(info.IsReady)
+            {
+                Console.WriteLine(info.Name + " " + info.DriveFormat + " " + info.AvailableFreeSpace);
+            }
+        }
+
+Example: Directory basic methods
+
+       var dir = @"C:\csnet\test1";
+        if (Directory.Exists(dir))
+        {
+            Console.WriteLine(Directory.GetLastAccessTime(dir));
+            Directory.Delete(dir);
+        }
+        else
+        {
+            Directory.CreateDirectory(dir);
+            Console.WriteLine("Created");
+        }
+
+        Console.WriteLine(Directory.GetCurrentDirectory());
+        Directory.SetCurrentDirectory(@"c:\csnet");
+        
+Example : List/search file/dirs
+
+      var dir = @"C:\csnet\info";
+
+        Console.WriteLine("Dirs\n");
+                                    //Directory.GetDirectories(dir)
+        foreach (var d in Directory.GetDirectories(dir,"*.*",SearchOption.AllDirectories))
+        {
+            Console.WriteLine(d);
+        }
+
+
+        Console.WriteLine("Files\n");
+        foreach (var d in Directory.GetFiles(dir))  //.GetFiles(dir,"pattern",option)
+        {
+            Console.WriteLine(d);
+        }
+
+        Console.WriteLine("Both\n");
+        foreach (var d in Directory.GetFileSystemEntries(dir))
+        {
+            Console.WriteLine(d);
+        }
+
+Example: Validate file name and path strings
+
+
+        var path = @"x:\test\he""llo.txt";
+        var fileName = "hel>p.txt";
+
+        Console.WriteLine(Path.GetInvalidPathChars());
+        Console.WriteLine(Path.GetInvalidFileNameChars());
+
+        if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1)
+            Console.WriteLine("Valid file name");
+        else
+            Console.WriteLine("Invalid file name");
+
+        if (path.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+            Console.WriteLine("Valid path");
+        else
+            Console.WriteLine("Invalid path");
+
+Example: Path meta data & temp folder/file
+
+        var path = @"x:\test\hello.txt";
+
+        Console.WriteLine(Path.Combine(path, @"sample\text"));
+        Console.WriteLine(Path.GetDirectoryName(path));
+        Console.WriteLine(Path.GetFileName(path));
+        Console.WriteLine(Path.GetFileNameWithoutExtension(path));
+        Console.WriteLine(Path.GetPathRoot(path));
+        Console.WriteLine(Path.ChangeExtension(path,"exe"));
+        // var newPath = Path.ChangeExtension(path,"exe"); 
+
+        //Temp folder & files
+        Console.WriteLine(Path.GetTempPath());
+        Console.WriteLine(Path.GetTempFileName());
+        Console.WriteLine(Path.GetRandomFileName());
+
+Example: File - exists, delete, write and read
+
+        var file = @"c:\csnet\emp.txt";
+
+        if(File.Exists(file))
+        {
+            Console.WriteLine("Creation Time : " + File.GetCreationTime(file));
+            Console.WriteLine("Last Accesse : " + File.GetLastAccessTime(file));
+            // File.Delete(file);
+            File.AppendAllText(file, "This is next line");
+            string[] lines = { "AA", "BB", "CC" };
+            File.AppendAllLines(file, lines);
+        }
+        else
+        {
+            Console.WriteLine("Not Exist");
+            File.WriteAllText(file, "This is the first line.");
+        }
+
+        Console.WriteLine( File.ReadAllText(file) );
+
+Example: Create FileStream object to write or read byte(s)
+
+       //Create a file and write some bytes via FileStream Or File.Open or File.OpenRead or File.OpenCreate 
+
+        // FileStream fs = File.Open(@"c:\csnet\s1.txt", FileMode.OpenOrCreate);
+       // FileStream fs = File.OpenRead(@"c:\csnet\s1.txt");
+
+        using (FileStream fs = new FileStream(@"c:\csnet\s1.txt", FileMode.OpenOrCreate))
+        {
+            Console.WriteLine("Position :" + fs.Position);
+            fs.WriteByte(65);
+            fs.WriteByte(67);
+            Console.WriteLine("Position :" + fs.Position);
+
+           //String to Byte Array Conversion
+            string str = "Hello World";
+            byte[] ar = System.Text.Encoding.ASCII.GetBytes(str);
+            fs.Write(ar, 0, ar.Length);
+
+            Console.WriteLine("Position :" + fs.Position);
+
+            //Read byte by byte
+            fs.Position = 0;
+            Console.WriteLine(fs.ReadByte());
+            Console.WriteLine(fs.ReadByte());
+            Console.WriteLine("Position :" + fs.Position);
+            int b = 0;
+            while( (b = fs.ReadByte()) >0 ) {
+                Console.WriteLine(b);
+            }
+
+            //Read block of bytes - arrays
+            fs.Position = 0;
+            byte[] ba = new byte[1000];
+             while( (b= fs.Read(ba,0,ba.Length))>0)
+            {                                                //Byte array to String Conversion
+                Console.WriteLine(b + " bytes read.[ : "+  System.Text.Encoding.ASCII.GetString(ba,0,b));
+            }
+
+        }
+
+Example: BinaryWriter helper class convert simple data into bytes and write them into underlying stream.
+         BinartReader helper class read bytes from the underlying stream and form the simple datatype value.
+
+       using (var stream = new BinaryWriter(File.Create(@"c:\csnet\p1.txt")))
+        {
+            stream.Write(10); //4 bytes
+            stream.Write(3.4); // 8 bytes - double
+            stream.Write("Hello World");
+         }
+        using (var stream = new BinaryReader(File.OpenRead(@"c:\csnet\p1.txt")))
+        {
+            Console.WriteLine(stream.ReadInt32());
+            Console.WriteLine(stream.ReadDouble());
+            Console.WriteLine(stream.ReadString());
+        }

@@ -1,0 +1,551 @@
+The MVC - Model, View, and Controller
+============================================================================================
+
+MVC is a program design pattern through which we can separate the code of user interface from the code of data/database and from the code of controlling things.
+
+  The code that is created to work with data & data files & databases are known as a "Model"; There isn't any specific
+	kind or type of the model component that represent the data. Developers are free to design their own models
+	based upon the needs or requirements.
+
+	We've different layers under the "Model" category of components:
+		1. View Model classes works with mostly views or user interfaces. 
+		2. Plain or pure model represent the simple or complex data
+		3. Database layer models defines database actions to save/retrieve/update/delete data.
+		4. Business layer defines more abstract form of database layer and so on.
+
+  The code that is used to define the user-interface is called "View" component. The "View" describes the user
+	interface using client's ability to render the content. For example, web user interfaces are drawn or 
+	rendered by the browsers. Andorid user interfaces are rendered by the Android OS and Windowing User interfaces
+	are rendered by the Windows or Graphics System of that operating system.
+
+  The code that "synchronized" the View and Model - update model using view and set data from model to the view; and
+  also perform some business tasks by gethering facts from other models and controllers. These categories of components
+  mostly perform background tasks and update user interface or deliver the user interface to the clients.
+
+Why we should use MVC design pattern to develop any kind of apps (mobile, web, desktop etc)?
+
+  1. Because of code separation; each component can be easily,
+		1. Developed
+		2. Tested and
+		3. Maintained & Debugged.
+  2. Clear & concise code so the future users (developers) of the code can easily get into them. It means there is
+	the great possibilities to enhance and extend the code without affecting other things.
+
+  3. User interfaces are delivered to the clients by the "controllers - based upon the background process" and not by
+	requesting a user interface directly. (Like in traditional web app, we request each resource via
+	addressbar or hyperlink or <form> but with MVC this approach will not work).
+
+    Client====>Request a method/function=====> Router Tool
+		(not a page or file)           (Request will be parse
+						and analysed by this software)
+						||
+						||
+						\/
+						Controller's method will be invoked by the
+						Router tool based upon the "request structure".
+						-> Controller uses Models object to peform data related tasks
+						-> Controller will decides which user interface should be sent or not.
+						-> Controller will check the authorization & authentication
+						-> Controller will cipher the content 
+						-> Controller will decides what content should be sent to the client
+						In other words, the controller is in center position of everthing 
+						in MVC design pattern.
+   /\
+   ||           Output/Response                   |
+   |------------------------------------------------
+
+
+The ASP.NET MVC and project structure
+============================================
+
+The ASP.NET is a web infrastructure of .NET Framework to develop, deploy and execute the web apps. We could design the app in ASP.NET are:
+  1. Web Form Application - Single Page Controller that consists View+Controller code (and you can't separate it). We 				can write separate "Model" if we wish.
+
+  2. Web Page Application - It uses RAZOR view engine and it is also a Single Page Controller. We can write separate 
+				Models if we wish. (.cshtml pages)
+
+  3. ASP.NET MVC	  - It uses RAZOR engine to define the view. There are varities of views - JSON, XML, Binary,
+				Text etc.
+
+			    It uses separate components to defie the "Controllers".
+
+			    And of course we could design Models if we wish.
+
+  4. ASP.NET WEB API --   Same as MVC design pattern instead it uses JSON or XML as input and output (view).
+
+
+ ASP.NET uses standard naming "Conventions" to create "Views", "Models", "Controllers" components. In your MVC App, the controller classes are to be saved under "Controllers" folder, "Views" are saved into the "Views" folder. And model components are saved under "Models" folder.
+
+
+/webapp/
+ 	|
+	|--------/App_Start
+	|
+	|--------/Controllers
+	|
+	|--------/Views
+	|
+	|--------/Models
+	|
+	|
+	| web.config 
+	| global.asax
+
+
+Global.asax - The ASP.NET Application Event Program
+=====================================================================================================
+This is the program in our app will be contains one or more events and they are called by the ASP.NET 
+runtime.
+
+These events are:
+
+         1. Application_Start() - code of the handler will be called when ASP.NET app boots or starts.
+	 2. Application_Error() - code of this handler will be called when an error encountered in the app.
+	 3. Application_End()   - When ASP.NET app is shutdown
+
+         4. Session_Start() - When a client is request the site very first time (or Session is created)
+	 5. Session_End/Stop() - When a client leave the app or Timeout of session is occur.
+        
+         6. Begin_Request()
+         7. End_Request()     - When resource's request is starts and ends respectively.
+
+ Note that these events are called by the ASP.NET application runtime and if we're interested to attach the code at certain point (for example, log the user's activities, authorize the user etc) then we can add our code into these
+ handlers.
+
+By default, there will be only one method Application_Start() is defined and it will call the method to configure the "Route" engine.
+
+  A route engine defines how a request should be made in order to send or receive data by the clients.
+
+     In MVC Web App, our request (client request) must be in following form:
+
+            /ControllerName/ActionMethodName/Id (optional Id or single value)
+		e.g  /product/new
+		     /product/edit/2  <--- call "edit(2)" method and which receive "2" value to edit the product from
+						the Product controller.
+		/emp/delete/3   <-- call delete(3) method of Emp controller to delete a record whose emp id is 3.
+
+   Under the App_Start folder, a code file contains route "uri" configuration:
+
+       /Controller/Action/Id
+         If controller name is not mentioned then "Home" will be assumed
+         If action name is not mentioned then "Index" will be assumed 
+
+ It means "Home" is the default controller and "Index" is a default action.
+
+     Request to "/" means /Home/Index
+                "/Home" means /Home/Index
+  
+The Controller class 
+=====================
+We will create one or more controller classes into "Controllers" folder. However you are free to create controller claas anywhere but for the sack of clerity we will use "Controllers" folder. 
+
+Each controller must be public and is a sub class of "Controller".
+
+Normally, our first controller must be "HomeController" (as per default configuration).
+
+The suffix "Controller" must be added to the name of controller.
+
+	For instance,	EmpController  will be automatically to map /emp/ or /Emp uri.
+			ProductController will be maped to /product
+
+   The URI is case-insensitive. You can use upper or lower or mixed case.
+		/product/edit/3  or /Product/Edit/3  or /PRODUCT/EDIT/3
+
+Example: Create Empty + [x] MVC Web Application (Checked the [x] MVC while creating empty web app)
+
+1. Right mouse click at "Controllers" + Add + Controler... + Empty Controller + [HomeController] + Add
+
+public class HomeController : Controller
+{
+   //following are action methods
+   public string Index()
+    {
+      return "Welcome MVC!";
+     }
+    public string About()
+     {
+       return "We're ?";
+      }
+    public int Square()
+      {
+         return 10 * 10;
+       }    
+}
+
+2. Press F5 or Ctrl+F5 to start the build + start app
+
+ By default /Home/Index will be selected so output on browser will be : Welcome MVC!
+     / 
+     /home
+     /home/index
+
+ You can change uri,
+
+     /home/about   
+     /home/square
+
+The Action methods
+===================
+Action methods are just regular instance methods of class which takes parameters and returns value or nothing (no returns).
+
+It is important to note that the action methods must be public.
+
+The action method return data can be single, simple or multiple or more complex. 
+
+There is a class named "ActionResult" is used to specify the return value of one of the
+	following result :
+		1. The cshtml content (Html/Css/JavaScript) as a page
+		2. Strings - plain, xml, html etc
+		3. Json - Json object or list
+                4. File content or byte array
+	
+	The following functions called inside the Action method to return a specify type of output:
+
+			1. View() -- It returns .cshtml or .html or .aspx page that is located under ~/Views/ folder
+			2. Content() -- It returns strings
+			3. Json() -- It returns Json object/list
+			4. File() -- It returns file or byte array
+
+Example: Add following action methods in HomeController
+
+public ActionResult Index()
+{
+  return View();
+}
+
+public ActionResult About()
+{
+  return View();
+}
+
+public ActionResult Contact()
+{
+  return View();
+}
+
+Now, run the app and you will get error message /Views/Home/xxxx.xxx not found because we haven't created any view pages.
+
+The ASP.NET MVC project template automatically creates a controller named folder into ~/Views/ and now we need to add controller specific pages into that folder (This is a kind of separation).
+
+Now, we need to add the .cshtml pages - Index.cshtml, About.cshtml, and Contact.cshtml via project template system:
+
+   public ActionResult Index()  <--- Right mouse click on "Index" name + Add View + [ ] unchecked the "Use a layout"
+    {									+ Add ( Index.cshtml will be created)
+      return View();			Similarly create pages for other actions.
+    }
+				
+You can add other action that returns non View():
+
+public ActionResult Emp()
+{
+  var emp = new { Id = 10, Name = "Rajesh" };
+  return Json(emp);
+}
+
+public ActionResult Test()
+{
+  return Content("Hello World <h3>Hello World</h3>");
+}
+Note: Security reason begind sending Json (Always uses POST request) here. Change code in Emp():
+
+    return Json(emp,JsonRequestBehavior.AllowGet);  Will allow GET request method now.
+
+
+The Request method and the Actions
+============================================================
+By default, an action method supports both; GET and POST request. However you can set restrictions to the action method via [HttpGet]  or [HttpPost] attributes.
+
+For example,
+
+[HttpGet]
+public ActionResult Index() { return View(); }   <-- Now this method supports GET request only
+
+
+[HttpPost]
+public ActionResult Emp()
+{
+  var emp = new { Id = 10, Name = "Raj" }; 
+  return Json(emp);
+}
+
+We can't request /home/emp any more.
+
+To call or access /home/emp, write following code in /views/home/index.cshtml page
+
+<form method="post" action="/home/emp">
+ <button>Submit</button>
+</form>
+
+Parameters of Actions methods
+=====================================================================
+
+As we know that the action methods can support GET or POST or BOTH request type and hance these methods can have no or one or more parameters.
+
+
+The special parameter - id
+--------------------------
+
+ The route engine has already configured request uri pattern and "id" is the last part of (and it is optional) the URI.
+
+Example:
+
+
+public ActionResult Test(int id)
+{
+  return Content("Value : " + id);
+}
+
+[Presume that the code is in Home controller]
+
+/home/test/10 <--- 10 value will be received via id 
+
+But the action will throws an exception when URI ommit id /home/test
+
+So, in order to prevent such error, use Nullable type.
+
+public ActionResult Test(int? id)
+{  
+  return Content("Value : " + ( id ?? 0 ));
+}
+
+You can choose the type of "id" as string or any nullable (class) or Nullable and you must receive a single value; not a comma or dot separated (no double/decimal values)
+
+/home/test/10.10 <-- Error
+/home/test/pen   <--- OK if   parameter is of string type (e.g Test(string id) { .. } )
+
+Two or more parameters (mostly nullables) and receive GET or POST data
+---------------------------------------------------------------------
+
+The parameter names automatically behaves like a key/name in Request[] collection and these parameters automatically populated.
+
+public ActionResult Test(int?no, string name)
+{
+   return Content("Result : " + no + " " + name);
+}
+
+/home/test?no=10&name=Jay   <---- Query string via GET request method
+
+and write following markup in index.cshtml
+
+<form method="post" action="/home/test">
+ No : <input type="number" name="no"/>
+ Name : <input type="text" name="name"/>
+ <button>Submit</button>
+</form>
+
+The Route engine assign request data to the action method parameters based upon the matches of names. ie. parameter name matches the request key/name.
+
+However, we can use Request[] collection in our action methods. 
+
+ public ActionResult Test()
+  {
+     var no = Request["no"].AsInt();
+     var name = Request["name"] ?? "";
+     return Content("Result : " + no + "  " + name);
+   }
+
+But, as you can see that the action parameters way is much easy and better.
+
+
+Push data (of any type/kind) into the View from Controller's Action Method
+===========================================================================
+
+To pass or send or push data into the view (.cshtml) page we've two strategies in our action methods :
+
+  1. The "ViewBag" - a dynamic dictionary (Key-value pair collection of dynamic type)
+
+  2. The "Model"   - a single object that will be of any type.
+
+ Note: The ViewBag has ability to send or pass more than one objects whereas the "Model" receive only one object;  however this object can be simple or complex (collections).
+
+ 
+Example: [code in Home controller]
+
+      public ActionResult Index()
+        {
+            ViewBag.Greet = "Welcome Guest";
+            ViewBag.Now = DateTime.Now.ToLongDateString();
+            ViewBag.Name = "Mr. Rajesh";
+            ViewBag.Age = 30;
+            return View();
+        }
+and Index.cshtml markup,
+
+        <p>@ViewBag.greet, How are you @ViewBag.Name</p>
+        <p>I guess you're coming from @ViewBag.City</p>
+        <p>You're @ViewBag.age years old</p>
+        <p>@ViewBag.Now</p>
+
+
+NOTE: ViewBag is a dynamic object and any name added to the object using . is called property or key or name and it
+	is case insensitive in RAZOR page.
+	If specified property is not exists into the ViewBag then null will be returned.
+
+Example:
+
+public ActionResult Index()
+{
+   var cities = new List<string>() { "Meh","Pat","Raj" };
+   ViewBag.Cities = cities;
+   return View();
+}
+and in index.cshtml,
+
+<select>
+ @foreach(var city in ViewBag.Cities)
+ {
+    <option>@city</option>
+  }
+</select>
+
+<table>
+ <thead>
+  <tr><th>City</th><th>Action</th></tr>
+ </thead>
+ <tbody>
+   @foreach(var city in ViewBag.Cities)
+     {
+       <tr><td>@city</td><td><a href="/home/delete/@city">Delete</td></tr>
+     }
+  </tbody>
+ </table>
+
+Use of "Model" property in RAZOR page
+----------------------------------------
+The View() function carries the model object.
+
+  Syntax:  return View(model-object-ref);
+
+The object reference passed through the View() method is received via @Model property in a razor page. The @Model property will not works property unless you mentioned the which type/class of the data it (Model is ) represents.
+
+The @Model property's type is describes via @model razor processors,
+
+@model Namespace.SubNamespace.TypeName
+
+     It indicates that the @Model's type is above mentioned with @model instruction.
+
+
+Example:
+
+   public ActionResult Index()
+        {
+            var cities = new List<string>() { "Meh", "Pat", "Raj" };
+            return View(cities);
+        }
+and index.cshtml
+
+@model System.Collections.Generic.List<string>
+
+<h3>Total cities (count) @Model.Count()</h3>
+<select>
+ @foreach(var city in Model)
+  {
+    <option>@city</option>
+   }
+</select>
+
+Redirect from one action to another action method
+===========================================================
+You can use Response.Redirect("url") to transfer user from one resource to another resource.
+ e.g Response.Redirect("/home/success"); 
+ Or  Rspponse.Redirect("/emp/list");
+
+But to redirect from one action to another within the controller we will use "return RedirectToAction("ActionName")" method.
+
+Example: Input no and name and transfer the user based upon the value of input data; move to "Fail" action if data are invalid or move user to "Success" action if data are valid.
+
+HomeController
+-------------
+
+[HttpGet]
+public ActionResult Create()
+{
+   return View();
+}
+[HttpPost]
+public ActionResult Create(int?no , string name)
+{
+  if(no == null || string.IsNullOrEmpty(name))
+    {
+       return RedirectToAction("Fail");
+     }
+  return RedirectToAction("Success");
+}
+public ActionResult Fail() { return View(); }
+public ActionResult Success() { return View(); }
+
+Create.cshtml
+------
+<form method="post" action="/home/create">
+  No: <input type="text" name="no"/>
+  Name: <input type="text" name="name"/>
+  <button>Submit</button>
+</form>
+
+Fail.cshtml
+-------------
+<h4>Invalid data!  <a href="/home/create">Back</a></h4>
+
+Success.cshtml
+-----------------
+<h4>Valid data!  <a href="/home/create">Add another record!</a></h4>
+     
+Example: Assume that we've Emp table with three fields (EmpId, Name and BirthDate) and configured the EntityFramework.
+
+1. Create EmpController and add following action methods:
+
+
+public ActionResult Index()
+{
+   using(var db = new YourDbContext())
+    {
+      ViewBag.Emps = db.Emps.ToList();
+    }
+   return View();
+}
+
+[HttpGet]
+public ActionResult Create()
+{
+  return View();
+}
+[HttpPost]
+public ActionResult Create(int ?EmpId, string Name, DateTime? BirthDate)
+{
+  //write code to insert the Emp record
+  if( EmpId==null || string.IsNullOrEmpty(name) || BirthDate ==null)
+   {
+     ViewBag.Message = "Please input the values";
+   }
+  else
+   {
+       //code to insert a record
+       ...
+       ...
+      ViewBag.Message = "Record added successfully";
+     } 
+  return View();
+}
+Index.cshtml
+------------
+<a href="/emp/create">Create new Employee</a>
+<table>
+ @foreach(var e in ViewBag.Emps)
+  {
+    <tr><td>@e.EmpId</td><td>@e.Name</td><td>@e.BirthDate</td></tr>
+  }
+</table>
+Create.cshtml
+--------------
+<form method="post" action="/emp/create">
+  No:<input type="number" name="EmpId"/>
+  Name:<input type="text" name="Name"/>
+  Birth Date:<input type="date" name="BirthDate"/>
+  <button>Submit</button>
+</form>
+<p>@ViewBag.Message</p>
+<p><a href="/emp/index">List Employees</a></p>
+
+
+
+        

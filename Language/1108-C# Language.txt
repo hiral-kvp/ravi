@@ -1,0 +1,209 @@
+ The var keyword
+ ---------------
+ The var keyword in C# is used to create local variables without using explicit name
+ of datatype. The C# compiler determines the type of variable based upon the value
+ assigned to it.
+
+ Syntax:  var varName = value;
+
+ Example:
+    
+   var no = 10; //int
+   var percent = 66.77m; //decimal
+   var name = "Mr. A"; //string
+
+ Note: The "var" keyword only used to create local variables. You cannot use it as        fields, method parameters or return type.
+ 
+ The dynamic keyword
+ -------------------
+ The dynamic keyword tells the compiler that do not examine the type of a variable  which is created using "dynamic" keyword. The dynamic variable's datatype is evaluted  during program execution.
+
+ Syntax:  dynamic varName;
+          dynamic varName = value;
+
+ You can use dynamic keyword to create local variables, fields, method parameters and
+ method return type.
+
+ Example:
+
+        dynamic no;
+        no = 10; //int
+        Console.WriteLine( no * 2);
+        Console.WriteLine(no);
+        no = "Hello"; //string
+        Console.WriteLine(no);
+        Console.WriteLine(no.Length);
+
+Parse "string" data to appropriate simple data value
+-------------------------------------------------------
+To parse means separate the chars and then gether them to form a desired value of appropriate datatype. (Parse doesn't mean conversion).
+
+All simple types have a method called "Type.Parse()" to parse the string.
+
+Example:
+
+  var str = "100";  //string
+  var no = int.Parse( str );
+  Console.WriteLine( no );
+  Console.WriteLine( no * 2); //you can perform any arithmetic operation of numeric 			      //data.
+
+Example:
+
+  string str = "100.10";
+  var a = float.Parse( str ); // float
+  var b = double.Parse( str ) ; // double
+  var c = decimal.Parse( str ); // decimal
+
+The Parse() method throws an exception (error) when string is invalid or has invalid format.
+
+Example :
+
+  string str = "10a";
+  var no = int.Parse( str ); // Error - invalid data format
+
+Input from console - Console.ReadLine() method
+-----------------------------------------------------------
+The Console.ReadLine() accept string and return it. Another method called Console.Read() is used to accept a char.
+
+Example:
+
+ int age;
+ string name;
+
+ Console.Write("Enter your name : ");
+ name = Console.ReadLine();
+
+ Console.Write("Your age please! : ");
+ age = int.Parse( Console.ReadLine() );
+
+ Console.WriteLine("Hello, " +name + ". You are " + age + " years old.");
+
+Working with DateTime
+------------------------------------------------------------
+To represent Date, Time and Date & Time and provide methods to manipulate DateTime object.
+
+1. Get system's current date & time 
+
+   DateTime now = DateTime.Now;       // Now returns local datetime
+   DateTime utcNow = DateTime.UtcNow; // Universal Time Cordinates UTC 
+ 
+   Console.WriteLine( now );
+   Console.WriteLine( utcNow );
+   Console.WriteLine( DateTime.Now );
+
+2. Parse datetime string - Default format is mm/dd/yyyy hh:mm:ss am/pm
+
+   var str = "12/31/2015 10:30:40 PM";
+
+   var dt = DateTime.Parse( str );
+
+   Console.WriteLine( dt );
+
+   str = "01/31/2002";
+   dt = DateTime.Parse( str );
+   Console.WriteLine( dt );
+
+   str = "10:20:20 AM";
+   dt = DateTime.Parse(str); //Current system's date with specified time
+   Console.WriteLine(dt);
+
+3. Add or subtract Seconds, Minutes, Hours, Days, Months, Years
+
+Use AddXXXX(+/-Value) to add or subtract date & time parts.
+
+        DateTime now = DateTime.Now;
+        Console.WriteLine( now.AddDays(5));
+        Console.WriteLine(now.AddMonths(5));
+        DateTime dt1 = now.AddYears(2).AddMonths(3).AddDays(5);
+        DateTime dt2 = now.AddYears(-2);
+        Console.WriteLine(now);
+        Console.WriteLine(dt1);   
+
+4. DateTime difference via System.Timespan and - (hyphen) operator.
+
+        DateTime start = DateTime.Parse("5/31/2012 10:10 PM");
+        DateTime end = DateTime.Parse("7/31/2015");
+
+        TimeSpan span = end - start;
+
+        //Returns double value
+        Console.WriteLine("Total Days: " + span.TotalDays);
+        Console.WriteLine("Total Hours: " + span.TotalHours);
+
+        // returns int value
+        Console.WriteLine(span.Days); 
+        Console.WriteLine(span.Hours);
+
+Format the string - Any data value represented as a "string" is known as "format"
+----------------------------------------------------------------------------------
+In CTS, the ToString() method is used to format a string. (ie. int,float,double , DateTime etc to string translation).
+
+ int no =  10;
+ string str = no.ToString();
+ Console.WriteLine( str ); //string value
+ var now = DateTime.Now;  
+ str = now.ToString();     //string
+ Console.WriteLine( str );
+
+We can enhance the string format for numeric data via "N", "C", "0", "#", "," and "."
+format characters.
+
+ Example:
+ 
+ int no = 1000000;
+ double amount = 39392222.33342;
+
+ //Without format
+ Console.WriteLine( no.ToString() );
+ Console.WriteLine( amount.ToString() );
+
+ //Number - N format with two digit decimal
+ Console.WriteLine( no.ToString("N") );
+ Console.WriteLine( amount.ToString("N") );
+ Console.WriteLine( no.ToString("N4") ); // four digit decimal
+ Console.WriteLine( amount.ToString("N4") ); // four digit decimal
+
+ //Currency - C format with 2 digits decimal
+ Console.WriteLine( no.ToString("C") );
+ Console.WriteLine( amount.ToString("C") );
+ Console.WriteLine( amount.ToString("C3") ); //three digit decimal
+
+ //Custom format - 0 or # (black) padding.
+ Console.WriteLine( no.ToString("0,00,00,000.00") );
+ Console.WriteLine( no.ToString("#,##,##,##.00") );
+
+ //Zero padding output
+ for(int i=1;i<=1000;i=i+50) 
+ {
+   Console.WriteLine( i.ToString("00000") ); // 00001, 00050 etc
+   } 
+ 
+ We can use following DateTime format characters to format the output.
+ 
+  Format	Meaning
+  d		day of month 
+  d		date when used independently
+  dd		day of month
+  ddd		day name (abbr)
+  dddd		day name (fullname)
+  M		month & day (independently)
+  M		month number
+  MM		month number
+  MMM		month name (abbr)
+  MMMM		month name (full)
+  y		month & year (ind)
+  yy		year (two digits)
+  yyyy		year (four digits)
+  t		time (ind)
+  tt		AM/PM
+  HH		24 hours
+  hh		12 hours
+  mm		minute
+  ss		second
+  
+Example:
+   var now = DateTime.Now;
+   Console.WriteLine( now.ToString("dd-MM-yyyy hh:mm:ss tt") );
+   Console.WriteLine( now.ToString("dddd MMMM dd, yyyy") );
+
+   

@@ -1,0 +1,287 @@
+ Database layers - a program which expose methods that allows add, delete, update,  search and list the employees.
+
+ Step-1  Create a database named "EmpDb" with following table:
+
+   create table Emp
+    (
+      EmpId int primary key,
+      EmpName varchar(50) not null,
+      JoinDate date
+     )
+
+ Step-2 Create "Emp.cshtml" to design entry form:
+ 
+   ID        : ______
+   Name      : __________
+   Join Date : ______
+
+   [Add]
+
+  We will use |DataDirectory| macro or substitution in connection string to path the
+  location of database instead hardcoded physical path.
+
+  The |DataDirectory| is a special macro which represent the path of "App_Data" 
+  folder.
+
+    For instance.
+
+     "....AttachedDbFileNamed=|DataDirectory|\YourFileDb.mdf;.........."
+
+Code: Emp.cshtml
+=====================================
+
+@using System.Data.SqlClient
+@{
+    var empId = Request["empId"].AsInt();
+    var empName = Request["empName"] ?? "";
+    var joinDate = Request["joinDate"].AsDateTime();
+    var message = "";
+    var cmd = Request["cmd"] ?? "";
+    var isFound = false;
+
+    var CnStr = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EmpDb.mdf;Integrated Security=True";
+    SqlConnection cn = null;
+    SqlCommand cm = null;
+    SqlDataReader rd = null;
+
+    if (!IsPost)
+    {
+        cmd = "";
+    }
+    if("Add".Equals(cmd))
+    {
+        using (cn = new SqlConnection(CnStr))
+        {
+            using (cm = new SqlCommand())
+            {
+                cm.Connection = cn;
+                cm.CommandText = "select empid from emp where empid=@p1";
+                cm.Parameters.AddWithValue("@p1", empId);
+                cn.Open();
+                var result = cm.ExecuteScalar();
+                if(result!=null)
+                {
+                    isFound = true;
+                }
+                cn.Close();
+            }
+
+            if (!isFound)
+            {
+                using (cm = new SqlCommand())
+                {
+                    cm.Connection = cn;
+                    cm.CommandText = "insert into emp values (@p1,@p2,@p3)";
+                    cm.Parameters.AddWithValue("@p1", empId);
+                    cm.Parameters.AddWithValue("@p2", empName);
+                    cm.Parameters.AddWithValue("@p3", joinDate);
+
+                    cn.Open();
+                    cm.ExecuteNonQuery();
+                    message = "Record added successfully";
+                    cn.Close();
+                }
+            } else
+            {
+                message = "Given EmpId already exists. Reenter please";
+            }
+        }
+    } //End "Add" button
+
+     /* code for Delete/Update/SEarch etc */
+
+}
+
+<form method="post">
+    <p>
+      ID : <input type="number" name="empId" value="@empId"/></p>
+    <p>Name : <input type="text" name="empName" value="@empName" /></p>
+    <p>Date : <input type="date" name="joinDate" 
+                value="@joinDate.ToString("yyyy-MM-dd")" /></p>
+    <p>@message</p>
+    <p>
+        <button name="cmd" value="Add">Add</button>
+    </p>
+</form>
+
+ Step-3 Copy Emp.cshtml to Emp1.cshtml and add following code.
+
+   ID        : ______      [Search]
+   Name      : __________
+   Join Date : ______
+
+   [Add] [Update] [Delete] [Cancel]
+
+   -----------------------------------
+   | Id  | Name     | Date    |       |
+   |----------------------------------|
+   | 1   | Raj      | x-x-x-  | [Edit]|
+   |......
+
+
+Code: Emp1.cshtml
+-------------------
+
+@using System.Data.SqlClient
+@{
+    var empId = Request["empId"].AsInt();
+    var empName = Request["empName"] ?? "";
+    var joinDate = Request["joinDate"].AsDateTime();
+    var message = "";
+    var cmd = Request["cmd"] ?? "";
+    var isFound = false;
+
+    var CnStr = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EmpDb.mdf;Integrated Security=True";
+    SqlConnection cn = null;
+    SqlCommand cm = null;
+    SqlDataReader rd = null;
+
+    if (!IsPost)
+    {
+        cmd = "";
+    }
+    if("Add".Equals(cmd))
+    {
+        using (cn = new SqlConnection(CnStr))
+        {
+            using (cm = new SqlCommand())
+            {
+                cm.Connection = cn;
+                cm.CommandText = "select empid from emp where empid=@p1";
+                cm.Parameters.AddWithValue("@p1", empId);
+                cn.Open();
+                var result = cm.ExecuteScalar();
+                if(result!=null)
+                {
+                    isFound = true;
+                }
+                cn.Close();
+            }
+
+            if (!isFound)
+            {
+                using (cm = new SqlCommand())
+                {
+                    cm.Connection = cn;
+                    cm.CommandText = "insert into emp values (@p1,@p2,@p3)";
+                    cm.Parameters.AddWithValue("@p1", empId);
+                    cm.Parameters.AddWithValue("@p2", empName);
+                    cm.Parameters.AddWithValue("@p3", joinDate);
+
+                    cn.Open();
+                    cm.ExecuteNonQuery();
+                    message = "Record added successfully";
+                    cn.Close();
+                }
+            } else
+            {
+                message = "Given EmpId already exists. Reenter please";
+            }
+        }
+    }//End of "Add"
+
+    if("Search".Equals(cmd))
+    {
+        using (cn = new SqlConnection(CnStr))
+        {
+            using (cm = new SqlCommand())
+            {
+                cm.Connection = cn;
+                cm.CommandText = "select * from emp where empid=@p1";
+                cm.Parameters.AddWithValue("@p1", empId);
+                cn.Open();
+                using (rd = cm.ExecuteReader())
+                {
+                    if(rd.Read())
+                    {
+                        isFound = true;
+                        empId = rd.GetInt32(0);
+                        empName = rd.GetString(1);
+                        joinDate = rd.GetDateTime(2);
+                    }else
+                    {
+                        empName = "";joinDate = DateTime.MinValue;
+                        message = "Employee not found";
+                    }
+                }
+            }
+        }
+    }//End - Search
+
+    if("Cancel".Equals(cmd))
+    {
+        empName = "";
+        empId = 0;
+        joinDate = DateTime.MinValue;
+    } //End - Cancel
+
+
+    if("Update".Equals(cmd))
+    {
+
+    }
+    if ("Delete".Equals(cmd))
+    {
+
+    }
+}
+
+<form method="post">
+    <p>
+      ID : <input type="number" name="empId" value="@empId"/>
+        <button name="cmd" value="Search">Search</button>
+    </p>
+    <p>Name : <input type="text" name="empName" value="@empName" /></p>
+    <p>Date : <input type="date" name="joinDate" value="@joinDate.ToString("yyyy-MM-dd")" /></p>
+    <p>@message</p>
+    <p>
+        @if (isFound)
+        {
+            <button name="cmd" value="Update">Update</button>
+            <button name="cmd" value="Delete">Delete</button>
+            <button name="cmd" value="Cancel">Cancel</button>
+        }
+        else
+        {
+            <button name="cmd" value="Add">Add</button>
+        }
+    </p>
+</form>
+
+@{ 
+    using (cn = new SqlConnection(CnStr))
+    {
+        using(cm = new SqlCommand())
+        {
+            cm.Connection = cn;
+            cm.CommandText = "select * from emp";
+            cn.Open();
+            using (rd = cm.ExecuteReader())
+            {
+                <table border="1">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Join Date</th>
+                        <th></th>
+                    </tr>
+                    @while(rd.Read())
+                    {
+                        <tr>
+                            <td>@rd[0]</td>
+                            <td>@rd[1]</td>
+                            <td>@rd.GetDateTime(2).ToString("dd-MM-yyyy")</td>
+                            <td>
+                                <form method="post">
+                                    <input type="hidden" name="empId" value="@rd[0]"/>
+                                    <button name="cmd" value="Search">Edit</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        }
+    }
+}
+

@@ -1,0 +1,170 @@
+Cookies - A Client Side State Management
+===========================================================================
+Like the "Session" object, cookie is a collection but it is controlled/managed by the web-browser. The Cookie object will be created, deleted or updated by the web-browser via Http Response instructions. We will have to use "Response"
+property of Page or HttpContext.Current.Response for the class method.
+
+A Cookie is a key-value collection and also it add some more properties like cookie's age (expire date & time), path (namespace) of cookie to create a group.
+
+There are two types of cookies we can create to persists our data:
+   1. Cookies having "age" - setting expire date & time; the max limit is 1 year from the current date & time.
+      A cookie having "age" is called persistent cookie.
+
+   2. Non persistent cookie -- It will be released/discarded when client/browser is close.
+
+Cookie persist the data in "string" format and also plain text form. So beware to store important data like password, ids etc because these data easily viewed or manipulated by the client program.
+
+HttpCookie class : Server side, we will use HttpCookie object to set data & instructions and sent it to client via
+			Response.Cookies collection.
+
+Example:
+
+Create.cshtml
+------------------
+@{ 
+    HttpCookie c1 = new HttpCookie("no","10");
+    c1.Path = "/";
+
+   //  c1.Expires = DateTime.Now.AddDays(15); //Uncomment it and will become a persistent cookie
+    Response.Cookies.Add(c1);
+}
+<hr/>
+<a href="Create.cshtml">Create</a>
+<a href="Delete.cshtml">Delete</a>
+<a href="Show.cshtml">Show</a>
+ 
+Show.cshtml
+----------------
+@{
+    if(Request.Cookies["no"]!=null)
+    {
+        <p>@Request.Cookies["no"].Value</p>
+    }
+    else
+    {
+        <p>No Cookie</p>
+    }
+}
+.. as per previous code..
+
+Delete.cshtml  : Set "Past" DateTime to Expires property to delete a cookie
+----------------
+@{
+    HttpCookie c1 = new HttpCookie("no", "");
+    c1.Path = "/";
+    c1.Expires = DateTime.Now.AddMinutes(-1);
+    Response.Cookies.Add(c1);
+}
+....
+
+
+
+You can create CookieWrapper class to ease the cookie related actions:
+
+public class CookieWrapper  /* Choose your own class name instead of this */
+{
+   public static void CreateCookie(string name, string value, bool persist)
+    {
+        HttpCookie c1 = new HttpCookie(name,value);
+        c1.Path = "/";
+        if(persist)
+            c1.Expires = DateTime.Now.AddDays(15); 
+        HttpContext.Current.Response.Cookies.Add(c1);
+      }
+    public static void DeleteCookie(string name)
+    {
+        HttpCookie c1 = new HttpCookie(name,"");
+        c1.Path = "/";
+        c1.Expires = DateTime.Now.AddDays(-1); 
+        HttpContext.Current.Response.Cookies.Add(c1);
+      }
+ public static string GetCookie(string name)
+    {
+        if(HttpContext.Current.Response.Cookies[name]!=null)
+           return HttpContext.Current.Response.Cookies[name].Value;
+        return "";
+      }
+}
+
+Example: Shoping Cart -- Add or Remove items from the Cart collection
+
+Step=1 Create "Item.cs" model class
+
+ public class Item
+    {
+        public string Name { get; set; }
+        public int Qty { get; set; }
+        public override int GetHashCode()
+        {
+            return string.IsNullOrWhiteSpace(Name) ? 0 : Name.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
+
+        //Collection
+        public static List<Item> Cart
+        {
+            get
+            {
+                if (HttpContext.Current.Session["Cart"] == null)
+                    HttpContext.Current.Session["Cart"] = new List<Item>();
+                return HttpContext.Current.Session["Cart"] as List<Item>;
+            }
+        }
+    }
+Step=2 .cshtml markup/code
+
+
+@{ 
+    var name = Request["name"] ?? "";
+    var qty = Request["qty"].AsInt();
+    var cmd = Request["cmd"] ?? "";
+
+    if(cmd.Equals("Add"))
+    {
+        Item.Cart.Add(new  Item { Name=name,Qty=qty });
+    }
+    if(cmd.Equals("Delete"))
+    {
+        Item.Cart.Remove(new  Item { Name = name, Qty = qty });
+    }
+}
+ 
+        <form method="post">
+            <input type="hidden" name="name" value="Pen" />
+            <h2>Pen</h2>
+            <input type="number" name="qty"/>
+            <button name="cmd" value="Add">Add To Cart</button>
+        </form>
+        <form method="post">
+            <input type="hidden" name="name" value="Pencil" />
+            <h2>Pencil</h2>
+            <input type="number" name="qty" />
+            <button name="cmd" value="Add">Add To Cart</button>
+        </form>
+        <form method="post">
+            <input type="hidden" name="name" value="Book of Ali" />
+            <h2>Book of Ali</h2>
+            <input type="number" name="qty" />
+            <button name="cmd" value="Add">Add To Cart</button>
+        </form>
+
+       <table>
+           @foreach (var i in Item.Cart)
+           {
+               <tr>
+                   <td>@i.Name</td>
+                   <td>@i.Qty</td>
+                   <td>
+                       <form method="post">
+                           <input type="hidden" name="name" value="@i.Name" />
+                           <button name="cmd" value="Delete">X</button>
+                       </form>
+                   </td>
+               </tr>
+           }
+       </table>
+ 
+
+

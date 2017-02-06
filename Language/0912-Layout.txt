@@ -1,0 +1,54 @@
+ Layout page & Content pages
+ ===========================
+
+ In "Razor" view engine, for consitent layout of web page, a feature called "layout  page" is used.
+
+ The "Layout page" is just like a regular .cshtml page but it has special
+ purpose and characteristics:
+
+     1. A "layout page" cannot be request by the client directly. 
+     2. A "layout page" is used by another "cshtml" page called "content page" and
+        this mechanism produce combine result from "layout page" and "content page".
+     3. As we know that layout pages can't request by clients and if they request then
+        ASP.NET throws an exception. So here in ASP.NET, we have a special naming
+        convention to hide the file from public user by prefixing with underscore _         character.
+     4. A "layout page" has a "section - also called default section" and this section
+        is replaced by the "content page". The "default section" is denoted by          calling  @RenderBody() method into the "layout page".
+
+Example: Add "_site.cshtml"  (use of _ underscore is optional)
+
+_site.cshtml
+===============
+<!doctype html>
+<html>
+  <head><title>ABC Site</title></head>
+  <body>
+    <h1>ABC Site</h1>
+    <a href="Index.cshtml">Home</a>
+    <a href="About.cshtml">About us</a>
+    <hr/>
+    @RenderBody()
+   </body>
+</html>
+
+Index.cshtml   (Content page)
+==============
+@{
+ Layout = "~/_site.cshtml";
+}
+<h3>Welcome to our site</h3>
+
+About.cshtml   (Content page)
+==============
+@{
+ Layout = "~/_site.cshtml";
+}
+<h3>Who are we?</h3>
+<p>We are ...</p>
+
+   5. Content pages must set the "Layout" property -- the reference of layout page.
+
+      @{
+       Layout = "~/folder/_file.cshtml";
+      }
+    

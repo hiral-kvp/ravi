@@ -1,0 +1,77 @@
+The Session object
+==============================================================================================================
+
+The HTTP is a stateless protocol; no communication record and data will be saved either at client or server (Http client and Http Server) that means each request to the server is consider as a "fresh request" or "new request".
+
+Now, in order to hold or store client's identity and client specific data (of any category), we have a mechanism called "Session" and "Cookies". The Session mechanism is applicable for server side whereas the "Cookies" is at client (browser) side.
+
+Sometimes we uses <input type="hidden" or querystrings to embed the data but the life of these data is at current page only. If we navigate some pages with some pre-defined or avilable data then the data will be discarded immediately when you render and tranfer to the next resource/program.
+
+The Session object
+------------------
+The Session object will be created automatically for each user (browser) by the ASP.NET to have the identity and to save user specific data.
+
+Each session is an object whose life is controlled by the ASP.NET via Session.TimeOut in minute property. Default value is 20 minites. 
+
+ You can change it, 
+@{
+
+Session.TimeOut = 1;
+}
+
+Each session's unique id called Session.SessionID used by the web-browser to keep the unique identity for the requests.
+
+The Session is dictionary object and use disctionary methods to operate it.
+
+1. Create an entry
+
+Session["key"] = value;
+
+e.g  Session["no"] = 10;
+     Session["name"] = "pqr";
+
+2. Read the entry
+
+ Always check for the availability of the pair
+
+  if(Session["key"]!=null)
+   {
+     int no = int.Parse(Session["key"].ToString());
+     .....
+   }
+
+3. To remove a key:
+ 
+   Session.RemoveAll(); Remove all keys
+   Session.Remove(key); Remove a key
+   Session.Abandon();   It re-create a new session object (drop all keys with new object)
+
+Example: 
+
+Create.cshtml
+@{
+  Session["no"] = 10;
+}
+<a href="create.cshtml">Create</a>
+<a href="delete.cshtml">Delete</a>
+<a href="show.cshtml">Show</a>
+<p>@Session.TimeOut minutes</p>
+<p>@Session.SessionID</p>
+
+Show.cshtml
+@{
+ if(Session["no"]!=null)
+  {
+    <p>@Session["no"]</p>
+   }
+}
+... same as previous...
+
+Delete.cshtml
+@{
+ if(Session["no"]!=null)
+  {
+     Session.Remove("no"); //Session.Abandon();
+   }
+}
+... same as previous...

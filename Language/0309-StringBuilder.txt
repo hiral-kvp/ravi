@@ -1,0 +1,79 @@
+ System.String and System.Text.StringBuilder classes
+ ------------------------------------------------------
+
+ In CTS, we have two types of "String" classes:
+
+  1. System.String - is called "immutable string object". Immutable means we cannot
+			change the value once it is stored into memory. (In other 			words it is also known as "readonly").
+
+     Every time you try to change the value of "string" class will create a new
+     object eachtime because of "immutable" characteristics.
+
+	For example:
+
+
+	  string name = "Raj"; //1st object is created
+          name = name + "P";   //new object will be created which contains "RajP" and
+			       //its reference is returned to name variable.
+          name = name + "Shah"; //again new object is created with "RajPShah" and so 				 //on...
+
+    The "string" class is best suited to represent string literal but it is not
+    suited to perform string manipulation because when we try to manipulate, it wont
+    be updated instead it creates a new object.
+
+    So never use "string" class to manipulate (insert/update/replace/delete/concat)     strings.     
+
+ 2. System.Text.StringBuilder - is called "mutable object". It means we can manipulate     string object without creating a new one. The same "StringBuilder" object allow us
+    to add/insert/delete/replace/concat strings/data by allocating or deallocate     memory (heap) as needed.
+
+Example:
+
+  StringBuilder sb = new StringBuilder();  //single object is created
+  sb.Append("Hello");                      //insert "Hello" into that object
+  sb.Append(10); // Insert 10 to that object
+  sb.Insert("Hi",4); //Insert "Hi" at 4th index
+
+  Console.WriteLine( sb.ToString() ); // convert it to System.String
+
+  Always use "StringBuilder" when string manipulate operations are required.
+
+Example: Time analysis via System.Diagnostics.StopWatch class
+
+class Test
+{
+    static void testString()
+    {
+        string str = "";
+        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+
+        watch.Start();
+        for (int i = 1; i <= 100000; i++) //Total 100001 objects will be created
+        {
+            str = str + i;
+        }
+        watch.Stop();
+
+        Console.WriteLine(watch.ElapsedMilliseconds + " ms");
+    }
+
+    static void testStringBuilder()
+    {
+        //single object will be created
+        System.Text.StringBuilder str = new System.Text.StringBuilder();
+        System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        watch.Start();
+        for (int i = 1; i <= 100000; i++)
+        {
+            str = str.Append(i);
+        }
+        watch.Stop();
+        Console.WriteLine(watch.ElapsedMilliseconds + " ms");
+    }
+    private static void Main()
+    {
+        testString();
+        testStringBuilder();
+    }
+}
+ 
+	

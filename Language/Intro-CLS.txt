@@ -1,0 +1,74 @@
+ The .Net Framework
+ ============================================================
+
+ The .net framework is a programming environment from the  Microsoft to develop, deploy and execute applications in
+ a highly distributed environment of the InternetWork (Also known as Client/Server or Distributed Computing architecture).
+
+ In general, the term "framework" or "platform" is derived from
+ the theory known as - IoC - Inversion of Control which simply
+ says "Don't call us, we will call you".
+
+ In computing, the OS is the base or fundamental framework and
+ there are number of sub-frameworks exists to ease the software
+ development, deployment and controls the executions of  applications in one or  many ways.
+
+ The sub or sub-sub frameworks are be installed upon the OS and
+ they are : Java Platforms (There are four Java Platforms), .Net  Platforms (Three four more sub-sub frameworks) and many more...
+
+
+ The .net framework for WinOS can be downloaded from  visualstudio.com site and same framework for Max or Linux is
+ downloaded from mono-develop website.
+
+ "Mono" is a code name of open source .net framework.
+
+ Client/Server Architecture
+ ----------------------------
+ 
+ It is a technique to split an application's processing ability  into two or more processes (programs) where each splitted process can be host into single machine or they are hosted on remote machine but they will communicate via ubiquitious internetwork standard called "TCP/IP".
+
+ Client-Server arch is also known as "Distributed computing" and
+ its enhance forms are - Game & Grid computing architectures.
+
+ [Some frameworks refer C/S arch as "Remoting"]
+
+ The Architecture of .net framework
+ -----------------------------------
+  The .net framework is composed of three major components.
+
+    In other words, there are three major components which  
+    constitute the .net framework:
+
+    1. Common Language Specification - CLS
+    2. Common Types System - CTS 
+    3. Common Language Runtime - CLR
+
+
+ 1. Common Language Specification (CLS) or Common Language     Infrastructure (CLI)
+
+    Each & every component or "thing" in .net framework is
+    specification based. Specification is a "guideline" for
+    the user's of .net framework, developer of .net framework,
+    and vendor of .net framework technologies.
+
+    Specification defines rules & guideline. For instance, it     tells us - how to declare variable, naming rules, type definition rules, overloading of methods rules, conversion rules, and many more.
+
+    In other words, it defines rules governing variable naming     to method overloading.
+
+    The Common Language Infrastructure (CLI) is a collection of
+    specifications including:
+            1. Specification for CTS
+            2. Specification for languages 
+            3. Specification for Runtime and many more
+
+ CLS compliant languages -- Languages (compilers) designed as  per common language specifications can be used with .net  framework to code. These languages are : C#, VB.NET, MC++  (Managed C++), Python (.NET), Ruby , PHP and so many other  compilers.
+
+ What is CLS-compliant code?
+    A code/program written in any CLS compliant language is     called CLS-compliant code.
+
+ [Note:
+
+    C# Language is designed using ECMA specification and C#     Language specification.
+
+    ECMA - European Computer Merchant Association is an     orgranization which maintain standards for JavaScript and        other scripting languages.
+ ]
+    

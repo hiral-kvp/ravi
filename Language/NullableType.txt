@@ -1,0 +1,47 @@
+ Nullable Types
+ ==============
+
+ We know that we cannot assign "null" to value types.
+   e.g int no = null; is not possible.
+
+ In reference types we have used the null to describe that value/data is not exists but the same cannot be performed with value types (struct & enum).
+
+ In C#, we have a way to create equivalent nullable type of struct or enum. It means  we can represent null for the simple value types too.
+
+ Syntax to create nullable type of value types.
+ -----------------
+  datatype? varName;
+
+ e.g   
+
+     int? no; <--- This is nullable of int type and can represent null or data.
+     no = 10; //OK
+     no = null; //OK
+
+  Compare and read nullable value
+  ---------------------------------
+  First of all, we have null coresion operator to read the value from nullable.
+
+     Example:
+
+             int? no = null;
+             int mno = no ?? 0; 
+             Console.WriteLine(mno);  
+
+   Secondly, we can use "HasValue" and "Value" properties of nullable type.
+
+    Example:
+
+            int? no = null;
+            int mno;
+            if(no.HasValue)
+                  mno = no.Value;
+            else
+                  mno = 0;
+            Console.WriteLine(mno);
+  OR
+
+            int? no = null;
+            int mno = no.HasValue ? no.Value : 0;
+            Console.WriteLine(mno);
+

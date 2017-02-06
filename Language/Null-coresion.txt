@@ -1,0 +1,21 @@
+ Null coresion operator
+ ==================================================
+ This operator especially used with reference types to set default value when
+ a reference variable contains the "null".
+
+ Syntax:
+ 
+         varName = varName ?? defaultValue;
+e.g
+
+     string name = null;
+
+     name = name ?? "Not Available";
+
+e.g
+
+     Product p = null;
+
+     p = p ?? new Product(); // creates an object if p is null 
+
+

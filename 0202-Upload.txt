@@ -1,0 +1,175 @@
+Upload a file
+==============
+To copy a file (of any type/kind) to server from client program is called File uploading.
+
+To upload a file, we must have to set "enctype - encoded type" of <form> with "multipart/form-data" and request method must be "post".
+
+<form method="post" action="youraction" enctype="multipart/form-data">
+  <input type="file" name="file"/>
+  <button>Submit</button>
+</form>
+
+To receive the uploaded file, we need to use HttpPostedFileBase as action method parameter or use Request["key"].Files collection.
+
+Actions in HomeController:
+
+        [HttpGet]
+        public ActionResult Upload()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Upload(HttpPostedFileBase file)
+        {
+            if(file!=null && file.ContentLength>0 && file.ContentLength<=10*1024*1024)
+            {
+                var path = Server.MapPath("~/Files/" + file.FileName);
+                file.SaveAs(path);
+                ViewBag.Message = "Uploaded!!!";
+            }
+            else
+            {
+                ViewBag.Message = "Can't upload!!!";
+            }
+            return View();
+        }
+
+Note: Create /Files folder to save the uploaded files.
+
+
+Example: Write path of uploaded photo and also file content into varbinary column and also rename the uploaded photo.
+
+create table Emp
+(
+  Id int primary key identity,
+  Name varchar(100) not null,
+  PhotoPath varchar(100),
+  PhotoContent varbinary(MAX)
+)
+
+Assume that we've /Photo folder at root.
+EmployeeViewModel
+-----------------
+public class EmpViewModel
+    {
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public string PhotoPath { get; set; }
+        public byte[] PhotoContent { get; set; }
+    }
+
+Actions in HomeController:
+
+       public ActionResult Index()
+        {
+            using (var db = new EmpDbEntities())
+            {
+                ViewBag.List = db.Emps.ToList(); 
+            }
+                return View();
+        }
+
+       //Download action - returns photo content of given emp id
+        public ActionResult Photo(int ?id)
+        {
+            using (var db = new EmpDbEntities())
+            {
+                var emp = db.Emps.FirstOrDefault(x => x.Id == id);
+                if (emp == null)
+                    return RedirectToAction("Index");
+                return File(emp.PhotoContent, "image/jpeg");
+            }
+            
+        }
+        [HttpGet]
+        public ActionResult Emp()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Emp(EmpViewModel model, HttpPostedFileBase file)
+        {
+            if (file != null &&
+                file.ContentLength > 0 && file.ContentLength <= 20 * 1024 * 1024
+                && "image/jpeg,image/png,image/gif".Contains(file.ContentType))
+            {
+                using (var db = new EmpDbEntities())
+                {
+                    var emp = new Emp { Name = model.Name };
+                    emp.PhotoPath = file.FileName; //Path
+
+                    //Sttream IO - Read file.InputStream and create byte array
+                    var stream = new System.IO.BinaryReader(file.InputStream);
+                    emp.PhotoContent = stream.ReadBytes(file.ContentLength);
+                    db.Emps.Add(emp);
+                    db.SaveChanges();
+
+                    var path = Server.MapPath("~/Photo/" + emp.Id + ".jpg");
+                    file.SaveAs(path);
+                    ViewBag.Message = "Employee added!!";
+                }
+               
+            }
+            else
+            {
+                ViewBag.Message = "Select .jpeg or .gif or .png file with 1 byte to 20 MB";
+            }
+            return View();
+        }
+
+
+Emp.cshtml
+-----------
+@model UploadDownload.Models.EmpViewModel
+
+@using (Html.BeginForm("Emp", 
+    "Home", 
+    FormMethod.Post, 
+    new { enctype = "multipart/form-data" }))
+{
+    <p>@Html.LabelFor(x=>x.Name)</p>
+    <p>@Html.EditorFor(x => x.Name)
+    @Html.ValidationMessageFor(x=>x.Name)
+    </p>
+    <p>
+        <input type="file" name="file" />
+    </p>
+    <p><button>Submit</button></p>
+    <p>@ViewBag.Message</p>
+}
+
+Index.cshtml
+-------------
+<h3>List Emp </h3>
+@foreach(var e in ViewBag.List)
+{
+    <div>@e.Name
+     <img src="/Photo/@(e.Id + ".jpg")" alt="@e.Name" />
+    </div>
+}
+
+<h3>Request /Home/Photo/id - Action</h3>
+
+@foreach (var e in ViewBag.List)
+{
+    <div>
+        @e.Name
+    <img src="/Home/Photo/@e.Id" alt="@e.Name" />
+</div>
+}
+
+Download pdf file:
+   public ActionResult Pdf()
+    {
+      return File(Server.MapPath("~/Files/1.pdf","application/pdf"); 
+      // Or force dowload      return File(Server.MapPath("~/Files/1.pdf","application/pdf","file.pdf"); 
+    }
+Download/Streaming video :
+   return File(Server.MapPath("~/Files/a1.mp4"),"video/mp4");
+Download/Streaming audio :
+   return File(Server.MapPath("~/Files/a1.mp3"),"audio/mp3");
+
+You can use <video src=/Home/Video autoplay controls></video>
+             <audio src=/Home/Video autoplay controls></audio>
+  To embed the video or audio in web document.

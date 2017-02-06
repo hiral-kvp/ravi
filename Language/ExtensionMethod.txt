@@ -1,0 +1,217 @@
+ Extension Method
+ -----------------------------------------------------------------------------------
+ This is very effective feature of C# language which allows us to attach a method that  is created in other classes, to the existing class/type.
+
+ It means we can add more functionalities to existing class without modifying them.
+
+
+ How to create extension method?
+ -------------------
+
+  1. Create a static class and
+  2. Define extension method as per following syntax:
+
+   public static class YourClassName
+   {
+     public static return_type ExtensionMethodName(this Type varName)
+       {
+          //
+        }
+     }
+
+Example: Add extension methods to any datatype. In this example, we are going to define extension method for "int" and int array.
+
+using System;
+
+public static class MyExtension
+{                               
+    public static int Square(this int n)
+    {
+        return n * n;
+    }
+    public static int Sum(this int[]n)
+    {
+        int s = 0;
+        foreach (var a in n)
+            s = s + a;
+        return s;
+    }
+    public static string  GetString(this int[] n)
+    {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+        foreach (var a in n)
+            sb.Append(a + ",");
+        return sb.ToString();
+    }
+}
+class Test
+{
+    static void Main()
+    {
+        int no= 10;
+        Console.WriteLine(no.Square());
+
+        int[] nos = { 11, 2, 3, 4, 5, 66 };
+        Console.WriteLine(nos.Sum());
+        Console.WriteLine(nos.GetString());
+    }
+}
+
+Example: Extension method to returns amount in words.
+
+public static class MyExtension
+{
+     public static string InWords(this int no)
+    {
+        string[] one = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thrteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Ninteen" };
+        string[] two = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninty" };
+        int d, r;
+
+        string str = "";
+
+        if (no >= 1000 && no <= 99999)
+        {
+            d = no / 1000;
+            if(d<=19)
+               str = str + one[d] + " Thousand ";
+            else
+            {
+                r = d % 10;
+                d = d / 10;
+                str = str + two[d] + " " + one[r] + " Thousand ";
+            }
+
+            no = no % 1000;
+        }
+
+        if (no>=100 && no<=999)
+        {
+            d = no / 100;
+            str = str + one[d] + " Hundred ";
+            no = no % 100;
+        }
+
+        if(no>=20 && no <= 99)
+        {
+            r = no % 10;
+            d = no / 10;
+            str = str + two[d] + " " + one[r];
+            r = no % 100;
+        }
+        else
+        {
+            str = str + one[no];
+        }
+        return str;
+    }
+}
+
+ class Test
+{
+    static void Main()
+    {
+        int no = 91704;
+        Console.WriteLine(no.InWords());
+    }
+}
+Example:
+
+using System;
+
+ 
+
+class Test
+{
+    static void Main()
+    {
+        decimal no = 34.45m;
+        Console.WriteLine(no.InWords());
+    }
+}
+public static class MyExtension
+{
+    public static string InWords(this decimal no)
+    {
+        int integral = (int)no;
+        int fraction = (int)((no - integral) * 100);
+        string str = integral.InWords() + " rupees";
+        if(fraction!=0)
+        {
+            str = str + " and " + fraction.InWords() + " paise only";
+        }
+        return str;
+    }
+     public static string InWords(this int no)
+    {
+        string[] one = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thrteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Ninteen" };
+        string[] two = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninty" };
+        int d, r;
+
+        string str = "";
+
+        if (no >= 1000 && no <= 99999)
+        {
+            d = no / 1000;
+            if(d<=19)
+               str = str + one[d] + " Thousand ";
+            else
+            {
+                r = d % 10;
+                d = d / 10;
+                str = str + two[d] + " " + one[r] + " Thousand ";
+            }
+
+            no = no % 1000;
+        }
+
+        if (no>=100 && no<=999)
+        {
+            d = no / 100;
+            str = str + one[d] + " Hundred ";
+            no = no % 100;
+        }
+
+        if(no>=20 && no <= 99)
+        {
+            r = no % 10;
+            d = no / 10;
+            str = str + two[d] + " " + one[r];
+            r = no % 100;
+        }
+        else
+        {
+            str = str + one[no];
+        }
+        return str;
+    }
+}
+Example: Extension method for decimal type
+
+public static class MyExtension
+{
+    public static string InWords(this decimal no)
+    {
+        int integral = (int)no;
+        int fraction = (int)((no - integral) * 100);
+        string str = "Rupees " + integral.InWords();
+        if(fraction!=0)
+        {
+            str = str + " and " + fraction.InWords() + " paise only";
+        } 
+        else 
+         {
+            str = str + " only.";
+          }
+        return str;
+    }
+   public static string InWords(this int no)
+    {
+     //as per previous example       
+    }
+}
+
+Code in Main:
+        decimal no = 34.45m;
+        Console.WriteLine(no.InWords());
+

@@ -1,0 +1,887 @@
+HTML Elements
+============================================================
+
+There are number of categories of HTML elements but initially we can classify these elements based upon the "display" property of these elements. 
+
+Some of them are "block", some of them are "inline" and some of them have "block & inline -- mixed" display property.
+
+Example:
+
+<!doctype html>
+
+<head>
+  <title>Test-No need to add html doctype is added</title>
+  <style>
+    * {
+      border: 1px solid red;
+      padding:3px;
+    }
+   </style>
+</head>
+<body>  
+  <h1>This is block element</h1>
+  <div>This is block..</div>
+  <span>This is inline</span>
+  <label>This is also inline</label>
+  <div>
+    I'm block.
+     <p>
+       I'm a block.
+        <code>HTML</code>,<code>CSS</code> and <code>JavaScript</code> are web client programming elements.
+        Please press <kbd>CTRL+SHIFT+I</kbd> or <kbd>F12</kbd> to open the <strong>Developer Tool</strong>
+      </p>
+  </div>
+</body>
+  
+HTML Sementic elements
+========================
+Sementic elements are such elements can be used for one or more purposes -- in fact you can use them in any context for your purpose.
+
+Example of sementic elements are:
+  div, span, label, header, footer, article, aside, section and many more. 
+
+These elements don't have very sepcial display or visual attributes and they are used to acts as a container so these elements might include text and other tags.
+
+For example, suppose we want to structure a web page which looks:
+
+|------------------------------------------|
+| Logo Section | Heading text              |
+|------------------------------------------|
+| Menu or Links                            |
+|------------------------------------------|
+|  Left   | Center               | Right   |
+|  sec    | section              | section |
+|         |                      |         |
+|------------------------------------------|
+| Footer                                   |
+|------------------------------------------|
+
+then our code inside the body should be :
+
+<body>
+ <div>   <!--- main container --->
+   <header>
+       <section>Logo section</section>
+       <section>
+            <div>First Text</div>
+            <div>Second Line</div>
+        </section>
+    </header>
+    <nav>
+       <a href="#">Home</a> .....
+    </nav>
+    <article>
+         <aside>Left Section</aside>
+         <aside>
+             <section>
+                 <header>Heading...</header>
+                 <div>Center Section...</div>
+             </section>
+         </aside>
+         <aside>Right Section</aside>
+     </article>
+    <footer>Footer</footer>
+ </div>
+</body> 
+
+Sementic elements are also known as "Generic Elements".
+
+Heading elements
+========================
+There are six different heading elements to display "text" in pre-defined heading styles and these are h1,h2,h3,h4,h5,h6
+
+code inside the body:
+
+<h1>Heading1</h1>
+<h2>Heading1</h2>
+<h3>Heading1</h3>
+<h4>Heading1</h4>
+<h5>Heading1</h5>
+<h6>Heading1</h6>
+
+Note that these elements can be act as "Container" so you can embed other tags inside these tags.
+
+Text elements
+============================
+Used to describe the text and they don't allows nested block elements.
+Example are :  p, code, label, span, kbd, abbr, text, i, em, strong, u, b etc.
+
+code in body:
+
+<p>
+ This is para element and it is a block but it can't another block child.
+ <strong>You can add/embed inline elements inside the p or other inline elements</strong>
+</p>
+
+
+Form elements
+==============================
+These elements are used to define the UI and read values/data interactively and also submit the data to the application server (via web server). These elements are:
+
+form, input, button, textarea, select etc.
+
+Embed elements
+=============================
+These elements embed to resource into the edisting web document.
+
+Example are : img, link, script, embed, video, audio, picture etc
+
+List elements
+===========================
+To list the items or create group of item
+
+Example:  ul, ol, li, dd, dt etc
+
+Misc elements
+=============================
+a <a href> -- Hyperlink 
+name       -- for bookmark
+summary	   -- display report summary/footnote
+
+
+CSS
+===========
+Cascade Stylesheet Language "style" the DOMs or HTML objects. It is also used with SVG (Scalar Vector Graphics). The CSS language offers number of "Properties" and these properties are "CASE SENSITIVE".
+
+General syntax of property: 
+
+    propertyName: value
+
+CSS language uses properties to create a style for one or more HTML elements and the way in which "CSS properties" are
+used to style the "HTML Elements" are called "SELECTORS".
+
+SELECTOR is a way to create a group in which one or more CSS properties are set and later this "group" is assgined or applied to the specified set of HTML elements.
+
+
+General syntax of selector:
+
+SelectCategory {
+  property1: value1;
+  property2: value2;
+  .....
+}
+
+SELECTOR begins with a "Selector Category" and pair of { and }. Inside the { }, there are number of CSS properties and each pair is separated with ; semicolon.
+
+NOTE: Selectors and their properties are case sensitive and they are always in lower letter so we should use "lower" letter to name our custom selectors.
+
+
+SELECTORS and their usage
+--------------------------
+
+CSS properties or selectors can be used in a web-document using one or all of the following methods:
+
+
+1. Inline CSS properties
+   Each html element has an attribute called "style" and you can set CSS properties via "style" attribute.
+
+code in body:
+
+<p style="color: blue; font-size: 2em">Para-1 with 200% font size</p>
+<p>Regular Para</p>
+<input type="button" value="click me" style="background: red; color: white" />
+
+  Inline CSS via "Style" attribute is very simple approach but we need to set CSS properties for each markup and that's
+  way we should focus on other methods (next two methods).
+
+2. Embed selectors inside the web-document.
+
+   Use <style> HTML tag and embed CSS selectors.
+
+code in body:
+
+<style>
+  p {
+    color: green;
+    font-size: 1.5em;   /* 150% */
+  }
+</style>
+<p>Hello</p>
+<p>World</p>
+  
+   This method is useful but we need to copy the same set of SELECTORS in different pages/documents and think what will happen when we want to change the text color "blue" of all P element in entire website? We need to open each page and update the property value; and that is not a good idea so we will always use third method (External CSS document).
+
+3. External CSS document -- Embed the CSS document
+
+A "Css" document that contains "SELECTORS" or
+A "program" that generate "SELECTORS" can be embed into the web document via <link> html tag.
+
+General Syntax:
+
+ <link rel="stylesheet" href="CSS document path and document name....."/>
+
+For example:
+
+ <link rel="stylesheet" href="http://www.abc.com/style.css "/>
+                              ^
+                              |---- this is absolute path or location 
+                              |
+                              V
+ <link rel="stylesheet" href="http://www.abc.com/mystyle "/>  
+                                                  |
+                                                  |-- a program that produces CSS selectors
+
+ <link rel="stylesheet" href="style.css" /> 
+                                |
+                                |---------------- Relative path of CSS doc. This doc and web-document are
+						  exist in a same website and same folder.
+
+ <link rel="stylesheet" href="/css/style.css"/> --- "style.css" is located under "css" folder in same webside where
+						    as web document can be any where within the webside.
+
+
+   Attributes "rel" stands for "relative" ( a relative to the "stylesheet" category)
+              "href" stands for document reference (hyper ref) or location
+
+
+Here, we have two types of "Path" for the documents (of varying types):
+    1. Absolute path documents (which begins with http://siteNAme/folder/folder.//filename) and
+    2. Relative path documents (documents are exists inside the websire where they are referenced & used)
+
+                              
+CSS SELECTORS
+==============
+
+1. Universal selector  -- SELECTOR glued/applied to all elements
+
+* {
+
+}
+
+* astrisk or star is called "universal selector"
+
+2. Element selector  --- SELECTOR glued to those tags belongs to specified HTML element
+
+Element {
+
+}
+e.g
+h1 {
+  /* for h1 tags */
+}
+div {
+  /* div tags */
+}
+
+3. Class selector   --- A custom selector whose name begins with . (period) and it is glued to HTML tag	
+			via "class" attribute.
+
+.my-box {
+  border: 1px solid red;
+}
+.my-text-color {
+   color: blue;
+}
+.blue {
+  color: blue;
+}
+.red {
+  color: red;
+}
+.padding5 {
+  padding: 5px;
+}
+
+Note: all above class selectors either placed into separate css doc or <style>
+
+<p class="my-box">This para with border</p>
+
+<p class="my-box red">Border and red text</p>
+
+<div class="my-box padding5 blue">My box with 5 padding and blue text</div>
+
+CLASS SELECTORS can be used to any HTML element via "class" attribute and you can apply one or more class selectors
+to the element.
+
+
+
+4. ID selector --- ID CSS selector is a custom selector whose name begins with # and it is glued using "id" attribute.
+
+			The "id" attribute contains scalar/single value and possible unique so the "id" selector
+			name should be unique per page/document.
+
+			The very same "id" attribute is also used by the JavaScript to name of HTML object.
+
+<style>
+  #error-message {
+    color: red;
+    font-variant: italic;
+  }
+</style>
+
+<div id="error-message">Error! Please check your input...</div>
+
+
+Example: CSS document and embed it 
+
+assume that we've following directory structure:
+
+/webapp/
+       |
+       |------/Styles/   <----- Create a folder inside your project (By right mouse click Add new item + New folder)
+       |         Style.css and add "style.css" inside the "Styles" folder.
+       |   
+       |
+       | Index.html, About.html and other web documents.....
+                         Add new items (html pages) inside the root of your website.
+
+/Styles/Style.css
+-------------------
+
+/* CSS uses C style comments */
+body {              
+  font-size: 1.4em;
+}
+
+#page-header {
+  font-size: 4em;
+}
+
+.border-1 {
+  border: 1px solid black;
+}
+.border-2 {
+  border: 2px solid black;
+}
+.text-red { 
+  color: red;
+}
+.text-green {
+  color: green;
+}
+.font-small {
+ font-size: .6em;
+}
+
+/Index.html
+--------------
+.....
+<head>
+  ...
+  <link rel="stylesheet" href="Styles/Style.css"/>  
+</head>
+<body>
+ <div id="page-header">
+   <h1>
+       <span class="text-green">ABC</span>
+       <span class="text-red"> RED</span> Pvt Ltd
+   </h1>
+ </div>
+ <div>
+   <p class="text-red font-small">Note: This is the note....</p> 
+ </div>
+</body>
+
+
+Whitespaces & HTML document
+------------------------------
+
+HTML ignore whitespaces. HTML parser adds a single whitespace automatically if one or more whitespaces exists inside the tag or text.
+
+<p>The     red          sun           and          red   		rose</p>
+ will be displayed as "The red sun and red rose"
+
+HTML Entities
+----------------------------------
+HTML entities are special charset which are represented by a special syntax to embed a text/char.
+
+  &npsp;   &--here-goes-some-chars--;   &nbsp; means space
+  &lt;     less than  symbol  <
+  &gt;     greater than  >
+  &copy;   copyright symbol
+
+Example:
+
+&lt;p&gt; is paragraph tag of paragraph element.
+
+<p>Keep two space between words</p>
+<p>Keep&nbsp;&nbsp;two&nbsp;&nbsp;space...</p>
+
+Or use <pre> html tag to preseve the whitespace:
+
+<pre>The    red  sun
+
+and
+
+rose
+</pre>
+
+5. Descedents selector -- It select all "children" of given element or selector.
+
+   Syntax:
+
+   selector1 selector2 { ... }    Where selector1 and selector2 can be universal, id, class or element selector.
+					(Descedents means child, grand child, great grand child and so on)
+				  selector1 is a parent and selector2 are children.
+
+Example:
+
+section div {
+  color: red;
+}
+
+<section>
+  <div>I'm div</div>
+  <header>
+     Inside the header 
+     <div>I'm a div</div>
+   </header>
+</section>
+<div>I'm a div but not a child of section</div>
+
+  
+6. Child selector 
+
+   selector1 > selector2 {  }  -- Selector2 which are children of "selector1" but not great grand childrens; only the
+				  1st level.
+
+section > div { 
+  color: red;
+}
+[use HTML markup from the prev example]
+
+7. Sibling or spouse selector
+
+   selector1 + selector2 {  }  Style the "selector2" which appears after the "selector1".
+
+h2 + div {
+  color: red;
+}
+
+<h2>Introduction</h2>
+<div>I'm the sibling of h2</div>
+<div>And I'm not</div>
+<h2>Chapter1</h2>
+<p>No sibling that matches the selector</p>
+<div>No I'm not</div>
+<h2>Chapter2</h2>
+<div>This chapter2 description and I'm a sibling</div>
+
+
+8. Siblings selector 
+
+   selector1 ~ selector2 { } select all siblings of selector1.
+
+h2 ~ div {
+  color: red;
+}
+[Same as previous example]
+
+
+9. Attribute selector
+
+  selector[attribute="value or pattern"] { ... }  
+
+input[type="text"] {
+    padding: 4px 4px 4px 25px;
+}
+input[type="submit"] {
+    padding: 4px;
+    background: red;
+    color: white;
+}
+div[name="help"] {
+    font-size: 1.9em;
+    color: green;
+}
+
+<input type='text'/>
+<input type="text"/>
+<input type="submit" value="Submit your data" />
+<div>These are input elements</div>
+<div name="help">There are number of input elements.</div>
+
+
+10. multiple selectors having common number of CSS properties
+
+selector1, selector2, selector3,.... {
+}
+
+Example:
+
+html, body, header, div, table, form, h1, h2 {
+  margin: 0;
+}
+
+Set 0 margin for above mentioned elements.
+
+
+11. element specific class selector
+
+element.class-selector {  }
+
+div.error {
+  color: red;
+  font-style: italic;
+}
+div.success {
+  color: green;
+}
+
+<div>The output of your program
+has some errors:
+ <div class="error">Please input numeric value only</div> but the your program <div class="success">code is correct</div></div>
+
+12. Pseudo selectors - These selectors are associate with some sort of actions and they are executed when your or 
+	web-browser perform some tasks/actions on the elements.
+
+For example, a:link, a:active and a:visited  are three pseudo selectors are associate with <a> hyperlink tag.
+
+a:link {
+ background: blue;
+}
+a:visited {
+  background: yellow;
+}
+a:active {
+  background: green;
+}
+
+<a href="home.cshtml">Home</a>
+<a href="abt.cshtml">About us</a>
+<a href="cnt.cshtml">Contact us</a>
+
+Example: selector:hover -- when a mouse pointer enters into the selector's region
+
+h1:hover {
+  color: red;
+}
+
+a:hover {
+  color: black;
+}
+
+.shape:hover {
+   background: red;
+}
+
+<h1>Hello</h1>
+<a href="index.cshtml">Welcome to our site</a>
+<p class="shape">I'm a shape</p>
+
+Example: selector:first-letter { } style the first letter
+         selector:first-line {} style the first line
+
+.para:first-letter {
+  font-size: 4em;
+}
+
+<div class="para"> 
+  Add text here...
+</div>
+
+Example: selector:after and selector:before -- insert the content after or before the selector
+
+.help:before {
+  content: '[';
+  font-size: 3em;
+}
+
+.help:after {
+  content: ']';
+  font-size: 3em;
+}
+
+<div class="help">Please read this documentation</div>
+
+Example: ::selection to set style of selected text
+
+::selection {
+  background: #ff3333;
+}
+
+
+CSS Properties
+==============================================================
+
+Unit of measurements -- CSS units
+----------------------------------
+
+inch (in), centimeter (cm), px (pixel), point (pt) are fixed measurement units and
+the emphesis (em) and percent (%) are relative units used with CSS property values.
+
+Always use relative units for "font-size".
+Always use relative units where you need the value of property can be computed based upon the resolution of screen and
+	height and width of browser's document area.
+
+Fixed measurement units have fixed value and cannot be changed even changes in screen resolution or resize of the web-browser windows.
+
+[Note: Never use inch, cm and point]
+
+calc() CSS function compute the value based upon the given context so we can use calc() function with CSS properties.
+
+Example: 
+
+.main {
+    border: 1px solid blue;
+}
+.main * {
+    margin: 0;
+    border: 1px solid red;
+    display: inline-block;
+    width: calc(50% - 20px); /* width: 50%;  or width: 300px; */
+}
+
+<div class="main">
+ <div>First</div>
+ <div>Second</div>
+</div>
+
+Example:
+
+body {
+  font-size: 20px; /* 120% or 1.2em; */
+}
+
+h1 {
+  font-size: 2em;
+}
+
+<h1>Head</h1>
+<p>Regular text</p>
+
+Important: Always use relative units for "font-size" and "line-height" properties.
+	Ex: 
+p {
+    font-size: 1.4em;
+    line-height: 1.5em;
+}
+
+Special value 0 (without any unit name)
+---------------------------------------
+Some CSS properties uses or allow 0 value or value without measurement unit name.
+
+For example, to set 0 to margin 
+
+html { margin:0; } is same as html { margin: 0in; } so it is better practice to not use unit name when setting 0.
+
+font-weigth: 100 to 900; The impression (bold face) value begins with 100 and lasts with 900 (bold, bolder, boldest ..)
+
+The colors - named colors and hexa decimal color value and rgb(), rgba() functions
+===================================================================================
+Text and background colors along with shadows, borders, outline etc uses named color, hex or CSS functions.
+
+named color: red, green, blue, magenta, yellow, black, white etc
+
+hexa decimal :  #000000;    begins with # and then two hex char for "RED"
+                                              next two hex for "GREEN"
+                                              next two hex for "BLUE"  
+		Each hex value must be in between (00 to FF -- 0 to 255)
+                You can use "shorthand - three hex char color" if each pair (RGB) contains equal characters.
+		e.g  #000000 is same as #000
+                     #ffaabb is same as #fab;
+                     but #ffa1bb cannot be written as #fa1bb <-- wrong
+
+                rgb(red, green, blue)
+                rgba(red,green blue,alpha-opacity)
+
+			Note: rgb(), rgba() uses int (0 to 255) for RGB and 0.0 to 1.0 value for alpha-opacity.
+
+Example:
+
+div { background: red; }
+div h1 { color: rgba(255,255,255,0.5); } 
+
+<div><h1>White text with 0.5 opacity</h1></div>
+
+1. margin: value;
+   margin: top right bottom left;
+
+    margin is a shorthand property of,
+	margin-left: value;
+        margin-right: value;
+        margin-bottom: value;
+        margin-top: value;
+
+    There is a special value called "auto" which tells the browser to calculate the margin based upon the other     elements & region of parent.
+
+Example: Centered the component. -- This is not an alignment of text but we will use "auto" value for the margin of fixed width HTML object.
+
+h1 {
+  width: 200px;
+  margin: auto;
+}
+
+2. padding: value;
+   padding: top right bottom left; You can also use padding-left, padding-right, padding-bottom and padding-top 				   properties.
+
+3. width: value;	absolute width
+   min-width: value;    minimum capacity 
+   max-width: value;    max capacity but width will be increased if the content size exceeds.
+
+4. height, min-height and max-height -- Set absolute, min and max height of the element respectively.
+
+5. overflow: hidden | scroll | auto; To hide or show the overflow text with scrollbars.
+
+Example:
+
+.box {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #aaa;
+    overflow:  auto ;  /* hidden;  or scroll; */
+}
+
+<div class="box">Add your text (more than 7 lines)</div>
+
+6. opacity: value;  To set transparency with 0.0 to 1.0 value (0.0 means 0 % and 1.0 means 100%)
+
+7. font-family: font-family1, font-family2,....., fallback-font-family;
+   font-family: font1,font2,..fallback;
+
+   Use double or single quote if font names are too long and contains whitespaces, or special chars.
+
+   Fllowing are font families:
+     1. sans serif  (edge of letters/symbols are rounded)
+     2. serif       ( angled edges)
+     3. monospace   ( plain text)
+     4. fantasy     ( fancy text)
+
+.container {
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+   font-size: 5em;
+}
+
+Example:
+  font-family: "Georgia", "Times New Roman", "Times", serif;
+
+Embed the open source fonts into the document ( fonts.google.com - We can download the fonts and save them into our current apps)
+
+1. USe fonts which are located remotly.
+
+Method-1
+
+Use <link> to add the CSS ref.
+   <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+
+and change the font-family property,
+
+   font-family: "Oswald","Times", serif;
+
+Method-2 using @import and url() function inside the CSS file
+
+@import url('https://fonts.googleapis.com/css?family=Mirza');
+
+.container {
+   font-family: 'Mirza', cursive;
+   font-size: 5em;
+}
+    
+2. Use locally (exists inside your webapp) fonts 
+
+  1. Extract the zip and copy all font files at your own folder .eg. Styles/Ubuntu
+
+  2. Add following code to create a font-family and set the font-family in style document.
+
+@font-face {
+    
+ font-family: 'Ubuntu';
+    
+ src:  url('/Styles/ubuntu/Ubuntu-Bold.ttf') format('truetype');
+
+}
+.container {
+   font-family: 'Ubuntu', sans-serif;
+   font-size: 5em;
+}
+
+
+@font-face and @import are CSS directives which tells the (they are instructions) browser to perform the tasks.
+And mostly they appear at the begin of the CSS documents.
+
+
+8. font-size: em | %;
+9. font-variant: normal | small-caps;
+10. font-style: normal | italic | oblique
+11. font-weight: 100 to 900;
+12. font-stratch and font-kerning are newly introduced CSS properties and these may or may not work in each browser 	because they are still in under the development.
+
+13. text-decoration: none | underline | overline | line-thru ..;
+14. text-transform: none | uppercase | lowercase | capitalize;
+15. line-height: em | %; set line height of text
+16. text-align: none | left | right | middle | justify;
+17. letter-spacing: value;
+18. word-spacing: value;
+19. white-space: none | pre | pre-line | pre-wrap; -- To include/allow whitespaces with or without wrapping the content.
+
+20. border: width style color; Or use border-left, border-right, border-bottom or border-top
+    The style constants are : solid, double, ridge, outline, inset etc
+21. border-radius: value;
+    border-radius: leftTop rightTop rightBottom leftBottom;  -- Add round corners
+
+.box {
+  border: 1px solid red;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+}
+22. outline: width style color;  This will draw an outline after the "border" of the element.
+
+.box {
+  border: 5px solid blue;
+  outline: 5px solid red;
+}
+
+23. box-shadow: xPos yPos blur color
+24. text-shadow: xPos yPos blur color
+
+.box {
+  border: 1px solid #aaa;
+  box-shadow: 10px 10px 5px black;
+}
+
+h1 {
+  font-size: 4em;
+  text-shadow: 5px 5px 3px #aaa;
+}
+
+25. display: none | normal | block | inline | inline-block | flex | table;  To change the display property.
+
+
+Example: Hide/show
+
+.container > div {
+    display: none;
+}
+
+.container:hover > div  {
+    display: block;
+}
+  
+<div class="container">
+  <p>Move mouse pointer here.</p>
+  <div>
+     <h1>Hello</h1>
+     <p>Test</p>
+   </div>
+</div>
+
+26. float: none | left | right;  To float the element either at left or right of the parent edge.
+27. clear: left | right | both; to clear the float effect.
+
+Example:
+
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+          <div>
+              <div class="float-right">A</div>
+              <div class="float-left">B</div>
+              <div class="float-left">C</div>
+              <div class="float-right">E</div>
+          </div>
+          <div class="clear"></div>
+          <div>
+              <div class="float-left">Hello</div>
+              <div class="float-left">Hello</div>
+          </div>
+
+  

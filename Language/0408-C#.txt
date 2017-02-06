@@ -1,0 +1,128 @@
+ C# Language
+ =============================================================
+ C# is case-sensitive, statically typed programming language
+ which supports OOP and functional programming paradigm.
+
+ C# language has some features through which it supports
+ dynamic language featrures.
+
+ With "statically typed language", datatype will be examined
+ for variable and value at the time of compilation. This  feature prevent runtime ugly errors encountered during program
+ execution.
+
+ 	C, C++, Java, C# are example of "Statically" typed 	languages. (They are also known as Tightly typed check
+			languages).
+
+ With "dynamic language", datatype of variable is determined  through the data. That means datatype is assigned to data/value
+ instead of variable.
+
+	JavaScript, PHP, Ruby etc languages are example of
+	dynamic languages. 
+ 
+        Note: C# has a keyword called "dynamic" through which
+		we can have dynamic language behavior.
+
+  Object Oriented Paradigm
+  -------------------------
+  What is "OOP"? -- It is a program design style. This style
+			allow us to :
+				1. Re-use the code and
+				2. Extends the existing code
+					without copying/pasting
+
+	OOP design provide three major concept through which
+	we can develop programs:
+		1. Abstraction
+                2. Encapsulation
+		3. Polymorphism - Inheritance & Generics
+
+	Abstraction : It defines a way to how to show or hide
+			some of the code implementation.
+			In other words, it outlines usage of
+			code from the actual code.
+
+			It separates (or draw outline between) 
+			code implementation from its 			declaration. ( creator of code and user 
+			of the code).
+
+			We have two kind of abstractions:
+  			1. Procedure/function abstraction
+			2. Data Type abstraction (ADT - Abstract
+				Data Type. eg. int,String, etc)
+        Encapsulation : It is a way to define "abstraction" in
+			our code by wrapping data-members and
+			function-members together. 
+
+			This approach allow us to define new
+			TYPES - either created from the scratch
+			or using existing types.
+
+			We will have to learn & use the "class"
+			and "interface" programming constructs
+			to achieve an abstraction via
+			encapsulation.
+	Polymorphism  : Polymorphism is achieved via 			"Inheritance" - class inheritance and
+			interface implementation.
+
+			A common name and multile forms is known
+			as "Polymorphism".
+
+			[For example, a word (English word) has
+			more than two meanings. To wash 			(clothes or car), To write ( letter, 				poem, story etc]
+
+			There are other ways to achive 			polymorphism apart from the 			"Inheritance" but they do not define the
+			real-world (or true) polymorphism.
+
+			Some programming language supports:
+				1. Method overloading and
+				2. Generics Or Templated Types
+			but these kind of polymorphism are
+			compiled time (or compiler directed or
+			language specified).
+			 
+
+			Static polymorphism - Achieved by the
+			compiler/language.
+			Dynamic / real-world poly - is achieved
+			by the runtime environment.
+
+		Method overloading - Methods having same name
+					with unique parameters.
+			e.g
+				void print() {}
+				void print(int n) {}
+				void print(int n,int m) {}
+				void print(String n) {}
+
+		Generics or Templated Types - This feature allow
+			us to pass "TYPES" into another "TYPE"
+			or "Methods".
+
+			Like the function arguments, we can pass
+			DataType to another datatype or 			functions.
+
+   For example, we need to define separate classes for different TYPES to implement "Stack" datatype:
+
+        	class StackInt {
+			int []items;
+			void push(int item) {}
+			int pop() { }
+                }
+	     class StackFloat {
+			float []items;
+			void push(float item) {}
+			float pop() { }
+                }
+
+Solution: But if we could use "Generics" then we don't have to write different class definitions. A single class with TYPE parameter will be used with one or more TYPES.
+              class Stack<T> {
+			T []items;
+			void push(T item) {}
+			T pop() { }
+                }
+     So we can create stack objects of different TYPES:
+             Stack<int> p = new Stack<int>();
+             Stack<float> q = new Stack<float>();
+             Stack<String> r = new Stack<String>();
+      
+             p.push(10);

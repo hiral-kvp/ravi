@@ -1,0 +1,217 @@
+ ADO.NET & ORM 
+ ================================================================================
+ ADO.NET stands for Active DataSet Object class library and it is used to connect
+ with any database product (oracle, MSSQL Server, MySql, DB2 etc), execute queries
+ and retriving results.
+
+ ORM stands for Object-Relation-Model - is a higher level database programming built
+ upon ADO.NET to ease the database programming. 
+
+
+ ADO.NET class library
+ =====================
+ The System.Data and System.Xml namespaces represent the ADO.NET class library.
+ The ADO.NET class library has two types of classes:
+
+    1. Data Provider classes - These classes are responsible to connect the database
+	server, execute sql statements and retriving the results.
+
+    2. Relational or DataSet classes - These classes are used to create "relations or 	tables" into memory (objects) and populate them with data.
+
+	[DataSet means cache of data or set of data or in-memory representation of
+ 	 data.]
+
+1. Data Provider APIs (classes)
+=================================
+   Different databases accessed via Data Provider APIs and these APIs are exists with
+   .net framework and also they can be downloaded from the sites of concern database
+   vendors.
+
+	For MSSQL Server, data provider classes are at,
+				System.Data.SqlClient
+        For MS-Access,Excel & other databases,
+				System.Data.OleDb
+        For Oracle, download ODP.NET data provider API from oracle.com site
+        For MySql, download MySql-Connector APIs from mysql.org site.
+        For DB2, download Db2 Connector APIs from IBM's website.
+
+        [Note: Microsoft's Database products Data Provider are exists with .net 		framework.]
+
+  Under System.Data namespace, there are some interfaces e.g IDbConnection,   IDbCommand, IDbDataReader and so on... These interfaces are implemented by the
+  Data Provider APIs so all these different Data Providers have common number of
+  classes & methods.
+
+  MSSQL Data Provider classes (System.Data.SqlClient)
+  ===========================
+  1. SqlConnection - To establish a database connection by sending connection 		information that includes - servername, login info,database name etc.
+
+  2. SqlCommand   - To execute SQL query and retriving results.
+
+  3. SqlDataReader - To fetch result from the database (fetch rows).
+
+  4. SqlParameter  - To define query parameter - name, datatype, size & value of 
+			query data.
+  5. SqlDataAdapter - This object uses SqlConnection,SqlCommand,SqlDataReader and 
+			DataSet classes. In fact it populates the DataSet (store data
+			from database) using SqlConnection,SqlCommand & SqlDataReader
+			classes.
+  
+
+ All ADO.NET APIs are IDisposable 
+ -----------------------------------
+ IDisposable is an interface and it has a "Dispose()" method. It means nearly all  ADO.NET classes has "Dispose()" method. Different classes have a "Dispose()" method
+ to release ADO object once we have finished or we've been done.
+ ADO objects uses huge amount of memory and if these memory / objects are not handled
+ properly then our application might a victim of "Memory Leak - Out of Memory".
+
+ So, once we finish the ADO tasks, we must release all ADO objects by calling  "Dispose()" method -- and of course this method must be called even an error/exception is raised.
+
+ In C#, we have using() block which calls Dispose() method of IDisposable object at  the end of block execution and also even after the exception.
+
+ Syntax:
+     using(IDisposableClass obj = new IDisposableClass()) { ... }
+
+Example:
+
+class Hello : IDisposable
+{
+   public void Dispose() 
+    {
+         Console.WriteLine("I am done.");
+     }
+}
+class Test
+{
+   static void Main()
+    {
+        using(Hello hello=new Hello())
+         { 
+            //statements
+          }
+      }
+}
+NOTE: Don't forget to call "Dispose()" method - you can use using(), which never forgets to call it or you can use try...catch..finally syntax:
+
+
+     IDisposableClass obj = null;
+
+     try 
+     {
+         obj = new IDisposableClass();
+         //other statements.....
+      }
+     catch(Exception ex)
+     {
+          //error information
+     }
+     finally
+      {
+         if(obj!=null)
+           {
+             obj.Dispose();
+            }
+       }
+
+SqlConnection class & methods
+===========================================
+1. Constructor(connection_string) - To set connect information for database server.
+2. ConnectionString - To set/get connect information for database server
+3. Open() - Establish database connection if "connect" info is set
+4. Close() - Disconnect the database connection
+5. Dispose() - Release the object and also disconnect the database
+
+SqlCommand class & methods
+=============================================
+1. Constructor(sql-query,connection_reference) - To pass SQL text and connection 						object.
+2. CommandText - To set/get SQL query
+3. Connection  - To get/set connection object reference
+4. Parameters  - To add/remove/get query parameters. Query parameter name must begins
+		 with @ (at the rate) sign. e.g @empno, @age etc
+5. int ExecuteNonQuery() - To execute the non-query (other than SELECT statement) and
+				returns count of affected rows.
+6. object ExecuteScalar() - To execute the "SELECT" statement and returns value from
+				1st row and 1st column. i.e returns single value.
+
+7. SqlDataReader ExecuteReader() - To execute the "SELECT" statement and returns
+				Database cursor that contains pointer to the
+				database results (rows).
+SqlDataReader class & methods
+===================================================
+1. bool Read() - Fetch a row from database, returns "true" if that row has data, 		returns "false" otherwise.
+2. FieldCount  - Returns count of fields/columns
+3. [column_name or column_ordinal] - Returns a value of specified column name or 		column ordinal.
+4. XXXXX GetXXXXX(column_ordinal) 
+        where XXXXX means datatype name.
+	e.g   Int32 GetInt32(0) <--- 0 first column of integer type
+              DateTime GetDateTime(1) <-- 1 second column
+   To return value of given column ordinal by casting the value.
+5. GetValues(object[]) -- Read entire rows and store values into object[]
+
+Example: Assume that we've Emp table
+create table Emp
+(
+  EmpNo int primary key,
+  EmpName varchar(60),
+  JoinDate Date
+)
+
+Steps to connect database, and execute sql statements: (Code in Main). Also import the System.Data.SqlClient namespace.
+
+//1. prepare connection string 
+string CnStr = @"......";
+                  ^
+                  |
+    1. Open Server Explorer + Right click on database name + Properties + In properties Windows, select "ConnectionString" value + Copy it and paste it here.
+
+ 
+//2. Connection object
+using (SqlConnection cn = new SqlConnection())
+  {
+     cn.ConnectionString = CnStr;
+//3. Prepare & execute query
+     var sql = "insert into emp values (@p1,@p2,@p3)";
+     using (SqlCommand cmd = new SqlCommand())
+      {
+       cmd.CommandText = sql;
+       cmd.Connection = cn;
+       cmd.Parameters.AddWithValue("@p1", 101);
+       cmd.Parameters.AddWithValue("@p2", "Rajesh");
+       cmd.Parameters.AddWithValue("@p3", DateTime.Parse("5/1/2001"));
+//4. Open connection & execute the query
+       cn.Open();
+       cmd.ExecuteNonQuery();
+       cn.Close();
+       }
+  }
+
+Example: Update emp record
+var CnStr = @"copy+paste";
+using(var cn = new SqlConnection(CnStr))
+{
+ var sql="update emp set empname=@empname,joindate = @joindate where empno=@empno";
+ using(var cmd = new SqlCommand(sql,cn))
+  {
+    cmd.Parameters.AddWithValue("@empname","Mahesh");
+    cmd.Parameters.AddWithValue("@joindate",DateTime.Now);
+    cmd.Parameters.AddWithValue("@empno",101);
+    cn.Open();
+    cmd.ExecuteNonQuery();
+   }
+}
+Example: Fetch rows
+.....
+ var sql = "select * from emp";
+ using (var cmd = new SqlCommand(sql, cn))
+  {
+   cn.Open();
+   using (var dr = cmd.ExecuteReader())
+    {
+     while (dr.Read())
+      {
+       // Console.WriteLine(dr["EmpName"] + " " + dr[0] + " " + dr["JoinDate"]);
+       Console.WriteLine(dr.GetInt32(0) + " " + dr.GetString(1) + " " 
+                             + dr.GetDateTime(2).ToString("dd-MMM-yyyy"));
+      }//end while
+     }//end dr
+   }//end cmd 
+.......

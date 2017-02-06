@@ -1,0 +1,81 @@
+ Visual Studio WebSite Vs WebApplication project
+ =================================================
+ 1. WebSite 
+
+         1. Each programmable web-page will be compiled on-fly and executed.
+         2. To write C# classes, we must have to save .cs files under the "App_Code"
+            folder. If code is placed outside the "App_Code" then our code wont be
+            compiled and hence not used.
+         3. Mostly suitable to create a web-site having few pages/programs.
+           (We cannot use website to create/develop large-scale web-applications)
+         4. To deploy(host) website, all files & folders including source code
+            files must be copied at "host" machine (There isn't a way to prevent
+            the source code being distributed).
+
+      Example: Create "WebSite" project, add Emp.cs (under App_Code) and create an                object of "Emp" class into "Index.cshtml".
+
+       /App_Code/Emp.cs 
+       -------
+        public class Emp 
+         {
+            public int Id {get;set;}
+            public string Name {get;set;}
+           }
+       /Index.cshtml
+       --------------
+        @{
+          Emp emp = new Emp { Id = 10, Name = "A" };
+        }
+        <p>No : @emp.Id Name : @emp.Name</p>
+
+      [NOTE: Now, move the "Emp.cs" outside the App_Code and request the              "Index.cshtml". You will get error-message page containing two links:
+              Compilation and Source code.]
+
+      How Razor pages compiled? (And also .cs files)
+      -------------------------
+      Each "Razor" page is converted into .cs file. 
+        e.g  About.cshtml page will be _Page_About_Cshtml class file which will be
+             a sub-class of System.Web.WebPages.WebPage class.
+      Then when we request "About.cshtml", the c# compiler compiles _Page_About_Cshtml
+      class and produce on-fly DLL assembly at c:\users\your_login_name\appData\local      \temp\ASP.NET Temporary Files\ folder.
+
+      Similarly, .cs files placed under App_Code will be compiled by the C# compiler
+      and their .dll files also created under "ASP.NET Temporary Files" folder.
+
+      What is "System.Web.WebPages.WebPage" class?
+ 
+       It is the "architecture/infrastructure" class has enomorus amount of        functionalities which includes - Request, Response, Session, Cookies, Upload
+       of files and many more.
+       Just creating any .cshtml file will automatically inherits "WebPage" class.
+
+
+    5. Any third party library (or .DLL file) must be copied under "Bin" folder of
+       our website.
+
+        Example: Open VS + File + New Project + Library Project (name it - MyLib) +         Add "Student.cs" + Build it (Compile it). 
+        After build (Build Menu), open the file explorer + open project "MyLib" folder         + copy "MyLib.dll" from Bin/Debug and paste it to your website's "Bin" folder.
+        + And created object of "Student" class into .cshtml pages.
+
+          @{
+               MyLib.Student s = new MyLib.Student { Roll=1,Name="B" };
+          }
+
+     6. Website can be created directly at "IIS location", "FTP location" or "Local         disk".
+        
+
+2. WebApplication Project template
+
+     1. All pages & .cs files are compiled at once and stored into single .dll file.
+        These .dll files are located at bin/debug folder.
+     2. We can create .cs or .cshtml file anywhere within the project.
+     3. WebApplication project cannot be created directly at IIS or FTP. It must be
+        first created at local disk.
+     4. No on-fly compilation. We can compile a project as a "whole" using debug or          build menu.
+     5. To use third party .DLLs, right mouse click on solution explorer + Add        "References" OR Project Menu + Add References and select your .dll files.
+     6. We first build the project after changes occurs in a project.
+     7. Large scale projects must be developed using "WebApp" project. Source code
+        and other files are compiled into a single .dll so source code will be
+        safe.
+
+
+        
